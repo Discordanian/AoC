@@ -1,0 +1,29 @@
+0 Inventory: [' 79', ' 98']
+0 Ops:  old * 19
+0 Test: 23
+0 Truthy: 2
+0 Falsy: 3
+0 Inspections: 0
+
+1 Inventory: [' 54', ' 65', ' 75', ' 74']
+1 Ops:  old + 6
+1 Test: 19
+1 Truthy: 2
+1 Falsy: 0
+1 Inspections: 0
+
+2 Inventory: [' 79', ' 60', ' 97']
+2 Ops:  old * old
+2 Test: 13
+2 Truthy: 1
+2 Falsy: 3
+2 Inspections: 0
+
+3 Inventory: [' 74']
+3 Ops:  old + 3
+3 Test: 17
+3 Truthy: 0
+3 Falsy: 1
+3 Inspections: 0
+
+Part 1 : 0
