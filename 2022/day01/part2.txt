@@ -1,0 +1,2 @@
+./x.sh input.txt |sort -n |grep MAX
+$((62877+65317+69206))
