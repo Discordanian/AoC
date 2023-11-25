@@ -10,6 +10,10 @@ export SRCLIB=day-00
 export LIBNAME=day-$1
 
 cargo new --lib $LIBNAME
+
+git add $LIBNAME
+
+# All the template copying
 cp $SRCLIB/solve.sh $LIBNAME/solve.sh
 mkdir $LIBNAME/src/bin/
 sed "s/00/$1/g" $SRCLIB/src/bin/part-1.rs > $LIBNAME/src/bin/part-1.rs
@@ -18,3 +22,4 @@ cp -v $SRCLIB/src/lib.rs $LIBNAME/src/lib.rs
 
 cd $LIBNAME
 cargo test
+cargo clean
