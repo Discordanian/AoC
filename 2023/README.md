@@ -1,4 +1,10 @@
 # Advent of Code 2024
 Focus on Rust
 
-Just days away from the start.
+## advent.sh
+```bash
+./advent.sh DD
+```
+
+Pass in the 2 digit date and this will template out a rust library.
+
