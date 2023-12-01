@@ -21,23 +21,15 @@ pub fn process_part1(input: &str) -> String {
 
 pub fn process_part2(input: &str) -> String {
     let mut new_input : String = String::from(input);
-    new_input = new_input.replace("nineight","98");
-    new_input = new_input.replace("sevenine","79");
-    new_input = new_input.replace("oneight","18");
-    new_input = new_input.replace("eightwo","82");
-    new_input = new_input.replace("eighthree","83");
-    new_input = new_input.replace("fiveight","58");
-    new_input = new_input.replace("threeight","38");
-    new_input = new_input.replace("twone","21");
-    new_input = new_input.replace("one","1");
-    new_input = new_input.replace("two","2");
-    new_input = new_input.replace("three","3");
+    new_input = new_input.replace("one","o1e");
+    new_input = new_input.replace("two","t2o");
+    new_input = new_input.replace("three","t3e");
     new_input = new_input.replace("four","4");
     new_input = new_input.replace("five","5");
     new_input = new_input.replace("six","6");
-    new_input = new_input.replace("seven","7");
-    new_input = new_input.replace("eight","8");
-    new_input = new_input.replace("nine","9");
+    new_input = new_input.replace("seven","7n");
+    new_input = new_input.replace("eight","e8t");
+    new_input = new_input.replace("nine","n9e");
 
     process_part1(new_input.as_str())
 
