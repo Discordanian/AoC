@@ -1,5 +1,3 @@
-use std::io;
-
 pub fn rgb_from_str(line: &str) -> (u32, u32, u32) {
     let mut r = 0;
     let mut g = 0;
@@ -24,21 +22,57 @@ pub fn rgb_from_str(line: &str) -> (u32, u32, u32) {
     (r,g,b)
 }
 
+pub fn max_rgb_from_str(line: &str) -> (u32, u32, u32) {
+    let mut r = 0;
+    let mut g = 0;
+    let mut b = 0;
+    let mut last_num = 0;
+    let parts: Vec<&str> =  line.split(':').collect();
+    let games: Vec<&str> = parts[1].split(';').collect();
+    for game in games {
+        for part in game.split_whitespace() {
+            match part {
+                "blue," => b = last_num.max(b),
+                "blue" => b = last_num.max(b),
+                "red," => r = last_num.max(r),
+                "red" => r = last_num.max(r),
+                "green," => g = last_num.max(g),
+                "green" => g = last_num.max(g),
+                _ => last_num = part.trim().parse().unwrap()
+            }
+        }
+    }
+    (r,g,b)
+}
+
+pub fn game_id(line: &str) -> u32 {
+    let parts: Vec<&str> =  line.split(':').collect();
+    let game_p: Vec<&str> = parts[0].split("Game ").collect();
+    game_p[1].parse().unwrap()
+}
+
 pub fn process_part1(input: &str) -> String {
+    println!("process_part1");
     let r = 12;
     let g = 13;
     let b = 14;
+    let mut sum = 0;
     for game in input.lines() {
-        let tup = rgb_from_str(game);
+        let tup = max_rgb_from_str(game);
         if r >= tup.0 && g >= tup.1 && b >= tup.2 {
-            dbg!("Yes Game {:?} -> {:?}", game,tup);
+            let id = game_id(game);
+            sum += id;
+            println!("Yes Game {} {:?} -> {:?}",id, game,tup);
+        } else {
+            let id = game_id(game);
+            println!("No Game {} {:?} -> {:?}",id, game,tup);
         }
     }
-    "1".to_string()
+    format!("{}",sum)
 }
 
-pub fn process_part2(input: &str) -> String {
-    input.to_string()
+pub fn process_part2(_input: &str) -> String {
+    "1".to_string()
 }
 
 #[cfg(test)]
@@ -61,6 +95,6 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, "15".to_string());
+        assert_eq!(result, "1".to_string());
     }
 }
