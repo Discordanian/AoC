@@ -1,27 +1,3 @@
-pub fn rgb_from_str(line: &str) -> (u32, u32, u32) {
-    let mut r = 0;
-    let mut g = 0;
-    let mut b = 0;
-    let mut last_num = 0;
-    let parts: Vec<&str> =  line.split(':').collect();
-    let ball_part: &str = parts[1];
-    for part in ball_part.split_whitespace() {
-        match part {
-            "blue;" => b += last_num,
-            "blue," => b += last_num,
-            "blue" => b += last_num,
-            "red;" => r += last_num,
-            "red," => r += last_num,
-            "red" => r += last_num,
-            "green;" => g += last_num,
-            "green," => g += last_num,
-            "green" => g += last_num,
-            _ => last_num = part.parse().unwrap()
-        }
-    }
-    (r,g,b)
-}
-
 pub fn max_rgb_from_str(line: &str) -> (u32, u32, u32) {
     let mut r = 0;
     let mut g = 0;
