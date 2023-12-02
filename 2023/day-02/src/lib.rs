@@ -52,7 +52,6 @@ pub fn game_id(line: &str) -> u32 {
 }
 
 pub fn process_part1(input: &str) -> String {
-    println!("process_part1");
     let r = 12;
     let g = 13;
     let b = 14;
@@ -62,17 +61,18 @@ pub fn process_part1(input: &str) -> String {
         if r >= tup.0 && g >= tup.1 && b >= tup.2 {
             let id = game_id(game);
             sum += id;
-            println!("Yes Game {} {:?} -> {:?}",id, game,tup);
-        } else {
-            let id = game_id(game);
-            println!("No Game {} {:?} -> {:?}",id, game,tup);
-        }
+        } 
     }
     format!("{}",sum)
 }
 
-pub fn process_part2(_input: &str) -> String {
-    "1".to_string()
+pub fn process_part2(input: &str) -> String {
+    let result = input.lines()
+    .map(|game| {
+        let tup = max_rgb_from_str(game);
+        tup.0 * tup.1 * tup.2
+        }).sum::<u32>();
+    result.to_string()
 }
 
 #[cfg(test)]
@@ -95,6 +95,6 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, "1".to_string());
+        assert_eq!(result, "2286".to_string());
     }
 }
