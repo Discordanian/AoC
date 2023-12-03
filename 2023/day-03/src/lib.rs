@@ -42,13 +42,11 @@ pub fn process_part1(input: &str) -> String {
         for c in 0..cols {
             let x = matrix[r][c];
             if !x.is_ascii_digit() && in_number && valid {
-                println!("Add read number {}", value);
                 retval += value;
                 in_number = false;
                 value = 0;
             }
             if !x.is_ascii_digit() && in_number && !valid {
-                println!("Discard read number {}", value);
                 value = 0;
                 in_number = false;
             }
@@ -63,10 +61,8 @@ pub fn process_part1(input: &str) -> String {
                 in_number = true;
                 value += x.to_digit(10).unwrap();
                 valid = check_valid(matrix.clone(), r, c);
-                println!("Found first digit of a number {} so value is {}", x, value);
             }
             if c == cols - 1 && in_number && valid {
-                println!("Add read number end of col {}", value);
                 retval += value;
                 valid = false;
                 value = 0;
@@ -78,8 +74,86 @@ pub fn process_part1(input: &str) -> String {
     retval.to_string()
 }
 
+pub fn number_from_rc(matrix: Vec<Vec<char>>, row: usize, col: usize) -> u32 {
+    let mut retval = 0;
+    let mut idx = col;
+
+    while idx > 0 && matrix[row][idx - 1].is_ascii_digit() {
+        idx -= 1;
+    }
+    // I think idx has the start of the number now
+    while idx < matrix[0].len() && matrix[row][idx].is_ascii_digit() {
+        let digit = matrix[row][idx].to_digit(10).unwrap();
+        retval *= 10;
+        retval += digit;
+        idx += 1;
+    }
+    retval
+}
+
+pub fn gear_pairs(matrix: Vec<Vec<char>>, row: usize, col: usize) -> Vec<(usize, usize)> {
+    let mut retval = vec![];
+
+    if row > 0 && col > 0 && matrix[row - 1][col - 1].is_ascii_digit() {
+        retval.push((row - 1, col - 1));
+    }
+    if row > 0
+        && matrix[row - 1][col].is_ascii_digit()
+        && (col == 0 || !matrix[row - 1][col - 1].is_ascii_digit())
+    {
+        retval.push((row - 1, col));
+    }
+    if row > 0
+        && col < matrix[0].len()
+        && matrix[row - 1][col + 1].is_ascii_digit()
+        && !matrix[row - 1][col].is_ascii_digit()
+    {
+        retval.push((row - 1, col + 1));
+    }
+    if col > 0 && matrix[row][col - 1].is_ascii_digit() {
+        retval.push((row, col - 1));
+    }
+    if col < matrix[row].len() && matrix[row][col + 1].is_ascii_digit() {
+        retval.push((row, col + 1));
+    }
+    if row < matrix.len() && col > 0 && matrix[row + 1][col - 1].is_ascii_digit() {
+        retval.push((row + 1, col - 1));
+    }
+    if row < matrix.len()
+        && matrix[row + 1][col].is_ascii_digit()
+        && (col == 0 || !matrix[row + 1][col - 1].is_ascii_digit())
+    {
+        retval.push((row + 1, col));
+    }
+    if row < matrix.len()
+        && col < matrix[0].len()
+        && matrix[row + 1][col + 1].is_ascii_digit()
+        && !matrix[row + 1][col].is_ascii_digit()
+    {
+        retval.push((row + 1, col + 1));
+    }
+    retval
+}
+
 pub fn process_part2(input: &str) -> String {
-    input.len().to_string()
+    let matrix = build_matrix(input);
+    let mut retval = 0;
+    let rows = matrix.len();
+    let cols = matrix[0].len();
+    for r in 0..rows {
+        for c in 0..cols {
+            let x = matrix[r][c];
+            if x == '*' {
+                let pairs = gear_pairs(matrix.clone(), r, c);
+                if pairs.len() == 2 {
+                    let num1 = number_from_rc(matrix.clone(), pairs[0].0, pairs[0].1);
+                    let num2 = number_from_rc(matrix.clone(), pairs[1].0, pairs[1].1);
+                    retval += num1 * num2;
+                }
+            }
+        }
+    }
+    retval.to_string()
 }
 
 #[cfg(test)]
@@ -107,6 +181,6 @@ mod tests {
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, "15".to_string());
+        assert_eq!(result, "467835".to_string());
     }
 }
