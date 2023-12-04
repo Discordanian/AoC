@@ -10,7 +10,10 @@ pub struct Card {
 impl From<&str> for Card {
     fn from(line: &str) -> Self {
         let parts: Vec<&str> = line.split(": ").collect();
-        let n: usize = parts[0][5..].trim().parse().expect("Unable to parse Card id");
+        let n: usize = parts[0][5..]
+            .trim()
+            .parse()
+            .expect("Unable to parse Card id");
         let numbers_part: Vec<&str> = parts[1].split("| ").collect();
         let l = numbers_part[0]
             .split_whitespace()
@@ -31,22 +34,17 @@ impl From<&str> for Card {
 fn part1_score(score: u32) -> u32 {
     match score {
         0 => 0,
-        1 => 1,
         _ => 2_u32.pow(score - 1),
     }
 }
 
 pub fn process_part1(input: &str) -> String {
-    // let cards: Vec<Card> = input.lines().map(|c| Card::from(c)).collect();
     let cards: Vec<Card> = input.lines().map(Card::from).collect();
-    let mut score = 0;
-
-    for card in cards {
-        let matches = card.right.iter().filter(|x| card.left.contains(x)).count();
-        score += part1_score(matches as u32);
-    }
-
-    score.to_string()
+    cards
+        .iter()
+        .map(|card| part1_score(card.left.intersection(&card.right).count() as u32))
+        .sum::<u32>()
+        .to_string()
 }
 
 pub fn process_part2(input: &str) -> String {
@@ -56,14 +54,12 @@ pub fn process_part2(input: &str) -> String {
     scratchers[0] = 0;
 
     for card in cards {
-        let matches = card.right.iter().filter(|x| card.left.contains(x)).count();
+        let matches = card.right.intersection(&card.left).count();
         for x in 1..=matches {
             let up_idx = card.id + x;
             scratchers[up_idx] += scratchers[card.id];
         }
-        // score += part1_score(matches as u32);
     }
-
 
     scratchers.iter().sum::<u32>().to_string()
 }
@@ -72,7 +68,7 @@ pub fn process_part2(input: &str) -> String {
 mod tests {
     use super::*;
 
-    const INPUT : &str = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+    const INPUT: &str = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
 Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
 Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
 Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
