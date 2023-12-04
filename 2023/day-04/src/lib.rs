@@ -1,15 +1,5 @@
 pub fn process_part1(input: &str) -> String {
-    let result = input
-        .split("\n\n") // Empty line between records
-        .map(|record| {
-            record
-                .lines()
-                .map(|row| row.parse::<u32>().unwrap())
-                .sum::<u32>()
-        })
-        .max()
-        .unwrap();
-    result.to_string()
+    input.len().to_string()
 }
 
 pub fn process_part2(_input: &str) -> String {
