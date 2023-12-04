@@ -1,9 +1,58 @@
-pub fn process_part1(input: &str) -> String {
-    input.len().to_string()
+use std::collections::BTreeSet;
+
+#[derive(Debug, Clone)]
+pub struct Card {
+    id: u32,
+    left: BTreeSet<u32>,
+    right: BTreeSet<u32>,
 }
 
-pub fn process_part2(_input: &str) -> String {
-    "15".to_string()
+impl From<&str> for Card {
+    fn from(line: &str) -> Self {
+        let parts: Vec<&str> = line.split(": ").collect();
+        let n: u32 = parts[0][5..].trim().parse().expect("Unable to parse Card id");
+        let numbers_part: Vec<&str> = parts[1].split("| ").collect();
+        let l = numbers_part[0]
+            .split_whitespace()
+            .map(|x| x.parse().unwrap())
+            .collect::<BTreeSet<u32>>();
+        let r = numbers_part[1]
+            .split_whitespace()
+            .map(|x| x.parse().unwrap())
+            .collect::<BTreeSet<u32>>();
+        Card {
+            id: n,
+            left: l,
+            right: r,
+        }
+    }
+}
+
+fn part1_score(score: u32) -> u32 {
+    match score {
+        0 => 0,
+        1 => 1,
+        _ => 2_u32.pow(score - 1),
+    }
+}
+
+pub fn process_part1(input: &str) -> String {
+    // let cards: Vec<Card> = input.lines().map(|c| Card::from(c)).collect();
+    let cards: Vec<Card> = input.lines().map(Card::from).collect();
+    // dbg!(&cards);
+    let mut score = 0;
+
+    for card in cards {
+        let matches = card.right.iter().filter(|x| card.left.contains(x)).count();
+        println!("Card {} has {} matches", card.id, matches);
+        score += part1_score(matches as u32);
+    }
+
+    score.to_string()
+}
+
+pub fn process_part2(input: &str) -> String {
+    input.len().to_string()
 }
 
 #[cfg(test)]
