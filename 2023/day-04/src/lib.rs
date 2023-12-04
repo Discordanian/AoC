@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 #[derive(Debug, Clone)]
 pub struct Card {
-    id: u32,
+    id: usize,
     left: BTreeSet<u32>,
     right: BTreeSet<u32>,
 }
@@ -10,7 +10,7 @@ pub struct Card {
 impl From<&str> for Card {
     fn from(line: &str) -> Self {
         let parts: Vec<&str> = line.split(": ").collect();
-        let n: u32 = parts[0][5..].trim().parse().expect("Unable to parse Card id");
+        let n: usize = parts[0][5..].trim().parse().expect("Unable to parse Card id");
         let numbers_part: Vec<&str> = parts[1].split("| ").collect();
         let l = numbers_part[0]
             .split_whitespace()
@@ -39,12 +39,10 @@ fn part1_score(score: u32) -> u32 {
 pub fn process_part1(input: &str) -> String {
     // let cards: Vec<Card> = input.lines().map(|c| Card::from(c)).collect();
     let cards: Vec<Card> = input.lines().map(Card::from).collect();
-    // dbg!(&cards);
     let mut score = 0;
 
     for card in cards {
         let matches = card.right.iter().filter(|x| card.left.contains(x)).count();
-        println!("Card {} has {} matches", card.id, matches);
         score += part1_score(matches as u32);
     }
 
@@ -52,7 +50,22 @@ pub fn process_part1(input: &str) -> String {
 }
 
 pub fn process_part2(input: &str) -> String {
-    input.len().to_string()
+    let cards: Vec<Card> = input.lines().map(Card::from).collect();
+    let size = cards.len() + 1;
+    let mut scratchers: Vec<u32> = vec![1; size];
+    scratchers[0] = 0;
+
+    for card in cards {
+        let matches = card.right.iter().filter(|x| card.left.contains(x)).count();
+        for x in 1..=matches {
+            let up_idx = card.id + x;
+            scratchers[up_idx] += scratchers[card.id];
+        }
+        // score += part1_score(matches as u32);
+    }
+
+
+    scratchers.iter().sum::<u32>().to_string()
 }
 
 #[cfg(test)]
@@ -75,6 +88,6 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11";
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, "15".to_string());
+        assert_eq!(result, "30".to_string());
     }
 }
