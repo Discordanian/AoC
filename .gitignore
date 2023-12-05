@@ -17,3 +17,5 @@ Cargo.lock
 
 # Advent of code input files should not be checked in
 **/input.txt
+
+**/*.py
