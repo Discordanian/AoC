@@ -1,13 +1,13 @@
 #[derive(Clone, Debug)]
 pub struct Conversion {
-    dest_start: i32,
-    source_start: i32,
-    length: i32,
+    dest_start: i64,
+    source_start: i64,
+    length: i64,
 }
 
 impl From<&str> for Conversion {
     fn from(line: &str) -> Self {
-        let parts: Vec<i32> = line
+        let parts: Vec<i64> = line
             .split_whitespace()
             .map(|x| x.parse().unwrap())
             .collect();
@@ -20,7 +20,7 @@ impl From<&str> for Conversion {
 }
 
 impl Conversion {
-    fn convert(&self, seed: i32) -> i32 {
+    fn convert(&self, seed: i64) -> i64 {
         match seed <= self.source_start || seed > (self.source_start + self.length) {
             true => seed,
             false => self.dest_start + (seed - self.source_start),
@@ -30,7 +30,7 @@ impl Conversion {
 
 pub fn process_part1(input: &str) -> String {
     let lines: Vec<&str> = input.split("\n").collect();
-    let mut seeds: Vec<i32> = lines[0]
+    let mut seeds: Vec<i64> = lines[0]
         .split(" ")
         .skip(1)
         .map(|x| x.parse().unwrap())
@@ -48,16 +48,16 @@ pub fn process_part1(input: &str) -> String {
         for seed in &mut seeds {
             *seed = c.convert(*seed);
         }
-        dbg!(&c);
-        dbg!(&seeds[1]);
+        // dbg!(&c);
+        // dbg!(&seeds[1]);
     }
-    dbg!(&seeds);
+    // dbg!(&seeds);
     seeds.iter().min().unwrap().to_string()
 }
 
 pub fn process_part2(input: &str) -> String {
     let lines: Vec<&str> = input.split("\n").collect();
-    let mut seeds: Vec<i32> = lines[0]
+    let mut seeds: Vec<i64> = lines[0]
         .split(" ")
         .skip(1)
         .map(|x| x.parse().unwrap())
@@ -75,10 +75,10 @@ pub fn process_part2(input: &str) -> String {
         for seed in &mut seeds {
             *seed = c.convert(*seed);
         }
-        dbg!(&c);
-        dbg!(&seeds[1]);
+        // dbg!(&c);
+        // dbg!(&seeds[1]);
     }
-    dbg!(&seeds);
+    // dbg!(&seeds);
     seeds.iter().min().unwrap().to_string()
 }
 
