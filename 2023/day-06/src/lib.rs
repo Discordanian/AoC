@@ -83,14 +83,11 @@ pub fn process_part1(input: &str) -> String {
         .to_string()
 }
 
-
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const INPUT : &str = "Time:      7  15   30
+    const INPUT: &str = "Time:      7  15   30
 Distance:  9  40  200";
 
     #[test]
