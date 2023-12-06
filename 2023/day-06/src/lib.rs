@@ -4,23 +4,6 @@ struct Race {
     distance: u32,
 }
 
-/*
-impl From<&str> for Conversion {
-    fn from(line: &str) -> Self {
-
-        let parts: Vec<i32> = line
-            .split_whitespace()
-            .map(|x| x.parse().unwrap())
-            .collect();
-        Conversion {
-            dest_start: parts[0],
-            source_start: parts[1],
-            length: parts[2],
-        }
-    }
-}
-
-*/
 impl Race {
     fn wins(&self) -> u32 {
         (1..self.time)
