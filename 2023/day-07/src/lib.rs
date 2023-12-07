@@ -67,7 +67,6 @@ impl From<&str> for Hand {
         let c: Vec<Card> = parts[0].chars().map(Card::from).collect();
         let b: u32 = parts[1].trim().parse().unwrap();
         let ht = HandType::from(c.clone());
-        // let hv: u32 = c.iter().fold(0_u32, |mut acc, c| {acc = acc * 14 + c.value; acc}) * ht.value;
         let hv1: u32 = c.clone().iter().fold(ht.value1, |mut acc, c| {
             acc = acc * 14 + c.value;
             acc
@@ -113,12 +112,8 @@ impl From<char> for Card {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    /* let c: Card = Card::from(input.chars().next().unwrap());
-    dbg!(c); */
-    // let mut hands: Vec<Hand> = input.split("\n").map(Hand::from).collect();
     let mut hands: Vec<Hand> = input.lines().map(Hand::from).collect();
     hands.sort_by(|a, b| a.hand_value1.cmp(&b.hand_value1));
-    // dbg!(&hands);
     hands
         .iter()
         .enumerate()
@@ -127,11 +122,8 @@ pub fn process_part1(input: &str) -> u32 {
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    /* let c: Card = Card::from(input.chars().next().unwrap());
-    dbg!(c); */
-    let mut hands: Vec<Hand> = input.split("\n").map(Hand::from).collect();
+    let mut hands: Vec<Hand> = input.lines().map(Hand::from).collect();
     hands.sort_by(|a, b| a.hand_value2.cmp(&b.hand_value2));
-    // dbg!(&hands);
     hands
         .iter()
         .enumerate()
@@ -139,12 +131,11 @@ pub fn process_part2(input: &str) -> u32 {
         .sum()
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const INPUT : &str = "32T3K 765
+    const INPUT: &str = "32T3K 765
 T55J5 684
 KK677 28
 KTJJT 220
@@ -159,6 +150,6 @@ QQQJA 483";
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 23);
+        assert_eq!(result, 5905);
     }
 }
