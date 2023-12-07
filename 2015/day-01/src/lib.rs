@@ -6,17 +6,18 @@ pub fn process_part1(input: &str) -> String {
 }
 
 pub fn process_part2(input: &str) -> String {
-    let mut result = input
-        .split("\n\n") // Empty line between records
-        .map(|record| {
-            record
-                .lines()
-                .map(|row| row.parse::<u32>().unwrap())
-                .sum::<u32>()
-        })
-        .collect::<Vec<_>>();
-
-    result.sort_by(|a,b| b.cmp(a)); // reverse sort
-    let sum: u32 = result.iter().take(3).sum();
-    sum.to_string()
+    let mut i = 1;
+    let mut floor = 0;
+    for c in input.chars() {
+        floor += match c {
+            '(' => 1,
+            ')' => -1,
+            _ => panic!("Unknown Char"),
+        };
+        if floor == -1 {
+            return i.to_string();
+        }
+        i+=1;
+    }
+    0.to_string()
 }
