@@ -25,16 +25,6 @@ pub fn process_part1(input: &str) -> u32 {
             hm
         });
         
-    /*
-    for line in lines.iter().skip(2) {
-        let name = &line[0..3];
-        let left = &line[7..10];
-        let right = &line[12..15];
-        println!("{} -> ({},{})", &name, &left, &right);
-        node_map.insert(name.to_string(), Node {left: left.to_string(), right: right.to_string()});
-    }
-    */
-
     let mut steps = 0;
     let mut current_node = "AAA".to_string();
     let mut index = 0;
@@ -56,14 +46,17 @@ pub fn process_part1(input: &str) -> u32 {
     steps
 }
 
-pub fn process_part2(input: &str) -> u32 {
+pub fn process_part2(input: &str) -> u64 {
+    // Scan for every node that ends in 'A'
+    // Get step count for that node to get to a node ending in 'Z'.
+    // Get the LCM of all those values
     23
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    const INPUT: &str = "LLR
+    const INPUT1: &str = "LLR
 
 AAA = (BBB, BBB)
 BBB = (AAA, ZZZ)
@@ -71,13 +64,24 @@ ZZZ = (ZZZ, ZZZ)";
 
     #[test]
     fn part1_works() {
-        let result = process_part1(INPUT);
+        let result = process_part1(INPUT1);
         assert_eq!(result, 6);
     }
 
+const INPUT2: &str = "LR
+
+11A = (11B, XXX)
+11B = (XXX, 11Z)
+11Z = (11B, XXX)
+22A = (22B, XXX)
+22B = (22C, 22C)
+22C = (22Z, 22Z)
+22Z = (22B, 22B)
+XXX = (XXX, XXX)";
+
     #[test]
     fn part2_works() {
-        let result = process_part2(INPUT);
+        let result = process_part2(INPUT2);
         assert_eq!(result, 23);
     }
 }
