@@ -9,12 +9,23 @@ pub struct Node {
 pub fn process_part1(input: &str) -> u32 {
     let lines = input.split("\n").collect::<Vec<&str>>();
     let instructions = lines[0].chars().collect::<Vec<char>>();
-    // dbg!(&lines);
-    // dbg!(&instructions);
     println!("{:?}", &instructions.len());
     println!("{:?}", &instructions);
-    let mut node_map : HashMap::<String, Node> = HashMap::new();
-    // input.split("\n").filter(|x| )
+    let mut node_map: HashMap<String, Node> = input
+        .split("\n")
+        .filter(|x| x.to_string().contains("="))
+        .fold(HashMap::<String, Node>::new(), |mut hm, line| {
+            hm.insert(
+                line[0..3].to_string(),
+                Node {
+                    left: line[7..10].to_string(),
+                    right: line[12..15].to_string(),
+                },
+            );
+            hm
+        });
+        
+    /*
     for line in lines.iter().skip(2) {
         let name = &line[0..3];
         let left = &line[7..10];
@@ -22,6 +33,7 @@ pub fn process_part1(input: &str) -> u32 {
         println!("{} -> ({},{})", &name, &left, &right);
         node_map.insert(name.to_string(), Node {left: left.to_string(), right: right.to_string()});
     }
+    */
 
     let mut steps = 0;
     let mut current_node = "AAA".to_string();
@@ -35,13 +47,11 @@ pub fn process_part1(input: &str) -> u32 {
         };
         if *current_node == "ZZZ".to_string() {
             return steps;
-        } 
+        }
         index += 1;
         println!("Index {}", index);
         index %= instructions.len();
     }
-
-
 
     steps
 }
@@ -53,7 +63,7 @@ pub fn process_part2(input: &str) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-const INPUT: &str = "LLR
+    const INPUT: &str = "LLR
 
 AAA = (BBB, BBB)
 BBB = (AAA, ZZZ)
