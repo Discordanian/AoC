@@ -53,7 +53,13 @@ pub fn next1_value(arr: Vec<i32>) -> i32 {
         idx += 1;
     }
 
-    dbg!(&matrix);
+    let mut last_val = 0;
+    for i in (0..(matrix.len() - 1)).rev() {
+        last_val = last_val + matrix[i].last().unwrap();
+        matrix[i].push(last_val);
+    }
+
+    // dbg!(&matrix);
     *matrix[0].last().unwrap()
 }
 
@@ -87,7 +93,18 @@ sum(ans)
 */
 
 pub fn process_part2(input: &str) -> i32 {
-    input.len() as i32
+    let lines: Vec<&str> = input.lines().collect();
+    lines
+        .iter()
+        .map(|line| {
+            let mut arr: Vec<i32> = line
+                .split_whitespace()
+                .map(|x| x.trim().parse().unwrap())
+                .collect();
+            arr.reverse();
+            next1_value(arr)
+        })
+        .sum()
 }
 
 #[cfg(test)]
