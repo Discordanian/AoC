@@ -26,10 +26,26 @@ for line in lines:
 
 sum(ans)
  */
-pub fn process_part1(input: &str) -> u32 {
-    input.len() as u32
+pub fn process_part1(input: &str) -> i32 {
+    let lines: Vec<&str> = input.lines().collect();
+    lines
+        .iter()
+        .map(|line| {
+            let arr: Vec<i32> = line
+                .split_whitespace()
+                .map(|x| x.trim().parse().unwrap())
+                .collect();
+            next1_value(arr)
+        })
+        .sum()
 }
 
+pub fn next1_value(arr: Vec<i32>) -> i32 {
+    let mut matrix: Vec<Vec<i32>> = vec![arr];
+    dbg!(&matrix);
+
+    *matrix[0].last().unwrap()
+}
 
 /*
 lines = fin.read().strip().split("\n")
@@ -60,15 +76,15 @@ for line in lines:
 sum(ans)
 */
 
-pub fn process_part2(input: &str) -> u32 {
-    input.len() as u32
+pub fn process_part2(input: &str) -> i32 {
+    input.len() as i32
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const INPUT : &str = "0 3 6 9 12 15
+    const INPUT: &str = "0 3 6 9 12 15
 1 3 6 10 15 21
 10 13 16 21 30 45
 ";
