@@ -46,11 +46,65 @@ pub fn process_part1(input: &str) -> u32 {
     steps
 }
 
+pub fn step_count(node_map: HashMap<String, Node>, instructions: Vec<char>, start: String) -> u64 {
+    let mut current_node = start;
+    let mut index = 0;
+    let mut steps = 0;
+    loop {
+        steps += 1;
+        current_node = match instructions[index] {
+            'L' => node_map[&current_node].left.clone(),
+            'R' => node_map[&current_node].right.clone(),
+            _ => panic!("Unknown instruction received"),
+        };
+        if current_node.ends_with("Z") {
+            return steps;
+        }
+        index += 1;
+        index %= instructions.len();
+    }
+    steps
+
+
+}
+
 pub fn process_part2(input: &str) -> u64 {
-    // Scan for every node that ends in 'A'
-    // Get step count for that node to get to a node ending in 'Z'.
-    // Get the LCM of all those values
-    23
+    let lines = input.split("\n").collect::<Vec<&str>>();
+    let instructions = lines[0].chars().collect::<Vec<char>>();
+    println!("{:?}", &instructions.len());
+    println!("{:?}", &instructions);
+    let mut node_map: HashMap<String, Node> = input
+        .split("\n")
+        .filter(|x| x.to_string().contains("="))
+        .fold(HashMap::<String, Node>::new(), |mut hm, line| {
+            hm.insert(
+                line[0..3].to_string(),
+                Node {
+                    left: line[7..10].to_string(),
+                    right: line[12..15].to_string(),
+                },
+            );
+            hm
+        });
+        
+    let mut steps = 0;
+    let mut current_node = "AAA".to_string();
+    let mut index = 0;
+    loop {
+        steps += 1;
+        current_node = match instructions[index] {
+            'L' => node_map[&current_node].left.clone(),
+            'R' => node_map[&current_node].right.clone(),
+            _ => panic!("Unknown instruction received"),
+        };
+        if *current_node == "ZZZ".to_string() {
+            return steps;
+        }
+        index += 1;
+        println!("Index {}", index);
+        index %= instructions.len();
+    }
+    steps
 }
 
 #[cfg(test)]
