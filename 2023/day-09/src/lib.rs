@@ -42,8 +42,18 @@ pub fn process_part1(input: &str) -> i32 {
 
 pub fn next1_value(arr: Vec<i32>) -> i32 {
     let mut matrix: Vec<Vec<i32>> = vec![arr];
-    dbg!(&matrix);
 
+    let mut idx = 0;
+    while !matrix[idx].iter().all(|&x| x == 0) {
+        let mut next_arr: Vec<i32> = vec![];
+        for i in 0..(matrix[idx].len() - 1) {
+            next_arr.push(matrix[idx][i + 1] - matrix[idx][i]);
+        }
+        matrix.push(next_arr);
+        idx += 1;
+    }
+
+    dbg!(&matrix);
     *matrix[0].last().unwrap()
 }
 
