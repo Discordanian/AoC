@@ -66,7 +66,10 @@ while len(q) > 0:
 ans = max(dists.values())
 print(ans)
 */
+use std::collections::HashMap;
+use std::collections::HashSet;
 
+/*
 #[derive(Clone, Debug, Copy)]
 pub struct Point {
     x: usize,
@@ -77,7 +80,7 @@ pub fn inbounds(point: &Point, width: usize, height: usize) -> bool {
     point.x > 0 && point.x < width && point.y > 0 && point.y < height
 }
 
-pub fn deltapoints(ch: char) -> Vec<(i32, i32)> {
+pub fn deltapoints(x: i32, y: i32, ch: char) -> Vec<(i32, i32)> {
     match ch {
         'S' => vec![(-1, 0), (1, 0), (0, -1), (0, 1)],
         '|' => vec![(0, -1), (0, 1)],
@@ -86,7 +89,7 @@ pub fn deltapoints(ch: char) -> Vec<(i32, i32)> {
         'J' => vec![(0, -1), (-1, 0)],
         '7' => vec![(0, 1), (-1, 0)],
         'F' => vec![(0, 1), (1, 0)],
-        '.' => Vec![],
+        '.' => vec![],
         _ => panic!("Unknown Char"),
     }
 }
@@ -104,13 +107,58 @@ pub fn adjacent_points(p: Point, points: &Vec<Vec<char>>) -> Vec<Point> {
     }
     retval
 }
+*/
+
+pub fn input_to_hashmap(input: &str) -> HashMap<(i32, i32), char> {
+    let mut retval = HashMap::new();
+    for (y, line) in input.lines().enumerate() {
+        for (x, ch) in line.chars().enumerate() {
+            retval.insert((x as i32, y as i32), ch);
+        }
+    }
+    retval
+}
+
+pub fn get_height_width(hm: &HashMap<(i32, i32), char>) -> (i32, i32) {
+    let mut height = 0;
+    let mut width = 0;
+    for  (x,y) in hm.keys() {
+        width = width.max(*x);
+        height = height.max(*y);
+    }
+    (height, width)
+}
+
+pub fn display_map(hm: &HashMap<(i32, i32), char>, width: i32, height: i32) {
+    for y in 0..=height {
+        for x in 0..=width {
+            print!("{}", hm.get(&(x as i32, y as i32)).unwrap());
+        }
+        println!("");
+    }
+}
+
+pub fn find_start(hm: &HashMap<(i32, i32), char>) -> (i32, i32) {
+    for ((x,y),c) in hm.iter() {
+        if c.clone() == 'S' {
+            return (x.clone(),y.clone());
+        }
+    }
+    (0,0)
+}
 
 pub fn process_part1(input: &str) -> u32 {
-    let points: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+    let pipe_map = input_to_hashmap(input);
+    let (height, width) = get_height_width(&pipe_map);
+    /*
     let mut seen: HashSet<Point> = HashSet::new();
     let mut dist_map: HashMap<Point, usize> = HashSet::new();
     dbg!(&points);
-    points.len() as u32
+    */
+    // dbg!(&pipe_map);
+    display_map(&pipe_map, width, height);
+    println!("S is at {:?}", find_start(&pipe_map));
+    pipe_map.len() as u32
 }
 
 pub fn process_part2(input: &str) -> u32 {
