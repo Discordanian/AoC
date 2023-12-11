@@ -68,6 +68,7 @@ print(ans)
 */
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::collections::VecDeque;
 
 /*
 #[derive(Clone, Debug, Copy)]
@@ -109,6 +110,24 @@ pub fn adjacent_points(p: Point, points: &Vec<Vec<char>>) -> Vec<Point> {
 }
 */
 
+pub fn adjacent_points(p: (i32, i32), hm: &HashMap<(i32, i32), char>) -> Vec<(i32, i32)> {
+    let delta_points = match hm.get(&(p.0.clone(), p.1.clone())).unwrap() {
+        'S' => vec![(-1, 0), (1, 0), (0, -1), (0, 1)],
+        '|' => vec![(0, -1), (0, 1)],
+        '-' => vec![(-1, 0), (1, 0)],
+        'L' => vec![(0, -1), (1, 0)],
+        'J' => vec![(0, -1), (-1, 0)],
+        '7' => vec![(0, 1), (-1, 0)],
+        'F' => vec![(0, 1), (1, 0)],
+        '.' => vec![],
+        _ => panic!("Unknown Char"),
+    };
+    delta_points
+        .iter()
+        .map(|(x, y)| (x + p.0, y + p.1))
+        .collect()
+}
+
 pub fn input_to_hashmap(input: &str) -> HashMap<(i32, i32), char> {
     let mut retval = HashMap::new();
     for (y, line) in input.lines().enumerate() {
@@ -122,7 +141,7 @@ pub fn input_to_hashmap(input: &str) -> HashMap<(i32, i32), char> {
 pub fn get_height_width(hm: &HashMap<(i32, i32), char>) -> (i32, i32) {
     let mut height = 0;
     let mut width = 0;
-    for  (x,y) in hm.keys() {
+    for (x, y) in hm.keys() {
         width = width.max(*x);
         height = height.max(*y);
     }
@@ -139,12 +158,12 @@ pub fn display_map(hm: &HashMap<(i32, i32), char>, width: i32, height: i32) {
 }
 
 pub fn find_start(hm: &HashMap<(i32, i32), char>) -> (i32, i32) {
-    for ((x,y),c) in hm.iter() {
+    for ((x, y), c) in hm.iter() {
         if c.clone() == 'S' {
-            return (x.clone(),y.clone());
+            return (x.clone(), y.clone());
         }
     }
-    (0,0)
+    (0, 0)
 }
 
 pub fn process_part1(input: &str) -> u32 {
@@ -156,8 +175,18 @@ pub fn process_part1(input: &str) -> u32 {
     dbg!(&points);
     */
     // dbg!(&pipe_map);
-    display_map(&pipe_map, width, height);
-    println!("S is at {:?}", find_start(&pipe_map));
+    // display_map(&pipe_map, width, height);
+    // println!("S is at {:?}", find_start(&pipe_map));
+    let mut dist_map: HashMap<(i32, i32), u32> = HashMap::new();
+    let mut q: VecDeque<(i32, i32, i32)> = VecDeque::new();
+    let (start_x, start_y) = find_start(&pipe_map);
+    q.push_back(start_x.clone(), start_y.clone(), 0);
+    dist_map.insert(find_start(&pipe_map), distance);
+
+    while !q.is_empty() {
+        let (x, y) = q.pop_front().unwrap();
+        for (nx, ny) in adjacent_points((x, y), &pipe_map).iter() {}
+    }
     pipe_map.len() as u32
 }
 
