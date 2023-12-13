@@ -1,19 +1,17 @@
 /*
 
-from tqdm import tqdm
-
 with open("./input.txt") as fin:
     lines = fin.read().strip().split("\n")
 
 ss = []
-target_runs = []
+spring_configurations = []
 for line in lines:
     parts = line.split(" ")
     ss.append(parts[0])
-    target_runs.append(list(map(int, parts[1].split(","))))
+    spring_configurations.append(list(map(int, parts[1].split(","))))
 
 
-def valid(line, target_runs):
+def valid(line, spring_configurations):
     n = len(line)
     runs = []
 
@@ -32,10 +30,10 @@ def valid(line, target_runs):
         runs.append(c)
         i = j
 
-    return runs == target_runs
+    return runs == spring_configurations
 
 
-def ways(s, target_runs):
+def ways(s, spring_configurations):
     line = []
     idxs = []
     for i, x in enumerate(s):
@@ -56,14 +54,14 @@ def ways(s, target_runs):
             else:
                 line_copy[idxs[i]] = 1
 
-        if valid(line_copy, target_runs):
+        if valid(line_copy, spring_configurations):
             count += 1
 
     return count
 
 
 ans = 0
-for s, target_run in tqdm(list(zip(ss, target_runs))):
+for s, target_run in list(zip(ss, spring_configurations)):
     res = ways(s, target_run)
     ans += res
 
@@ -75,40 +73,38 @@ pub fn process_part1(input: &str) -> u32 {
 
 /*
 
-from tqdm import tqdm
 from pprint import pprint
 
 with open("./input.txt") as fin:
     lines = fin.read().strip().split("\n")
 
 ss = []
-target_runs = []
+spring_configurations = []
 for line in lines:
     parts = line.split(" ")
     parts[0] = "?".join([parts[0]] * 5)
     parts[1] = ",".join([parts[1]] * 5)
 
     ss.append(parts[0])
-    target_runs.append(list(map(int, parts[1].split(","))))
+    spring_configurations.append(list(map(int, parts[1].split(","))))
 
 
-def ways(s, target_runs):
-    # This is what I get for not investing in DP (dyanmic programming)
+def ways(s, spring_configurations):
     # 3D dp on (idx in string, idx in set, length of current run)
     # Question: How many ways?
-    target_runs.append(0)
-    max_run = max(target_runs)
+    spring_configurations.append(0)
+    max_run = max(spring_configurations)
     s += "."
 
     n = len(s)
-    m = len(target_runs)
+    m = len(spring_configurations)
     dp = [[[None for _ in range(max_run+1)]
            for _ in range(m)] for _ in range(n)]
 
     for i in range(n):
         x = s[i]
         for j in range(m):
-            for k in range(target_runs[j]+1):
+            for k in range(spring_configurations[j]+1):
                 # Base case
                 if i == 0:
                     if j != 0:
@@ -141,7 +137,7 @@ def ways(s, target_runs):
                     ans_dot = 0
                 elif j > 0:
                     assert k == 0
-                    ans_dot = dp[i-1][j-1][target_runs[j-1]]
+                    ans_dot = dp[i-1][j-1][spring_configurations[j-1]]
                     ans_dot += dp[i-1][j][0]
                 else:
                     # i>0, j=0, k=0.
@@ -168,7 +164,7 @@ def ways(s, target_runs):
 
 
 ans = 0
-for s, target_run in tqdm(list(zip(ss, target_runs)), ncols=70):
+for s, target_run in list(zip(ss, spring_configurations))
     res = ways(s, target_run)
     ans += res
 
