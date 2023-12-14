@@ -1,21 +1,25 @@
-pub fn process_part1(input: &str) -> u32 {
-    let mut matrix: Vec<Vec<char>> = input
+pub fn grid_string(matrix: &Vec<Vec<char>>) -> String {
+    matrix.iter().map(|row| row.iter().collect::<String>()).fold(String::new(), |acc, s| format!("{}{}",acc,s))
+}
+
+pub fn input_to_matrix(input: &str) -> Vec<Vec<char>> {
+    input
         .lines()
         .collect::<Vec<&str>>()
         .iter()
         .map(|line| line.chars().collect())
-        .collect();
+        .collect::<Vec<Vec<char>>>()
+}
+
+pub fn process_part1(input: &str) -> u32 {
+    let mut matrix = input_to_matrix(input);
     matrix = fall_north(matrix);
     score_grid(matrix)
 }
 
 pub fn score_input(input: &str) -> u32 {
-    let matrix: Vec<Vec<char>> = input
-        .lines()
-        .collect::<Vec<&str>>()
-        .iter()
-        .map(|line| line.chars().collect())
-        .collect();
+    let mut matrix = input_to_matrix(input);
+    dbg!(grid_string(&matrix));
     score_grid(matrix)
 }
 
@@ -48,7 +52,9 @@ pub fn score_grid(matrix: Vec<Vec<char>>) -> u32 {
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    input.len() as u32
+    let mut matrix = input_to_matrix(input);
+    println!("{}", grid_string(&matrix));
+    matrix.len() as u32
 }
 
 #[cfg(test)]
