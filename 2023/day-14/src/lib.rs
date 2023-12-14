@@ -16,7 +16,7 @@ pub fn input_to_matrix(input: &str) -> Vec<Vec<char>> {
 
 pub fn process_part1(input: &str) -> u32 {
     let mut matrix = input_to_matrix(input);
-    matrix = fall_north(matrix);
+    matrix = fall_up(matrix);
     score_grid(matrix)
 }
 
@@ -26,7 +26,7 @@ pub fn score_input(input: &str) -> u32 {
     score_grid(matrix)
 }
 
-pub fn fall_north(mut matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
+pub fn fall_up(mut matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     let row_count = matrix.len();
     let col_count = matrix.iter().next().unwrap().len();
 
@@ -54,7 +54,7 @@ pub fn score_grid(matrix: Vec<Vec<char>>) -> u32 {
         .sum::<u32>()
 }
 
-pub fn rotate(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
+pub fn rotate_clockwise(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     if matrix.is_empty() {
         return Vec::new();
     }
@@ -78,36 +78,16 @@ pub fn rotate(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
 
 pub fn process_part2(input: &str) -> u32 {
     let mut matrix = input_to_matrix(input);
-    println!("{}", grid_string(&matrix));
+    // println!("{}", grid_string(&matrix));
     for _ in 0..4 {
-        matrix = fall_north(matrix);
-        matrix = rotate(matrix);
-        println!("{}", grid_string(&matrix));
+        matrix = fall_up(matrix);
+        matrix = rotate_clockwise(matrix);
+        // println!("{}", grid_string(&matrix));
     }
-    println!("{}", grid_string(&matrix));
+    // println!("{}", grid_string(&matrix));
     matrix.len() as u32
 }
-fn transpose(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
-    if matrix.is_empty() {
-        return Vec::new();
-    }
 
-    let num_rows = matrix.len();
-    let num_cols = matrix[0].len();
-
-    let mut transposed = Vec::with_capacity(num_cols);
-    for _ in 0..num_cols {
-        transposed.push(Vec::with_capacity(num_rows));
-    }
-
-    for i in 0..num_rows {
-        for j in 0..num_cols {
-            transposed[j].push(matrix[i][j]);
-        }
-    }
-
-    transposed
-}
 #[cfg(test)]
 mod tests {
     use super::*;
