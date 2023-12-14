@@ -70,46 +70,6 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 use std::collections::VecDeque;
 
-/*
-#[derive(Clone, Debug, Copy)]
-pub struct Point {
-    x: usize,
-    y: usize,
-}
-
-pub fn inbounds(point: &Point, width: usize, height: usize) -> bool {
-    point.x > 0 && point.x < width && point.y > 0 && point.y < height
-}
-
-pub fn deltapoints(x: i32, y: i32, ch: char) -> Vec<(i32, i32)> {
-    match ch {
-        'S' => vec![(-1, 0), (1, 0), (0, -1), (0, 1)],
-        '|' => vec![(0, -1), (0, 1)],
-        '-' => vec![(-1, 0), (1, 0)],
-        'L' => vec![(0, -1), (1, 0)],
-        'J' => vec![(0, -1), (-1, 0)],
-        '7' => vec![(0, 1), (-1, 0)],
-        'F' => vec![(0, 1), (1, 0)],
-        '.' => vec![],
-        _ => panic!("Unknown Char"),
-    }
-}
-
-pub fn adjacent_points(p: Point, points: &Vec<Vec<char>>) -> Vec<Point> {
-    let mut retval = vec![];
-    for dp in deltapoints(points[p.y][p.x]) {
-        let newpoint = Point {
-            x: dp.x + p.x,
-            y: dp.y + p.y,
-        };
-        if inbounds(&newpoint, points[0].len(), points.len()) {
-            retval.push(newpoint);
-        }
-    }
-    retval
-}
-*/
-
 pub fn adjacent_points(p: (i32, i32), hm: &HashMap<(i32, i32), char>) -> Vec<(i32, i32)> {
     let delta_points = match hm.get(&(p.0.clone(), p.1.clone())).unwrap() {
         'S' => vec![(-1, 0), (1, 0), (0, -1), (0, 1)],
