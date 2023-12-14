@@ -1,5 +1,8 @@
 pub fn grid_string(matrix: &Vec<Vec<char>>) -> String {
-    matrix.iter().map(|row| row.iter().collect::<String>()).fold(String::new(), |acc, s| format!("{}{}",acc,s))
+    matrix
+        .iter()
+        .map(|row| row.iter().collect::<String>())
+        .fold(String::new(), |acc, s| format!("{}\n{}", acc, s))
 }
 
 pub fn input_to_matrix(input: &str) -> Vec<Vec<char>> {
@@ -30,9 +33,9 @@ pub fn fall_north(mut matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     for c in 0..col_count {
         for _ in 1..row_count {
             for r in 1..row_count {
-                if matrix[r][c] == 'O' && matrix[r-1][c] =='.' {
-                    matrix[r][c]='.';
-                    matrix[r-1][c] = 'O';
+                if matrix[r][c] == 'O' && matrix[r - 1][c] == '.' {
+                    matrix[r][c] = '.';
+                    matrix[r - 1][c] = 'O';
                 }
             }
         }
@@ -51,12 +54,60 @@ pub fn score_grid(matrix: Vec<Vec<char>>) -> u32 {
         .sum::<u32>()
 }
 
+pub fn rotate(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
+    if matrix.is_empty() {
+        return Vec::new();
+    }
+
+    let num_rows = matrix.len();
+    let num_cols = matrix[0].len();
+
+    let mut transposed = Vec::with_capacity(num_cols);
+    for _ in 0..num_cols {
+        transposed.push(Vec::with_capacity(num_rows));
+    }
+
+    for i in 0..num_rows {
+        for j in 0..num_cols {
+            transposed[j].push(matrix[i][j]);
+        }
+    }
+
+    transposed
+}
+
 pub fn process_part2(input: &str) -> u32 {
     let mut matrix = input_to_matrix(input);
     println!("{}", grid_string(&matrix));
+    for _ in 0..4 {
+        matrix = fall_north(matrix);
+        matrix = rotate(matrix);
+        println!("{}", grid_string(&matrix));
+    }
+    println!("{}", grid_string(&matrix));
     matrix.len() as u32
 }
+fn transpose(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
+    if matrix.is_empty() {
+        return Vec::new();
+    }
 
+    let num_rows = matrix.len();
+    let num_cols = matrix[0].len();
+
+    let mut transposed = Vec::with_capacity(num_cols);
+    for _ in 0..num_cols {
+        transposed.push(Vec::with_capacity(num_rows));
+    }
+
+    for i in 0..num_rows {
+        for j in 0..num_cols {
+            transposed[j].push(matrix[i][j]);
+        }
+    }
+
+    transposed
+}
 #[cfg(test)]
 mod tests {
     use super::*;
