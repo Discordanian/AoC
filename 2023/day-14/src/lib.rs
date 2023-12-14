@@ -1,5 +1,12 @@
 pub fn process_part1(input: &str) -> u32 {
-    input.len() as u32
+    let mut matrix: Vec<Vec<char>> = input
+        .lines()
+        .collect::<Vec<&str>>()
+        .iter()
+        .map(|line| line.chars().collect())
+        .collect();
+    matrix = fall_north(matrix);
+    score_grid(matrix)
 }
 
 pub fn score_input(input: &str) -> u32 {
@@ -9,10 +16,27 @@ pub fn score_input(input: &str) -> u32 {
         .iter()
         .map(|line| line.chars().collect())
         .collect();
-    score_grid(&matrix)
+    score_grid(matrix)
 }
 
-pub fn score_grid(matrix: &Vec<Vec<char>>) -> u32 {
+pub fn fall_north(mut matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
+    let row_count = matrix.len();
+    let col_count = matrix.iter().next().unwrap().len();
+
+    for c in 0..col_count {
+        for _ in 1..row_count {
+            for r in 1..row_count {
+                if matrix[r][c] == 'O' && matrix[r-1][c] =='.' {
+                    matrix[r][c]='.';
+                    matrix[r-1][c] = 'O';
+                }
+            }
+        }
+    }
+    matrix.clone()
+}
+
+pub fn score_grid(matrix: Vec<Vec<char>>) -> u32 {
     let row_count: u32 = matrix.len() as u32;
     matrix
         .iter()
