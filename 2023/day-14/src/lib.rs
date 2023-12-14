@@ -67,9 +67,10 @@ pub fn rotate_clockwise(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
         transposed.push(Vec::with_capacity(num_rows));
     }
 
-    for i in 0..num_rows {
-        for j in 0..num_cols {
-            transposed[j].push(matrix[i][j]);
+    for i in 0..num_cols {
+        for j in 0..num_rows {
+            let y = num_rows - j - 1;
+            transposed[i].push(matrix[y][i]);
         }
     }
 
@@ -78,13 +79,13 @@ pub fn rotate_clockwise(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
 
 pub fn process_part2(input: &str) -> u32 {
     let mut matrix = input_to_matrix(input);
-    // println!("{}", grid_string(&matrix));
+    println!("{}", grid_string(&matrix));
     for _ in 0..4 {
         matrix = fall_up(matrix);
         matrix = rotate_clockwise(matrix);
-        // println!("{}", grid_string(&matrix));
+        println!("{}", grid_string(&matrix));
     }
-    // println!("{}", grid_string(&matrix));
+    println!("{}", grid_string(&matrix));
     matrix.len() as u32
 }
 
