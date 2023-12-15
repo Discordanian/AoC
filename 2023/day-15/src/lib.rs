@@ -1,56 +1,52 @@
+pub fn hash1(input: &str) -> u32 {
+    input.chars().fold(0_u32, |mut total, c| {
+        total += c as u32;
+        total *= 17;
+        total % 256
+    })
+}
+
 pub fn process_part1(input: &str) -> u32 {
-    let result = input
-        .split("\n\n") // Empty line between records
-        .map(|record| {
-            record
-                .lines()
-                .map(|row| row.parse::<u32>().unwrap())
-                .sum::<u32>()
-        })
-        .max()
-        .unwrap();
-    result
+    input
+        .split(",")
+        .map(hash1)
+        .inspect(|x| println!("{x}"))
+        .sum()
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    let mut result = input
-        .split("\n\n") // Empty line between records
-        .map(|record| {
-            record
-                .lines()
-                .map(|row| row.parse::<u32>().unwrap())
-                .sum::<u32>()
-        })
-        .collect::<Vec<_>>();
-
-    result.sort_by(|a,b| b.cmp(a)); // reverse sort
-    let sum: u32 = result.iter().take(3).sum();
-    sum
+    input.len() as u32
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const INPUT : &str = "1
-2
-
-5
-
-1
-
-3
-4";
+    const INPUT: &str = "rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7";
 
     #[test]
     fn part1_works() {
         let result = process_part1(INPUT);
-        assert_eq!(result, 7);
+        assert_eq!(result, 1320);
     }
 
+    #[test]
+    fn part1a_works() {
+        let result = hash1("rn=1");
+        assert_eq!(result, 30);
+    }
+
+    #[test]
+    fn part1b_works() {
+        let result = hash1("cm-");
+        assert_eq!(result, 253);
+    }
+
+    /*
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
         assert_eq!(result, 15);
     }
+    */
 }
