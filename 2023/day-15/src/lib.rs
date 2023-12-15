@@ -1,5 +1,5 @@
 pub fn hash1(input: &str) -> u32 {
-    input.chars().fold(0_u32, |mut total, c| {
+    input.trim_end().chars().fold(0_u32, |mut total, c| {
         total += c as u32;
         total *= 17;
         total % 256
@@ -7,11 +7,7 @@ pub fn hash1(input: &str) -> u32 {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    input
-        .split(",")
-        .map(hash1)
-        .inspect(|x| println!("{x}"))
-        .sum()
+    input.split(",").map(hash1).sum()
 }
 
 pub fn process_part2(input: &str) -> u32 {
