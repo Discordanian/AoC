@@ -27,25 +27,19 @@ pub fn process_part2(input: &str) -> u32 {
             let label = parts[0];
             let box_id = hash1(label) as usize;
             println!(
-                "Removing label {} from box {} in vec {:?}",
+                "Removing label {} from box[{}] in vec {:?}",
                 &label, &box_id, boxes[box_id]
             );
             if let Some(index) = boxes[box_id].iter().position(|x| x.0 == *label.to_string()) {
                 boxes[box_id].remove(index);
                 println!(
-                    "Removed label {} from box {} in vec {:?}",
+                    "Removed label {} from box[{}] in vec {:?}",
                     &label, &box_id, boxes[box_id]
                 );
             }
         }
     }
 
-    // dbg!(&boxes);
-    /*
-    for x in 0..5 {
-        println!("Box[{}] -> {:?}", x, boxes[x]);
-    }
-    */
     for (x, b) in boxes.clone().into_iter().enumerate().take(5) {
         println!("Box[{}] -> {:?}", x, b);
     }
