@@ -22,7 +22,7 @@ pub fn process_part2(input: &str) -> u32 {
             let box_id = hash1(&label) as usize;
             boxes[box_id].push((label.to_string(), lens));
         } else {
-            let parts: Vec<&str> = instruction.split("=").collect();
+            let parts: Vec<&str> = instruction.split("-").collect();
             let label = parts[0];
             let box_id = hash1(&label) as usize;
             if let Some(index) = boxes[box_id].iter().position(|x| x.0 == label.to_string()) {
