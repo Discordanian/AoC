@@ -7,31 +7,48 @@ pub fn hash1(input: &str) -> u32 {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    input.split(",").map(hash1).sum()
+    input.split(',').map(hash1).sum()
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    let instructions: Vec<&str> = input.split(",").collect();
-    let mut boxes: Vec<Vec<(String, u32)>> = (0..256).into_iter().map(|_| vec![]).collect();
+    let instructions: Vec<&str> = input.split(',').collect();
+    let mut boxes: Vec<Vec<(String, u32)>> = (0..256).map(|_| vec![]).collect();
 
     for instruction in instructions {
+        println!("Instruction {}", &instruction);
         if instruction.contains('=') {
-            let parts: Vec<&str> = instruction.split("=").collect();
+            let parts: Vec<&str> = instruction.split('=').collect();
             let label = parts[0];
             let lens: u32 = parts[1].parse().unwrap();
-            let box_id = hash1(&label) as usize;
+            let box_id = hash1(label) as usize;
             boxes[box_id].push((label.to_string(), lens));
         } else {
-            let parts: Vec<&str> = instruction.split("-").collect();
+            let parts: Vec<&str> = instruction.split('-').collect();
             let label = parts[0];
-            let box_id = hash1(&label) as usize;
-            if let Some(index) = boxes[box_id].iter().position(|x| x.0 == label.to_string()) {
+            let box_id = hash1(label) as usize;
+            println!(
+                "Removing label {} from box {} in vec {:?}",
+                &label, &box_id, boxes[box_id]
+            );
+            if let Some(index) = boxes[box_id].iter().position(|x| x.0 == *label.to_string()) {
                 boxes[box_id].remove(index);
+                println!(
+                    "Removed label {} from box {} in vec {:?}",
+                    &label, &box_id, boxes[box_id]
+                );
             }
         }
     }
 
-    dbg!(&boxes);
+    // dbg!(&boxes);
+    /*
+    for x in 0..5 {
+        println!("Box[{}] -> {:?}", x, boxes[x]);
+    }
+    */
+    for (x, b) in boxes.clone().into_iter().enumerate().take(5) {
+        println!("Box[{}] -> {:?}", x, b);
+    }
     boxes.len() as u32
 }
 
