@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 #[derive(Copy, Debug, Clone, PartialEq, Eq)]
 pub enum Direction {
     East = 0,
@@ -20,7 +22,8 @@ impl Ray {
         let row_count = matrix.len();
         let col_count = matrix[0].len();
 
-        let ns = (self.dir == Direction::North || self.dir == Direction::South);
+        let ns = self.dir == Direction::North || self.dir == Direction::South;
+        println!("At {:?} moving {:?}", self.pos, self.dir);
 
         if elem == '.' {
             match self.dir {
@@ -56,6 +59,7 @@ impl Ray {
         }
 
 
+        dbg!(&retval);
         retval
 
     }
@@ -73,7 +77,7 @@ impl Ray {
     }
     fn east(&self,wall:usize) -> Vec<Ray> {
         if self.pos.0 < wall - 1 {
-            return vec![Ray {pos: (self.pos.0 -1, self.pos.1), dir: Direction::East}];
+            return vec![Ray {pos: (self.pos.0 + 1, self.pos.1), dir: Direction::East}];
         } 
         vec![]
     }
@@ -91,19 +95,22 @@ pub fn process_part1(input: &str) -> u32 {
     // let mut seen: Vec<(usize, usize)> = Vec::new();
     let mut past_rays: Vec<Ray> = Vec::new();
 
-    past_rays.push(rays[0]);
+    // past_rays.push(rays[0]);
 
 
     while !rays.is_empty() {
+        println!("Working through {} rays", rays.len());
         let ray = rays.pop().unwrap();
         if past_rays.contains(&ray) {
+            println!("Skipping this one.  Seen it before");
             continue;
         }
         past_rays.push(ray);
         rays.extend(ray.next_ray(&matrix));
     }
-    dbg!(&rays);
-    matrix[0].len() as u32 + rays.len() as u32
+
+    dbg!(&past_rays);
+    past_rays.iter().map(|r| (r.pos.0, r.pos.1)).collect::<HashSet<(usize, usize)>>().len() as u32
 }
 
 pub fn process_part2(input: &str) -> u32 {
