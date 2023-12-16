@@ -23,3 +23,6 @@ cp -v $SRCLIB/src/lib.rs $LIBNAME/src/lib.rs
 cd $LIBNAME
 cargo test
 cargo clean
+cd ..
+git add $LIBNAME
+git status
