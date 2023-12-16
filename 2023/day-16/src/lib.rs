@@ -1,6 +1,21 @@
+#[derive(Copy, Debug, Clone)]
+pub enum Direction {
+    East = 0,
+    South = 1,
+    West = 2,
+    North = 3,
+}
+
+#[derive(Copy, Debug, Clone)]
+pub struct Ray {
+    pos: (usize, usize),
+    dir: Direction,
+}
+
 pub fn process_part1(input: &str) -> u32 {
     let matrix: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
-    matrix[0].len() as u32
+    let mut rays: Vec<Ray> = vec![Ray {pos: (0,0),dir: Direction::East}];
+    matrix[0].len() as u32 + rays.len() as u32
 }
 
 pub fn process_part2(input: &str) -> u32 {
