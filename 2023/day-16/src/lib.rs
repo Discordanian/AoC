@@ -132,6 +132,22 @@ pub fn process_part2(input: &str) -> u32 {
     matrix[1].len() as u32
 }
 
+pub fn print_rays(rays: Vec<Ray>, matrix: Vec<Vec<char>>) -> String {
+    let row_count = matrix.len();
+    let col_count = matrix[0].len();
+    let hs: HashSet(usize,usize) = rays.iter().map(|r| (r.pos.0, r.pos.1)).collect();
+
+    (0..row_count).into_iter().map(|y| 
+        (0..col_count).into_iter().map(|x| 
+            match hs.contains((x.y)) {
+            }
+        ).collect::<String>()
+    )
+
+
+
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
