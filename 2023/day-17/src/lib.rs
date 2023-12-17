@@ -1,9 +1,25 @@
+use glam::IVec2;
+
+use std::collections::HashMap;
+
+pub fn input_to_hashmap(input: &str) -> HashMap<IVec2, char> {
+    let mut grid_map = HashMap::new();
+
+    for (y,line) in input.lines().enumerate() {
+        for (x,ch) in line.chars().enumerate() {
+            grid_map.insert(IVec2::new(x as i32, y as i32), ch);
+        }
+    }
+    grid_map
+}
 pub fn process_part1(input: &str) -> u32 {
-    input.len() as u32
+    let map = input_to_hashmap(input);
+    map.len() as u32
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    input.len() as u32
+    let map = input_to_hashmap(input);
+    map.len() as u32
 }
 
 #[cfg(test)]
