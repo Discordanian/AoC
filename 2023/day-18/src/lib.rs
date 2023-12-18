@@ -113,12 +113,12 @@ U 2 (#7a21e3)";
     #[test]
     fn part1_works() {
         let result = process_part1(INPUT);
-        assert_eq!(result, 7);
+        assert_eq!(result, 62);
     }
 
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 15);
+        assert_eq!(result, 952408144115);
     }
 }
