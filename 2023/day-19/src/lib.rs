@@ -1,3 +1,33 @@
+pub struct Part {
+    x: usize,
+    m: usize,
+    a: usize,
+    s: usize,
+}
+
+enum CompOp {
+    LessThan,
+    GreaterThan
+}
+
+pub struct Comparison<'a> {
+    attribute: char,
+    comp_op: CompOp,
+    label: &'a str,
+}
+
+enum PartAttribute {
+    XAttr,
+    MAttr,
+    AAttr,
+    SAttr,
+}
+
+pub struct Rule<'a> {
+    comparisons: Vec<Comparison<'a>>,
+    default: &'a str,
+}
+
 pub fn process_part1(input: &str) -> u32 {
     input.len() as u32
 }
