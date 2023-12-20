@@ -25,4 +25,6 @@ cargo test
 cargo clean
 cd ..
 git add $LIBNAME
+git commit -a -m "$LIBNAME"
 git status
+git push
