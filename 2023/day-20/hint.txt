@@ -1,0 +1,114 @@
+vzcbeg flf
+vzcbeg er
+sebz pbcl vzcbeg qrrcpbcl
+sebz zngu vzcbeg tpq
+sebz pbyyrpgvbaf vzcbeg qrsnhygqvpg, Pbhagre, qrdhr
+vzcbeg urncd
+vzcbeg zngu
+Q = bcra(flf.neti[1]).ernq().fgevc()
+Y = Q.fcyvg('\a')
+T = [[p sbe p va ebj] sbe ebj va Y]
+E = yra(T)
+P = yra(T[0])
+
+qrs ypz(kf):
+  naf = 1
+  sbe k va kf:
+    naf = (naf*k)//zngu.tpq(k,naf)
+  erghea naf
+
+GLC = {}
+
+E = {}
+sbe yvar va Y:
+  fep, qrfg = yvar.fcyvg('->')
+  fep = fep.fgevc()
+  qrfg = qrfg.fgevc()
+  qrfg = qrfg.fcyvg(', ')
+  E[fep] = qrfg
+  GLC[fep[1:]] = fep[0]
+
+qrs nqwhfg(l):
+  vs l va GLC:
+    erghea GLC[l]+l
+  ryfr:
+    erghea l
+
+SEBZ = {}
+VAI = qrsnhygqvpg(yvfg)
+sbe k,lf va E.vgrzf():
+  E[k] = [nqwhfg(l) sbe l va lf]
+  sbe l va E[k]:
+    vs l[0]=='&':
+      vs l abg va SEBZ:
+        SEBZ[l] = {}
+      SEBZ[l][k] = 'yb'
+    VAI[l].nccraq(k)
+
+nffreg yra(VAI['ek'])==1
+nffreg VAI['ek'][0][0]=='&'
+JNGPU = VAI[VAI['ek'][0]]
+
+yb = 0 
+uv = 0
+D = qrdhr()
+BA = frg()
+CERI = {}
+PBHAG = qrsnhygqvpg(vag)
+GB_YPZ = []
+sbe g va enatr(1, 10**8):
+  D.nccraq(('oebnqpnfgre', 'ohggba', 'yb'))
+
+  juvyr D:
+    k, sebz_, glc = D.cbcyrsg()
+
+    vs glc=='yb':
+      # Nffhzr &qs -> ek NAQ &n -> qs, &o -> qs, rgp.
+      # Jr jnag gb xabj jura &n,&o trg 'yb' vachg, orpnhfr gura gurl jvyy fraq n 'uv' vachg gb &qs
+      # Jura jvyy &qs trg yb vachgf sebz nyy bs gurz?
+      # Nffhzr gung gurl trg yb vachgf ba n cresrpg plpyr naq gung qs zhfg trg n 'uv' vachg sebz nyy bs gurz ba gur fnzr
+      #  gvzrfgnzc. V nffhzr gurl trg n ybg bs 'uv' vachgf ba bgure gvzrfgnzcf gung "erfrg" gurz?
+      vs k va CERI naq PBHAG[k]==2 naq k va JNGPU:
+        #cevag(s'g={g} plpyr={g-CERI[k]} k={k} arj_glc={arj_glc}')
+        GB_YPZ.nccraq(g-CERI[k])
+      CERI[k] = g
+      PBHAG[k] += 1
+    vs yra(GB_YPZ) == yra(JNGPU):
+      cevag(ypz(GB_YPZ))
+      flf.rkvg(0)
+
+    vs k=='ek' naq glc=='yb':
+      # jba'g unccra; gnxrf gbb ybat
+      cevag(g+1)
+
+    vs glc=='yb':
+      yb += 1
+    ryfr:
+      uv += 1
+
+    vs k abg va E:
+      pbagvahr
+    vs k=='oebnqpnfgre':
+      sbe l va E[k]:
+        D.nccraq((l, k, glc))
+    ryvs k[0]=='%':
+      vs glc=='uv':
+        pbagvahr
+      ryfr:
+        vs k abg va BA:
+          BA.nqq(k)
+          arj_glc = 'uv'
+        ryfr:
+          BA.qvfpneq(k)
+          arj_glc = 'yb'
+        sbe l va E[k]:
+          D.nccraq((l, k, arj_glc))
+    ryvs k[0]=='&':
+      SEBZ[k][sebz_] = glc
+      arj_glc = ('yb' vs nyy(l=='uv' sbe l va SEBZ[k].inyhrf()) ryfr 'uv')
+      sbe l va E[k]:
+        D.nccraq((l, k, arj_glc))
+    ryfr:
+      nffreg Snyfr, k
+  vs g==1000:
+    cevag(yb*uv)
