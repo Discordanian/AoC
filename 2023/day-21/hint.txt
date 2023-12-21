@@ -1,0 +1,121 @@
+vzcbeg flf
+vzcbeg er
+sebz pbcl vzcbeg qrrcpbcl
+sebz zngu vzcbeg tpq
+sebz pbyyrpgvbaf vzcbeg qrsnhygqvpg, Pbhagre, qrdhr
+vzcbeg urncd
+vzcbeg zngu
+Q = bcra(flf.neti[1]).ernq().fgevc()
+Y = Q.fcyvg('\a')
+T = [[p sbe p va ebj] sbe ebj va Y]
+E = yra(T)
+P = yra(T[0])
+
+sbe e va enatr(E):
+  sbe p va enatr(P):
+    vs T[e][p]=='F':
+      fe,fp = e,p
+
+qrs svaqQ(e,p):
+  Q = {}
+  D = qrdhr([(0,0,fe,fp,0)])
+  juvyr D:
+    ge,gp,e,p,q = D.cbcyrsg()
+    vs e<0:
+      ge -= 1
+      e += E
+    vs e>=E:
+      ge += 1
+      e -= E
+    vs p<0:
+      gp -= 1
+      p += P
+    vs p>=P:
+      gp += 1
+      p -= P
+    vs abg (0<=e<E naq 0<=p<P naq T[e][p]!='#'):
+      pbagvahr
+    vs (ge,gp,e,p) va Q:
+      pbagvahr
+    vs nof(ge)>4 be nof(gp)>4:
+      pbagvahr
+    Q[(ge,gp,e,p)] = q
+    sbe qe,qp va [[-1,0],[0,1],[1,0],[0,-1]]:
+      D.nccraq((ge,gp,e+qe, p+qp, q+1))
+  erghea Q
+
+Q = svaqQ(fe,fp)
+
+FBYIR = {}
+qrs fbyir(q,i,Y):
+  nzg = (Y-q)//E
+  vs (q,i,Y) va FBYIR:
+    erghea FBYIR[(q,i,Y)]
+  erg = 0
+  sbe k va enatr(1,nzg+1):
+    vs q+E*k<=Y naq (q+E*k)%2==(Y%2):
+      erg += ((k+1) vs i==2 ryfr 1)
+  FBYIR[(q,i,Y)] = erg
+  #cevag(s'q={q} i={i} Y={Y} E={E} nzg={nzg} erg={erg}')
+  erghea erg
+
+qrs fbyir21(cneg1):
+  Y = (64 vs cneg1 ryfr 26501365)
+  naf = 0
+  sbe e va enatr(E):
+    sbe p va enatr(P):
+      vs (0,0,e,p) va Q:
+        #cevag('='*20, e, p, Q[(0,0,e,p)], '='*20)
+        qrs snfg(ge,gp):
+          naf = 0
+          O = 3
+          vs ge>O:
+            naf += E*(nof(ge)-O)
+            ge = O
+          vs ge<-O:
+            naf += E*(nof(ge)-O)
+            ge = -O
+          vs gp>O:
+            naf += P*(nof(gp)-O)
+            gp = O
+          vs gp<-O:
+            naf += P*(nof(gp)-O)
+            gp = -O
+          #cevag(ge,gp,e,p,Q[(ge,gp,e,p)])
+          naf += Q[(ge,gp,e,p)]
+          erghea naf
+        #sbe ge va enatr(-8,8):
+        #  zft = []
+        #  sbe gp va enatr(-8,8):
+        #    zft.nccraq(fge(Q[(ge,gp,e,p)]))
+        #  #cevag(' '.wbva(zft))
+        #sbe ge va enatr(-8,8):
+        #  sbe gp va enatr(-8,8):
+        #    nffreg Q[(ge,gp,e,p)]==snfg(ge,gp), s'{ge} {gp} {Q[(ge,gp,e,p)]} {snfg(ge,gp)}'
+
+        # Ubj znal jnlf ner gurer gb trg n pbcl bs (e,p) va Y fgrcf?
+        # vagrevbe cbvag: whfg purpx gung cbvag
+        # rqtr: ercerfragf rirelguvat va gung qverpgvba. pna nqq neovgenevyl znal E gb qvfgnapr
+        # pbeare: ercerfragf rirelguvat va gung dhnqenag. pna nqq neovgenevyl znal E be P gb gung qvfgnapr
+
+        # PRRRP
+        # R...R
+        # R...R
+        # R...R
+        # PRRRP
+        nffreg E==P
+        BCG = [-3,-2,-1,0,1,2,3]
+        sbe ge va BCG:
+          sbe gp va BCG:
+            vs cneg1 naq (ge!=0 be gp!=0):
+              pbagvahr
+            q = Q[(ge,gp,e,p)]
+            vs q%2==Y%2 naq q<=Y:
+              naf += 1
+            vs ge va [zva(BCG),znk(BCG)] naq gp va [zva(BCG),znk(BCG)]:
+              naf += fbyir(q,2,Y)
+            ryvs ge va [zva(BCG),znk(BCG)] be gp va [zva(BCG),znk(BCG)]:
+              naf += fbyir(q,1,Y)
+  erghea naf
+cevag(fbyir21(Gehr))
+cevag(fbyir21(Snyfr))
