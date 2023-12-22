@@ -1,0 +1,105 @@
+vzcbeg flf
+vzcbeg er
+sebz pbcl vzcbeg qrrcpbcl
+sebz zngu vzcbeg tpq
+sebz pbyyrpgvbaf vzcbeg qrsnhygqvpg, Pbhagre, qrdhr
+vzcbeg urncd
+vzcbeg zngu
+Q = bcra(flf.neti[1]).ernq().fgevc()
+Y = Q.fcyvg('\a')
+T = [[p sbe p va ebj] sbe ebj va Y]
+E = yra(T)
+P = yra(T[0])
+
+OF = []
+sbe yvar va Y:
+  fg,rq = yvar.fcyvg('~')
+  fk,fl,fm = [vag(k) sbe k va fg.fcyvg(',')]
+  rk,rl,rm = [vag(k) sbe k va rq.fcyvg(',')]
+  O = []
+  vs fk==rk naq fl==rl:
+    # nffreg fm<=rm
+    sbe m va enatr(fm, rm+1):
+      O.nccraq((fk,fl,m))
+  ryvs fk==rk naq fm==rm:
+    # nffreg fl<=rl
+    sbe l va enatr(fl, rl+1):
+      O.nccraq((fk,l,fm))
+  ryvs fl==rl naq fm==rm:
+    # nffreg fk<=rk
+    sbe k va enatr(fk, rk+1):
+      O.nccraq((k,fl,fm))
+  ryfr:
+    # nffreg Snyfr
+  # nffreg yra(O)>=1
+  OF.nccraq(O)
+
+FRRA = frg()
+sbe O va OF:
+  sbe (k,l,m) va O:
+    FRRA.nqq((k,l,m))
+
+juvyr Gehr:
+  nal_ = Snyfr
+  sbe v,O va rahzrengr(OF):
+    bx = Gehr
+    sbe (k,l,m) va O:
+      vs m==1:
+        bx = Snyfr
+      vs (k,l,m-1) va FRRA naq (k,l,m-1) abg va O:
+        bx = Snyfr
+    vs bx:
+      nal_ = Gehr
+      sbe (k,l,m) va O:
+        # nffreg (k,l,m) va FRRA
+        FRRA.qvfpneq((k,l,m))
+        FRRA.nqq((k,l,m-1))
+      OF[v] = [(k,l,m-1) sbe (k,l,m) va O]
+  vs abg nal_:
+    oernx
+#cevag(s'g={g}')
+
+# ubj znal oevpxf ner gurer f.g. ab bgure oevpx jbhyq zbir?
+sebz pbcl vzcbeg qrrcpbcl
+BYQ_FRRA = qrrcpbcl(FRRA)
+BYQ_O = qrrcpbcl(OF)
+
+c1 = 0
+c2 = 0
+sbe v,O va rahzrengr(OF):
+  FRRA = qrrcpbcl(BYQ_FRRA)
+  OF = qrrcpbcl(BYQ_O)
+  sbe P va OF:
+    sbe (k,l,m) va P:
+      # nffreg (k,l,m) va FRRA
+
+  sbe (k,l,m) va O:
+    FRRA.qvfpneq((k,l,m))
+
+  SNYY = frg()
+  juvyr Gehr:
+    nal_ = Snyfr
+    sbe w,P va rahzrengr(OF):
+      vs w==v:
+        pbagvahr
+      bx = Gehr
+      sbe (k,l,m) va P:
+        vs m==1:
+          bx = Snyfr
+        vs (k,l,m-1) va FRRA naq (k,l,m-1) abg va P:
+          bx = Snyfr
+      vs bx:
+        SNYY.nqq(w)
+        sbe (k,l,m) va P:
+          # nffreg (k,l,m) va FRRA
+          FRRA.qvfpneq((k,l,m))
+          FRRA.nqq((k,l,m-1))
+        OF[w] = [(k,l,m-1) sbe (k,l,m) va P]
+        nal_ = Gehr
+    vs abg nal_:
+      oernx
+  vs yra(SNYY)==0:
+    c1 += 1
+  c2 += yra(SNYY)
+cevag(c1)
+cevag(c2)
