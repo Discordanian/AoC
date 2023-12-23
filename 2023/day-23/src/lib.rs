@@ -1,5 +1,5 @@
 use glam::IVec2;
-use petgraph::algo::all_simple_paths;
+use petgraph::algo::{self, all_simple_paths};
 use petgraph::graph::DiGraph;
 
 use std::collections::HashMap;
@@ -54,6 +54,15 @@ pub fn maze_to_tiles(input: &str) -> HashMap<IVec2, TileType> {
     retval
 }
 
+pub fn maxy_of_hashmap(map: &HashMap<IVec2, TileType>) -> i32 {
+    let mut maxy = -1;
+    for item in map.keys() {
+        maxy = maxy.max(item.y);
+    }
+
+    maxy
+}
+
 pub fn process_part1(input: &str) -> u32 {
     let hm = maze_to_tiles(input);
 
@@ -64,7 +73,32 @@ pub fn process_part1(input: &str) -> u32 {
         .map(|coord| (*coord, graph.add_node(coord)))
         .collect();
 
-    node_map.len() as u32
+    for (iv2, ttype) in hm.iter() {
+        let possible_directions = match ttype {
+            TileType::Directional(d) => vec![d.step(&iv2)],
+            TileType::Empty => vec![
+                Direction::North.step(&iv2),
+                Direction::South.step(&iv2),
+                Direction::East.step(&iv2),
+                Direction::West.step(&iv2),
+            ],
+        };
+        for new_iv2 in possible_directions {
+            if hm.get(&new_iv2).is_some() {
+                graph.add_edge(node_map[&iv2], node_map[&new_iv2], 1);
+            }
+        }
+    }
+
+    // dbg!(graph);
+    let start_v = hm.keys().filter(|iv| iv.y == 0).next().unwrap();
+    let maxy = maxy_of_hashmap(&hm);
+    let finish_v = hm.keys().filter(|iv| iv.y == maxy).last().unwrap();
+
+    let routes =
+        algo::all_simple_paths::<Vec<_>, _>(&graph, node_map[start_v], node_map[finish_v], 0, None);
+    // node_map.len() as u32
+    routes.max_by(|a, b| a.len().cmp(&b.len())).unwrap().len() as u32 - 1_u32
 }
 
 pub fn process_part2(input: &str) -> u32 {
