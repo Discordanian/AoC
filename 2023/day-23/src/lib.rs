@@ -102,7 +102,37 @@ pub fn process_part1(input: &str) -> u32 {
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    input.len() as u32
+    let hm = maze_to_tiles(input);
+
+    let mut graph = DiGraph::<&IVec2, u32>::new();
+
+    let node_map: HashMap<IVec2, _> = hm
+        .keys()
+        .map(|coord| (*coord, graph.add_node(coord)))
+        .collect();
+
+    for (iv2, _) in hm.iter() {
+        let possible_directions = vec![
+                Direction::North.step(&iv2),
+                Direction::South.step(&iv2),
+                Direction::East.step(&iv2),
+                Direction::West.step(&iv2),
+            ];
+        for new_iv2 in possible_directions {
+            if hm.get(&new_iv2).is_some() {
+                graph.add_edge(node_map[&iv2], node_map[&new_iv2], 1);
+            }
+        }
+    }
+
+    let start_v = hm.keys().filter(|iv| iv.y == 0).next().unwrap();
+    let maxy = maxy_of_hashmap(&hm);
+    let finish_v = hm.keys().filter(|iv| iv.y == maxy).last().unwrap();
+
+    let routes =
+        algo::all_simple_paths::<Vec<_>, _>(&graph, node_map[start_v], node_map[finish_v], 0, None);
+    routes.max_by(|a, b| a.len().cmp(&b.len())).unwrap().len() as u32 - 1_u32 // has an off-by-one
+    // thing going on.  I think it's because it's counting the start as a step of 1
 }
 
 #[cfg(test)]
