@@ -1,5 +1,5 @@
 use glam::IVec2;
-use petgraph::algo::{self, all_simple_paths};
+use petgraph::algo;
 use petgraph::graph::DiGraph;
 
 use std::collections::HashMap;
@@ -31,12 +31,14 @@ enum TileType {
     Empty,
 }
 
+/*
 #[derive(Debug)]
 struct Tile {
     tile_type: TileType,
 }
+*/
 
-pub fn maze_to_tiles(input: &str) -> HashMap<IVec2, TileType> {
+fn maze_to_tiles(input: &str) -> HashMap<IVec2, TileType> {
     let mut retval = HashMap::new();
     for (y, line) in input.lines().enumerate() {
         for (x, ch) in line.chars().enumerate().filter(|(_, c)| *c != '#') {
@@ -54,7 +56,7 @@ pub fn maze_to_tiles(input: &str) -> HashMap<IVec2, TileType> {
     retval
 }
 
-pub fn maxy_of_hashmap(map: &HashMap<IVec2, TileType>) -> i32 {
+fn maxy_of_hashmap(map: &HashMap<IVec2, TileType>) -> i32 {
     let mut maxy = -1;
     for item in map.keys() {
         maxy = maxy.max(item.y);
@@ -75,12 +77,12 @@ pub fn process_part1(input: &str) -> u32 {
 
     for (iv2, ttype) in hm.iter() {
         let possible_directions = match ttype {
-            TileType::Directional(d) => vec![d.step(&iv2)],
+            TileType::Directional(d) => vec![d.step(iv2)],
             TileType::Empty => vec![
-                Direction::North.step(&iv2),
-                Direction::South.step(&iv2),
-                Direction::East.step(&iv2),
-                Direction::West.step(&iv2),
+                Direction::North.step(iv2),
+                Direction::South.step(iv2),
+                Direction::East.step(iv2),
+                Direction::West.step(iv2),
             ],
         };
         for new_iv2 in possible_directions {
@@ -90,10 +92,9 @@ pub fn process_part1(input: &str) -> u32 {
         }
     }
 
-    // dbg!(graph);
-    let start_v = hm.keys().filter(|iv| iv.y == 0).next().unwrap();
+    let start_v = hm.keys().find(|iv| iv.y == 0).unwrap();
     let maxy = maxy_of_hashmap(&hm);
-    let finish_v = hm.keys().filter(|iv| iv.y == maxy).last().unwrap();
+    let finish_v = hm.keys().find(|iv| iv.y == maxy).unwrap();
 
     let routes =
         algo::all_simple_paths::<Vec<_>, _>(&graph, node_map[start_v], node_map[finish_v], 0, None);
@@ -113,10 +114,10 @@ pub fn process_part2(input: &str) -> u32 {
 
     for (iv2, _) in hm.iter() {
         let possible_directions = vec![
-                Direction::North.step(&iv2),
-                Direction::South.step(&iv2),
-                Direction::East.step(&iv2),
-                Direction::West.step(&iv2),
+                Direction::North.step(iv2),
+                Direction::South.step(iv2),
+                Direction::East.step(iv2),
+                Direction::West.step(iv2),
             ];
         for new_iv2 in possible_directions {
             if hm.get(&new_iv2).is_some() {
@@ -125,9 +126,10 @@ pub fn process_part2(input: &str) -> u32 {
         }
     }
 
-    let start_v = hm.keys().filter(|iv| iv.y == 0).next().unwrap();
+    // let start_v = hm.keys().filter(|iv| iv.y == 0).next().unwrap();
+    let start_v = hm.keys().find(|iv| iv.y == 0).unwrap();
     let maxy = maxy_of_hashmap(&hm);
-    let finish_v = hm.keys().filter(|iv| iv.y == maxy).last().unwrap();
+    let finish_v = hm.keys().find(|iv| iv.y == maxy).unwrap();
 
     let routes =
         algo::all_simple_paths::<Vec<_>, _>(&graph, node_map[start_v], node_map[finish_v], 0, None);
