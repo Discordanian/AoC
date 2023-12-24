@@ -1,13 +1,16 @@
-/*
- * Broke this. 
- *
- * TODO:  Fix this
- */
+use itertools::Itertools;
+
 #[derive(Clone, Debug)]
-pub struct Conversion {
+struct Conversion {
     dest_start: i64,
     source_start: i64,
     length: i64,
+}
+
+#[derive(Clone, Debug)]
+struct Range {
+    from: i64,
+    to: i64,
 }
 
 impl From<&str> for Conversion {
@@ -33,58 +36,143 @@ impl Conversion {
     }
 }
 
-pub fn process_part1(input: &str) -> String {
-    let lines: Vec<&str> = input.split("\n").collect();
-    let mut seeds: Vec<i64> = lines[0]
-        .split(" ")
-        .skip(1)
-        .map(|x| x.parse().unwrap())
-        .collect();
-    // dbg!(seeds);
-    let conversions: Vec<Conversion> = input
-        .split("\n")
-        .skip(3)
-        .filter(|x| !x.contains(":"))
-        .filter(|x| x.len() > 0)
-        .map(Conversion::from)
-        .collect();
-    // dbg!(conversions);
-    for c in conversions {
-        for seed in &mut seeds {
-            *seed = c.convert(*seed);
+pub fn process_part1(input: &str) -> i64 {
+    let (seeds_str, maps_str) = input.split_once("\n\n").unwrap();
+    let seeds = seeds_str.strip_prefix("seeds: ").unwrap();
+    let seeds = seeds.split_whitespace().map(|s| s.parse::<i64>().unwrap());
+
+    let mut maps = Vec::new();
+    for block in maps_str.split("\n\n") {
+        let (_, rules) = block.split_once("\n").unwrap();
+        let mut map = Vec::new();
+        for line in rules.lines() {
+            let mut nums = line.splitn(3, " ");
+            let dest_start: i64 = nums.next().unwrap().parse().unwrap();
+            let source_start: i64 = nums.next().unwrap().parse().unwrap();
+            let length: i64 = nums.next().unwrap().parse().unwrap();
+            map.push(Conversion {
+                dest_start,
+                source_start,
+                length,
+            });
         }
-        // dbg!(&c);
-        // dbg!(&seeds[1]);
+        maps.push(map);
     }
-    // dbg!(&seeds);
-    seeds.iter().min().unwrap().to_string()
+
+    let mut min = i64::MAX;
+
+    for seed in seeds {
+        let mut curr = seed;
+
+        'maps: for map in &maps {
+            for conversion in map {
+                let rule_applies =
+                    curr >= conversion.source_start && curr <= conversion.source_start + conversion.length;
+                if rule_applies {
+                    let offset = curr - conversion.source_start;
+                    curr = conversion.dest_start + offset;
+                    continue 'maps;
+                }
+            }
+        }
+
+        min = min.min(curr);
+    }
+    min
 }
 
-pub fn process_part2(input: &str) -> String {
-    let lines: Vec<&str> = input.split("\n").collect();
-    let mut seeds: Vec<i64> = lines[0]
-        .split(" ")
-        .skip(1)
-        .map(|x| x.parse().unwrap())
-        .collect();
-    // dbg!(seeds);
-    let conversions: Vec<Conversion> = input
-        .split("\n")
-        .skip(3)
-        .filter(|x| !x.contains(":"))
-        .filter(|x| x.len() > 0)
-        .map(Conversion::from)
-        .collect();
-    // dbg!(conversions);
-    for c in conversions {
-        for seed in &mut seeds {
-            *seed = c.convert(*seed);
+pub fn process_part2(input: &str) -> i64 {
+    let (seeds_str, maps_str) = input.split_once("\n\n").unwrap();
+    let seeds = seeds_str.strip_prefix("seeds: ").unwrap();
+    let seeds = seeds
+        .split_whitespace()
+        .map(|s| s.parse::<i64>().unwrap())
+        .chunks(2); // Itertools
+    let seeds = seeds.into_iter().map(|mut chunk| {
+        let from = chunk.next().unwrap();
+        let range = chunk.next().unwrap();
+        Range {
+            from,
+            to: from + range,
         }
-        // dbg!(&c);
-        // dbg!(&seeds[1]);
+    });
+
+    let maps: Vec<Vec<Conversion>> = maps_str
+        .split("\n\n")
+        .map(|block| {
+            block
+                .lines()
+                .skip(1)
+                .map(|line| {
+                    let mut nums = line.splitn(3, " ");
+                    Conversion {
+                        dest_start: nums.next().unwrap().parse().unwrap(),
+                        source_start: nums.next().unwrap().parse().unwrap(),
+                        length: nums.next().unwrap().parse().unwrap(),
+                    }
+                })
+                .sorted_by(|a, b| a.source_start.cmp(&b.source_start))
+                .collect()
+        })
+        .collect();
+
+    let mut curr_ranges: Vec<Range> = seeds.collect();
+
+    for map in &maps {
+        let mut new_ranges: Vec<Range> = Vec::new();
+
+        for range in &curr_ranges {
+            let mut curr = range.clone();
+
+            for rule in map {
+                let offset = rule.dest_start - rule.source_start;
+                let rule_applies = curr.from <= curr.to
+                    && curr.from <= rule.source_start + rule.length
+                    && curr.to >= rule.source_start;
+
+                if rule_applies {
+                    if curr.from < rule.source_start {
+                        new_ranges.push(Range {
+                            from: curr.from,
+                            to: rule.source_start - 1,
+                        });
+                        curr.from = rule.source_start;
+                        if curr.to < rule.source_start + rule.length {
+                            new_ranges.push(Range {
+                                from: curr.from + offset,
+                                to: curr.to + offset,
+                            });
+                            curr.from = curr.to + 1;
+                        } else {
+                            new_ranges.push(Range {
+                                from: curr.from + offset,
+                                to: rule.source_start + rule.length - 1 + offset,
+                            });
+                            curr.from = rule.source_start + rule.length;
+                        }
+                    } else if curr.to < rule.source_start + rule.length {
+                        new_ranges.push(Range {
+                            from: curr.from + offset,
+                            to: curr.to + offset,
+                        });
+                        curr.from = curr.to + 1;
+                    } else {
+                        new_ranges.push(Range {
+                            from: curr.from + offset,
+                            to: rule.source_start + rule.length - 1 + offset,
+                        });
+                        curr.from = rule.source_start + rule.length;
+                    }
+                }
+            }
+            if curr.from <= curr.to {
+                new_ranges.push(curr);
+            }
+        }
+        curr_ranges = new_ranges;
     }
-    // dbg!(&seeds);
-    seeds.iter().min().unwrap().to_string()
+
+    curr_ranges.iter().map(|range| range.from).min().unwrap()
 }
 
 #[cfg(test)]
@@ -128,12 +216,12 @@ humidity-to-location map:
     #[test]
     fn part1_works() {
         let result = process_part1(INPUT);
-        assert_eq!(result, "35".to_string());
+        assert_eq!(result, 35);
     }
 
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, "46".to_string());
+        assert_eq!(result, 46);
     }
 }
