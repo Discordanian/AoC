@@ -66,10 +66,335 @@ while len(q) > 0:
 ans = max(dists.values())
 print(ans)
 */
-use std::collections::HashMap;
 use std::collections::HashSet;
-use std::collections::VecDeque;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Tile {
+    NorthSouth,
+    EastWest,
+    NorthEast,
+    NorthWest,
+    SouthWest,
+    SouthEast,
+    Ground,
+    Start,
+}
+impl Tile {
+    fn from(c: char) -> Self {
+        match c {
+            '|' => Tile::NorthSouth,
+            '-' => Tile::EastWest,
+            'L' => Tile::NorthEast,
+            'J' => Tile::NorthWest,
+            '7' => Tile::SouthWest,
+            'F' => Tile::SouthEast,
+            '.' => Tile::Ground,
+            'S' => Tile::Start,
+            _ => panic!(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+struct Coord {
+    row_idx: usize,
+    col_idx: usize,
+}
+
+impl Coord {
+    fn new(row_idx: usize, col_idx: usize) -> Self {
+        Self { row_idx, col_idx }
+    }
+
+    fn valid_neighbours(&self, map: &[Vec<Tile>]) -> Vec<Coord> {
+        let mut neighbours = vec![];
+        let max_height = map.len() - 1;
+        let max_width = map[0].len() - 1;
+
+        match map[self.row_idx][self.col_idx] {
+            Tile::Ground => (),
+            Tile::Start => {
+                // north
+                if self.row_idx > 0 {
+                    let tile = map[self.row_idx - 1][self.col_idx];
+                    if matches!(tile, Tile::NorthSouth | Tile::SouthWest | Tile::SouthEast) {
+                        neighbours.push(Coord::new(self.row_idx - 1, self.col_idx));
+                    }
+                }
+                // south
+                if self.row_idx < max_height {
+                    let tile = map[self.row_idx + 1][self.col_idx];
+                    if matches!(tile, Tile::NorthSouth | Tile::NorthWest | Tile::NorthEast) {
+                        neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                    }
+                }
+                // west
+                if self.col_idx > 0 {
+                    let tile = map[self.row_idx][self.col_idx - 1];
+                    if matches!(tile, Tile::EastWest | Tile::SouthEast | Tile::NorthEast) {
+                        neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                    }
+                }
+                // east
+                if self.col_idx < max_width {
+                    let tile = map[self.row_idx][self.col_idx + 1];
+                    if matches!(tile, Tile::EastWest | Tile::NorthWest | Tile::SouthWest) {
+                        neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                    }
+                }
+            }
+            Tile::NorthSouth => {
+                // north
+                if self.row_idx > 0 {
+                    match map[self.row_idx - 1][self.col_idx] {
+                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        _ => (),
+                    }
+                }
+                // south
+                if self.row_idx < max_height && map[self.row_idx + 1][self.col_idx] != Tile::Ground {
+                    match map[self.row_idx + 1][self.col_idx] {
+                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        _ => (),
+                    }
+                }
+            }
+            Tile::EastWest => {
+                // west
+                if self.col_idx > 0 {
+                    match map[self.row_idx][self.col_idx - 1] {
+                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        _ => (),
+                    }
+                }
+                // east
+                if self.col_idx < max_width {
+                    match map[self.row_idx][self.col_idx + 1] {
+                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        _ => (),
+                    }
+                }
+            }
+            Tile::NorthEast => {
+                // north
+                if self.row_idx > 0 {
+                    match map[self.row_idx - 1][self.col_idx] {
+                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        _ => (),
+                    }
+                }
+                // east
+                if self.col_idx < max_width {
+                    match map[self.row_idx][self.col_idx + 1] {
+                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        _ => (),
+                    }
+                }
+            }
+            Tile::NorthWest => {
+                // north
+                if self.row_idx > 0 {
+                    match map[self.row_idx - 1][self.col_idx] {
+                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        _ => (),
+                    }
+                }
+                // west
+                if self.col_idx > 0 {
+                    match map[self.row_idx][self.col_idx - 1] {
+                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        _ => (),
+                    }
+                }
+            }
+            Tile::SouthWest => {
+                // south
+                if self.row_idx < max_height {
+                    match map[self.row_idx + 1][self.col_idx] {
+                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        _ => (),
+                    }
+                }
+                // west
+                if self.col_idx > 0 {
+                    match map[self.row_idx][self.col_idx - 1] {
+                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        _ => (),
+                    }
+                }
+            }
+            Tile::SouthEast => {
+                // south
+                if self.row_idx < max_height {
+                    match map[self.row_idx + 1][self.col_idx] {
+                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        _ => (),
+                    }
+                }
+                // east
+                if self.col_idx < max_width {
+                    match map[self.row_idx][self.col_idx + 1] {
+                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        _ => (),
+                    }
+                }
+            }
+        }
+
+        neighbours
+    }
+}
+
+fn parse(input: &str) -> (Vec<Vec<Tile>>, Coord) {
+    let mut start = Coord::new(0, 0);
+    let map = input
+        .lines()
+        .enumerate()
+        .map(|(row_idx, line)| {
+            line.chars()
+                .enumerate()
+                .map(|(col_idx, c)| {
+                    let tile = Tile::from(c);
+                    if tile == Tile::Start {
+                        start = Coord::new(row_idx, col_idx)
+                    }
+                    tile
+                })
+                .collect()
+        })
+        .collect();
+    (map, start)
+}
+
+fn build_loop(start: Coord, map: &[Vec<Tile>]) -> HashSet<Coord> {
+    let mut loop_coords = HashSet::new();
+    loop_coords.insert(start);
+    let mut to_visit = start.valid_neighbours(map);
+
+    while let Some(curr_pos) = to_visit.pop() {
+        for neighbour in curr_pos.valid_neighbours(map) {
+            if !loop_coords.contains(&neighbour) {
+                to_visit.push(neighbour);
+                loop_coords.insert(neighbour);
+            }
+        }
+    }
+
+    loop_coords
+}
+
+pub fn process_part1(input: &str) -> usize {
+    let (map, start) = parse(input);
+    let loop_coords = build_loop(start, &map);
+    loop_coords.len() / 2
+}
+
+fn get_start_pipe(map: &Vec<Vec<Tile>>, start: Coord) -> Tile {
+    let neighbours = start.valid_neighbours(map);
+    let north = neighbours
+        .iter()
+        .find(|coord| coord.row_idx < start.row_idx)
+        .is_some();
+    let south = neighbours
+        .iter()
+        .find(|coord| coord.row_idx > start.row_idx)
+        .is_some();
+    let west = neighbours
+        .iter()
+        .find(|coord| coord.col_idx < start.col_idx)
+        .is_some();
+    let east = neighbours
+        .iter()
+        .find(|coord| coord.col_idx > start.col_idx)
+        .is_some();
+
+    match (north, west, south, east) {
+        (true, true, _, _) => Tile::NorthWest,
+        (true, _, true, _) => Tile::NorthSouth,
+        (true, _, _, true) => Tile::NorthEast,
+        (_, true, true, _) => Tile::SouthWest,
+        (_, _, true, true) => Tile::SouthEast,
+        (_, true, _, true) => Tile::EastWest,
+        _ => panic!("Start should have exactly 2 entrances"),
+    }
+}
+
+/// replace start with a valid pipe segment, and only keep pipe segments that are part of the loop
+fn clean_map(start: Coord, loop_coords: &HashSet<Coord>, map: Vec<Vec<Tile>>) -> Vec<Vec<Tile>> {
+    let start_pipe = get_start_pipe(&map, start);
+
+    map.into_iter()
+        .enumerate()
+        .map(|(row_idx, line)| {
+            line.into_iter()
+                .enumerate()
+                .map(|(col_idx, tile)| match tile {
+                    Tile::Start => start_pipe,
+                    pipe if loop_coords.contains(&Coord::new(row_idx, col_idx)) => pipe,
+                    _ => Tile::Ground,
+                })
+                .collect()
+        })
+        .collect()
+}
+
+pub fn process_part2(input: &str) -> usize {
+    let (map, start) = parse(input);
+    let loop_coords = build_loop(start, &map);
+    let map = clean_map(start, &loop_coords, map);
+
+    let mut inside = false;
+
+    map.into_iter()
+        .flatten()
+        .filter(|tile| match tile {
+            Tile::Ground => inside,
+            Tile::NorthSouth | Tile::NorthWest | Tile::NorthEast => {
+                inside = !inside;
+                false
+            }
+            _ => false,
+        })
+        .count()
+}
+
+/*
 pub fn adjacent_points(p: (i32, i32), hm: &HashMap<(i32, i32), char>) -> Vec<(i32, i32)> {
     let delta_points = match hm.get(&(p.0.clone(), p.1.clone())).unwrap() {
         'S' => vec![(-1, 0), (1, 0), (0, -1), (0, 1)],
@@ -153,6 +478,7 @@ pub fn process_part1(input: &str) -> u32 {
 pub fn process_part2(input: &str) -> u32 {
     0
 }
+*/
 
 #[cfg(test)]
 mod tests {
@@ -190,6 +516,6 @@ SJ.L7
 LJ...
 ";
         let result = process_part2(input);
-        assert_eq!(result, 15);
+        assert_eq!(result, 10);
     }
 }
