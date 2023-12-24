@@ -46,26 +46,35 @@ pub fn process_part1(input: &str) -> u64 {
 
     for i in 0..rock_cnt {
         for j in (i + 1)..rock_cnt {
-            let x1 = rocks[i].x;
-            let x2 = rocks[i].x + rocks[i].xv;
-            let x3 = rocks[j].x;
-            let x4 = rocks[j].x + rocks[j].xv;
+            let rocka_x = rocks[i].x;
+            let rocka_x_delta = rocks[i].x + rocks[i].xv;
+            let rockb_x = rocks[j].x;
+            let rockb_x_delta = rocks[j].x + rocks[j].xv;
 
-            let y1 = rocks[i].y;
-            let y2 = rocks[i].y + rocks[i].yv;
-            let y3 = rocks[j].y;
-            let y4 = rocks[j].y + rocks[j].yv;
+            let rocka_y = rocks[i].y;
+            let rocka_y_delta = rocks[i].y + rocks[i].yv;
+            let rockb_y = rocks[j].y;
+            let rockb_y_delta = rocks[j].y + rocks[j].yv;
 
-            let denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+            let denom = (rocka_x - rocka_x_delta) * (rockb_y - rockb_y_delta)
+                - (rocka_y - rocka_y_delta) * (rockb_x - rockb_x_delta);
             if denom != 0 {
-                let px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4))
-                    / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
-                let py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4))
-                    / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+                let px = ((rocka_x * rocka_y_delta - rocka_y * rocka_x_delta)
+                    * (rockb_x - rockb_x_delta)
+                    - (rocka_x - rocka_x_delta)
+                        * (rockb_x * rockb_y_delta - rockb_y * rockb_x_delta))
+                    / ((rocka_x - rocka_x_delta) * (rockb_y - rockb_y_delta)
+                        - (rocka_y - rocka_y_delta) * (rockb_x - rockb_x_delta));
+                let py = ((rocka_x * rocka_y_delta - rocka_y * rocka_x_delta)
+                    * (rockb_y - rockb_y_delta)
+                    - (rocka_y - rocka_y_delta)
+                        * (rockb_x * rockb_y_delta - rockb_y * rockb_x_delta))
+                    / ((rocka_x - rocka_x_delta) * (rockb_y - rockb_y_delta)
+                        - (rocka_y - rocka_y_delta) * (rockb_x - rockb_x_delta));
 
-                let test1 = (px > x1) == (x2 > x1); // if px>x1 then x2 has to be greater than x1.
-                                                    // If not, both have to be false
-                let test2 = (px > x3) == (x4 > x3);
+                let test1 = (px > rocka_x) == (rocka_x_delta > rocka_x); // if px>rocka_x then rocka_x_delta has to be greater than rocka_x.
+                                                                         // If not, both have to be false
+                let test2 = (px > rockb_x) == (rockb_x_delta > rockb_x);
 
                 let test3 = range_low <= px && px <= range_high;
                 let test4 = range_low <= py && py <= range_high;
