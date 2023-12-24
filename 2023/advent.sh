@@ -28,3 +28,4 @@ git add $LIBNAME
 git commit -a -m "$LIBNAME"
 git status
 git push
+figlet $LIBNAME
