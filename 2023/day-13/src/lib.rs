@@ -18,18 +18,104 @@ pub fn transpose(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     transposed
 }
 
+/*
 pub fn process_part1(input: &str) -> u32 {
     let fields: Vec<Vec<Vec<char>>> = input
         .split("\n\n")
         .map(|matrix| matrix.lines().map(|line| line.chars().collect()).collect())
         .collect();
-    dbg!(&fields);
+    // dbg!(&fields);
     fields.len() as u32
 }
 
 pub fn process_part2(input: &str) -> u32 {
     // 'smudge' a cell and if there is no reflection, smucde the next cell and so on.
     0
+}
+
+*/
+use std::collections::VecDeque;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Tile {
+    Ash,
+    Rock,
+}
+
+fn parse(input: &str) -> Vec<VecDeque<Vec<Tile>>> {
+    input
+        .split("\n\n")
+        .map(|block| {
+            block
+                .lines()
+                .map(|line| {
+                    line.chars()
+                        .map(|c| match c {
+                            '.' => Tile::Ash,
+                            '#' => Tile::Rock,
+                            _ => panic!("Unknown Tile"),
+                        })
+                        .collect()
+                })
+                .collect()
+        })
+        .collect()
+}
+
+fn reflects_at(grid: &VecDeque<Vec<Tile>>, smudges: usize) -> Option<usize> {
+    (1..grid.len()).find(|&offset| {
+        let half1 = grid.iter().take(offset).rev();
+        let half2 = grid.iter().skip(offset);
+        let combined = half1.zip(half2); // Check zip,
+        let found_smudges: usize = combined
+            .map(|(row1, row2)| row1.iter().zip(row2.iter()).filter(|(a, b)| a != b).count())
+            .sum();
+
+        found_smudges == smudges
+    })
+}
+
+pub fn process_part1(input: &str) -> usize {
+    let grid = parse(input);
+    grid.iter()
+        .map(|grid| {
+            // horizontal
+            if let Some(i) = reflects_at(grid, 0) {
+                return i * 100;
+            }
+
+            // vertical
+            let cols = (0..grid[0].len())
+                .map(|i| grid.iter().map(|row| row[i]).collect())
+                .collect();
+            if let Some(i) = reflects_at(&cols, 0) {
+                return i;
+            }
+            0
+        })
+        .sum()
+}
+
+pub fn process_part2(input: &str) -> usize {
+    let grid = parse(input);
+    grid.iter()
+        .map(|grid| {
+            // horizontal
+            if let Some(i) = reflects_at(grid, 1) {
+                return i * 100;
+            }
+
+            // vertical
+            let cols = (0..grid[0].len())
+                .map(|i| grid.iter().map(|row| row[i]).collect())
+                .collect();
+            if let Some(i) = reflects_at(&cols, 1) {
+                return i;
+            }
+
+            0
+        })
+        .sum()
 }
 
 #[cfg(test)]
