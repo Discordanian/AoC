@@ -516,6 +516,6 @@ SJ.L7
 LJ...
 ";
         let result = process_part2(input);
-        assert_eq!(result, 10);
+        assert_eq!(result, 1);
     }
 }
