@@ -147,19 +147,32 @@ impl Coord {
                 // north
                 if self.row_idx > 0 {
                     match map[self.row_idx - 1][self.col_idx] {
-                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
-                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
-                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::NorthSouth => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
+                        Tile::SouthWest => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
+                        Tile::SouthEast => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
                         _ => (),
                     }
                 }
                 // south
-                if self.row_idx < max_height && map[self.row_idx + 1][self.col_idx] != Tile::Ground {
+                if self.row_idx < max_height && map[self.row_idx + 1][self.col_idx] != Tile::Ground
+                {
                     match map[self.row_idx + 1][self.col_idx] {
-                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
-                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
-                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthSouth => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
+                        Tile::NorthWest => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
+                        Tile::NorthEast => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
                         _ => (),
                     }
@@ -169,9 +182,15 @@ impl Coord {
                 // west
                 if self.col_idx > 0 {
                     match map[self.row_idx][self.col_idx - 1] {
-                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
-                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
-                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::EastWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
+                        Tile::SouthEast => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
+                        Tile::NorthEast => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
                         _ => (),
                     }
@@ -179,9 +198,15 @@ impl Coord {
                 // east
                 if self.col_idx < max_width {
                     match map[self.row_idx][self.col_idx + 1] {
-                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
-                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
-                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::EastWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
+                        Tile::NorthWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
+                        Tile::SouthWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
                         _ => (),
                     }
@@ -191,9 +216,15 @@ impl Coord {
                 // north
                 if self.row_idx > 0 {
                     match map[self.row_idx - 1][self.col_idx] {
-                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
-                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
-                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::NorthSouth => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
+                        Tile::SouthWest => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
+                        Tile::SouthEast => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
                         _ => (),
                     }
@@ -201,9 +232,15 @@ impl Coord {
                 // east
                 if self.col_idx < max_width {
                     match map[self.row_idx][self.col_idx + 1] {
-                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
-                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
-                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::EastWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
+                        Tile::NorthWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
+                        Tile::SouthWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
                         _ => (),
                     }
@@ -213,9 +250,15 @@ impl Coord {
                 // north
                 if self.row_idx > 0 {
                     match map[self.row_idx - 1][self.col_idx] {
-                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
-                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
-                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
+                        Tile::NorthSouth => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
+                        Tile::SouthWest => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
+                        Tile::SouthEast => {
+                            neighbours.push(Coord::new(self.row_idx - 1, self.col_idx))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx - 1, self.col_idx)),
                         _ => (),
                     }
@@ -223,9 +266,15 @@ impl Coord {
                 // west
                 if self.col_idx > 0 {
                     match map[self.row_idx][self.col_idx - 1] {
-                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
-                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
-                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::EastWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
+                        Tile::SouthEast => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
+                        Tile::NorthEast => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
                         _ => (),
                     }
@@ -235,9 +284,15 @@ impl Coord {
                 // south
                 if self.row_idx < max_height {
                     match map[self.row_idx + 1][self.col_idx] {
-                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
-                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
-                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthSouth => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
+                        Tile::NorthWest => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
+                        Tile::NorthEast => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
                         _ => (),
                     }
@@ -245,9 +300,15 @@ impl Coord {
                 // west
                 if self.col_idx > 0 {
                     match map[self.row_idx][self.col_idx - 1] {
-                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
-                        Tile::SouthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
-                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
+                        Tile::EastWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
+                        Tile::SouthEast => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
+                        Tile::NorthEast => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx - 1))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx - 1)),
                         _ => (),
                     }
@@ -257,9 +318,15 @@ impl Coord {
                 // south
                 if self.row_idx < max_height {
                     match map[self.row_idx + 1][self.col_idx] {
-                        Tile::NorthSouth => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
-                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
-                        Tile::NorthEast => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
+                        Tile::NorthSouth => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
+                        Tile::NorthWest => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
+                        Tile::NorthEast => {
+                            neighbours.push(Coord::new(self.row_idx + 1, self.col_idx))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx + 1, self.col_idx)),
                         _ => (),
                     }
@@ -267,9 +334,15 @@ impl Coord {
                 // east
                 if self.col_idx < max_width {
                     match map[self.row_idx][self.col_idx + 1] {
-                        Tile::EastWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
-                        Tile::NorthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
-                        Tile::SouthWest => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
+                        Tile::EastWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
+                        Tile::NorthWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
+                        Tile::SouthWest => {
+                            neighbours.push(Coord::new(self.row_idx, self.col_idx + 1))
+                        }
                         Tile::Start => neighbours.push(Coord::new(self.row_idx, self.col_idx + 1)),
                         _ => (),
                     }

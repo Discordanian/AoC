@@ -5,8 +5,8 @@ use std::collections::HashMap;
 pub fn input_to_hashmap(input: &str) -> HashMap<IVec2, char> {
     let mut grid_map = HashMap::new();
 
-    for (y,line) in input.lines().enumerate() {
-        for (x,ch) in line.chars().enumerate() {
+    for (y, line) in input.lines().enumerate() {
+        for (x, ch) in line.chars().enumerate() {
             grid_map.insert(IVec2::new(x as i32, y as i32), ch);
         }
     }
@@ -26,7 +26,7 @@ pub fn process_part2(input: &str) -> u32 {
 mod tests {
     use super::*;
 
-    const INPUT : &str = "2413432311323
+    const INPUT: &str = "2413432311323
 3215453535623
 3255245654254
 3446585845452

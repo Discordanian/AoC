@@ -114,11 +114,11 @@ pub fn process_part2(input: &str) -> u32 {
 
     for (iv2, _) in hm.iter() {
         let possible_directions = vec![
-                Direction::North.step(iv2),
-                Direction::South.step(iv2),
-                Direction::East.step(iv2),
-                Direction::West.step(iv2),
-            ];
+            Direction::North.step(iv2),
+            Direction::South.step(iv2),
+            Direction::East.step(iv2),
+            Direction::West.step(iv2),
+        ];
         for new_iv2 in possible_directions {
             if hm.get(&new_iv2).is_some() {
                 graph.add_edge(node_map[&iv2], node_map[&new_iv2], 1);
@@ -134,7 +134,7 @@ pub fn process_part2(input: &str) -> u32 {
     let routes =
         algo::all_simple_paths::<Vec<_>, _>(&graph, node_map[start_v], node_map[finish_v], 0, None);
     routes.max_by(|a, b| a.len().cmp(&b.len())).unwrap().len() as u32 - 1_u32 // has an off-by-one
-    // thing going on.  I think it's because it's counting the start as a step of 1
+                                                                              // thing going on.  I think it's because it's counting the start as a step of 1
 }
 
 #[cfg(test)]

@@ -7,8 +7,8 @@ use petgraph::{
     dot::{Config, Dot},
     prelude::*,
 };
-use std::collections::{HashMap, HashSet};
 use rustworkx_core::connectivity::stoer_wagner_min_cut;
+use std::collections::{HashMap, HashSet};
 
 fn parse_input(input: &str) -> HashMap<String, HashSet<String>> {
     let mut adjacency_map: HashMap<String, HashSet<String>> = HashMap::new();
@@ -66,8 +66,8 @@ pub fn process_part1(input: &str) -> usize {
     }
 
     // use rustworkx_core::connectivity::stoer_wagner_min_cut;
-    let min: rustworkx_core::Result< Option<(usize, Vec<_>)>,
-    > = stoer_wagner_min_cut(&graph, |_| Ok(1));
+    let min: rustworkx_core::Result<Option<(usize, Vec<_>)>> =
+        stoer_wagner_min_cut(&graph, |_| Ok(1));
     let (_, partition_size) = min.unwrap().unwrap();
 
     (unique_list.len() - partition_size.len()) * partition_size.len()

@@ -16,30 +16,29 @@ pub fn process_part1(input: &str) -> String {
             first = false;
         }
     }
-    format!("{}",sum)
+    format!("{}", sum)
 }
 
 pub fn process_part2(input: &str) -> String {
-    let mut new_input : String = String::from(input);
-    new_input = new_input.replace("one","o1e");
-    new_input = new_input.replace("two","t2o");
-    new_input = new_input.replace("three","t3e");
-    new_input = new_input.replace("four","4");
-    new_input = new_input.replace("five","5");
-    new_input = new_input.replace("six","6");
-    new_input = new_input.replace("seven","7n");
-    new_input = new_input.replace("eight","e8t");
-    new_input = new_input.replace("nine","n9e");
+    let mut new_input: String = String::from(input);
+    new_input = new_input.replace("one", "o1e");
+    new_input = new_input.replace("two", "t2o");
+    new_input = new_input.replace("three", "t3e");
+    new_input = new_input.replace("four", "4");
+    new_input = new_input.replace("five", "5");
+    new_input = new_input.replace("six", "6");
+    new_input = new_input.replace("seven", "7n");
+    new_input = new_input.replace("eight", "e8t");
+    new_input = new_input.replace("nine", "n9e");
 
     process_part1(new_input.as_str())
-
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const INPUT1 : &str = "1abc2
+    const INPUT1: &str = "1abc2
 pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet

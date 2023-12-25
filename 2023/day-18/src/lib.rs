@@ -94,7 +94,7 @@ pub fn process_part2(input: &str) -> i64 {
 mod tests {
     use super::*;
 
-    const INPUT: &str ="R 6 (#70c710)
+    const INPUT: &str = "R 6 (#70c710)
 D 5 (#0dc571)
 L 2 (#5713f0)
 D 2 (#d2c081)
@@ -108,7 +108,6 @@ R 2 (#7807d2)
 U 3 (#a77fa3)
 L 2 (#015232)
 U 2 (#7a21e3)";
-
 
     #[test]
     fn part1_works() {

@@ -23,7 +23,7 @@ pub fn process_part2(input: &str) -> u32 {
         })
         .collect::<Vec<_>>();
 
-    result.sort_by(|a,b| b.cmp(a)); // reverse sort
+    result.sort_by(|a, b| b.cmp(a)); // reverse sort
     let sum: u32 = result.iter().take(3).sum();
     sum
 }
@@ -32,7 +32,7 @@ pub fn process_part2(input: &str) -> u32 {
 mod tests {
     use super::*;
 
-    const INPUT : &str = "1
+    const INPUT: &str = "1
 2
 
 5

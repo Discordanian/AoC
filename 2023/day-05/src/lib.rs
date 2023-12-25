@@ -66,8 +66,8 @@ pub fn process_part1(input: &str) -> i64 {
 
         'maps: for map in &maps {
             for conversion in map {
-                let rule_applies =
-                    curr >= conversion.source_start && curr <= conversion.source_start + conversion.length;
+                let rule_applies = curr >= conversion.source_start
+                    && curr <= conversion.source_start + conversion.length;
                 if rule_applies {
                     let offset = curr - conversion.source_start;
                     curr = conversion.dest_start + offset;

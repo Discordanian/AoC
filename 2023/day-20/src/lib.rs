@@ -10,7 +10,7 @@ pub fn process_part2(input: &str) -> u32 {
 mod tests {
     use super::*;
 
-    const INPUT : &str = "";
+    const INPUT: &str = "";
 
     #[test]
     fn part1_works() {

@@ -11,7 +11,8 @@ enum Tile {
 }
 
 fn input_to_grid(input: &str) -> Vec<Vec<Tile>> {
-    input.lines()
+    input
+        .lines()
         .map(|line| {
             line.chars()
                 .map(|c| match c {
@@ -78,7 +79,6 @@ fn energized_count(start: Ray, grid: &[Vec<Tile>]) -> usize {
     retval.len()
 }
 
-
 #[derive(Copy, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Direction {
     East = 0,
@@ -112,14 +112,13 @@ impl Ray {
     }
 }
 
-
 pub fn process_part1(input: &str) -> u32 {
     let grid = input_to_grid(input);
     let start = Ray {
         pos: Coord { x: 0, y: 0 },
         dir: Direction::East,
     };
-    energized_count(start, &grid)  as u32
+    energized_count(start, &grid) as u32
 }
 
 pub fn process_part2(input: &str) -> u32 {

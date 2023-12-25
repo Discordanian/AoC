@@ -1,5 +1,5 @@
-use std::collections::{BinaryHeap, HashMap};
 use std::cmp::Ordering;
+use std::collections::{BinaryHeap, HashMap};
 use std::fs;
 
 #[derive(Clone, Copy, Eq, PartialEq, Hash)]
@@ -20,7 +20,9 @@ struct Grid {
 impl Ord for State {
     fn cmp(&self, other: &Self) -> Ordering {
         // Reverse the ordering to make the BinaryHeap act as a min heap
-        other.r.cmp(&self.r)
+        other
+            .r
+            .cmp(&self.r)
             .then_with(|| other.c.cmp(&self.c))
             .then_with(|| other.dir.cmp(&self.dir))
             .then_with(|| other.indir.cmp(&self.indir))
@@ -44,7 +46,12 @@ impl Grid {
         let mut queue = BinaryHeap::new();
         let mut dist = HashMap::new();
 
-        queue.push(State { r: 0, c: 0, dir: 0, indir: -1 });
+        queue.push(State {
+            r: 0,
+            c: 0,
+            dir: 0,
+            indir: -1,
+        });
         dist.insert((0, 0, 0, -1), 0);
 
         while let Some(State { r, c, dir, indir }) = queue.pop() {
@@ -60,19 +67,21 @@ impl Grid {
                 let rr = r as isize + dr;
                 let cc = c as isize + dc;
                 let new_dir = i;
-                let new_indir = if new_dir != dir {
-                    indir + 1
-                } else {
-                    indir
-                };
+                let new_indir = if new_dir != dir { indir + 1 } else { indir };
 
                 let isnt_reverse = (new_dir + 2) % 4 != dir;
                 let isvalid_part1 = new_indir <= 3;
-                let isvalid_part2 = new_indir <= 10 && (new_dir == dir || indir >= 4 || indir == -1);
+                let isvalid_part2 =
+                    new_indir <= 10 && (new_dir == dir || indir >= 4 || indir == -1);
                 let isvalid = if part2 { isvalid_part2 } else { isvalid_part1 };
 
-                if rr >= 0 && rr < self.rows as isize && cc >= 0 && cc < self.cols as isize
-                    && isnt_reverse && isvalid {
+                if rr >= 0
+                    && rr < self.rows as isize
+                    && cc >= 0
+                    && cc < self.cols as isize
+                    && isnt_reverse
+                    && isvalid
+                {
                     let cost = self.data[rr as usize][cc as usize].to_digit(10).unwrap() as i32;
                     queue.push(State {
                         r: rr as usize,
@@ -80,12 +89,16 @@ impl Grid {
                         dir: new_dir,
                         indir: new_indir,
                     });
-                    dist.insert((rr as usize, cc as usize, new_dir, new_indir), dist[&(r, c, dir, indir)] + cost);
+                    dist.insert(
+                        (rr as usize, cc as usize, new_dir, new_indir),
+                        dist[&(r, c, dir, indir)] + cost,
+                    );
                 }
             }
         }
 
-        dist.into_iter().filter(|&((r, c, _, _), _)| r == self.rows - 1 && c == self.cols - 1)
+        dist.into_iter()
+            .filter(|&((r, c, _, _), _)| r == self.rows - 1 && c == self.cols - 1)
             .map(|(_, v)| v)
             .min()
             .unwrap_or(i32::MAX)
@@ -101,4 +114,3 @@ fn main() {
     println!("{}", grid.solve(false));
     println!("{}", grid.solve(true));
 }
-
