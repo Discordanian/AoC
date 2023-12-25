@@ -1,74 +1,83 @@
-use std::collections::{HashMap, HashSet};
-use petgraph::graph::UnGraph;
-use petgraph::adj::NodeIndex;
+// use petgraph::adj::NodeIndex;
+// use petgraph::graph::UnGraph;
 
-fn parse_input(input: &str) -> HashMap<&str, HashSet<&str>> {
-    let mut adjacency_map: HashMap<&str, HashSet<&str>> = HashMap::new();
+use petgraph::{
+    algo::{self, dominators, min_spanning_tree},
+    data::FromElements,
+    dot::{Config, Dot},
+    prelude::*,
+};
+use std::collections::{HashMap, HashSet};
+use rustworkx_core::connectivity::stoer_wagner_min_cut;
+
+fn parse_input(input: &str) -> HashMap<String, HashSet<String>> {
+    let mut adjacency_map: HashMap<String, HashSet<String>> = HashMap::new();
 
     for line in input.lines() {
-        let parts: Vec<&str> = line.split([':', ' ', '\n']).filter(|s| !s.is_empty()).collect();
+        let parts: Vec<&str> = line
+            .split([':', ' ', '\n'])
+            .filter(|s| !s.is_empty())
+            .collect();
 
- 		if let Some(node) = parts.get(0).cloned() {
-            let neighbors: HashSet<&str> = parts[1..].iter().cloned().collect();
-            adjacency_map.insert(node, neighbors);
+        if let Some(node) = parts.get(0).cloned() {
+            let neighbors: HashSet<String> = parts[1..].iter().cloned().map(String::from).collect();
+            adjacency_map.insert(node.to_string(), neighbors);
         }
     }
     adjacency_map
 }
 
-fn unique_nodes(input: &str) -> HashSet<&str> {
+fn unique_nodes(input: &str) -> HashSet<String> {
     let mut retval = HashSet::new();
 
     for line in input.lines() {
-        let parts: Vec<&str> = line.split([':', ' ', '\n']).filter(|s| !s.is_empty()).collect();
+        let parts: Vec<&str> = line
+            .split([':', ' ', '\n'])
+            .filter(|s| !s.is_empty())
+            .collect();
 
- 		if let Some(node) = parts.get(0).cloned() {
-			retval.insert(node);
+        if let Some(node) = parts.get(0).cloned() {
+            retval.insert(node.to_string());
             for n in parts[1..].iter() {
-				retval.insert(n);
-			}
+                retval.insert(n.to_string());
+            }
         }
     }
-	retval
+    retval
 }
 
+pub fn process_part1(input: &str) -> usize {
+    let nodelist = parse_input(input);
+    let unique_list = unique_nodes(input);
 
-pub fn process_part1(input: &str) -> u32 {
-	let nodelist = parse_input(input);
-	let unique_list = unique_nodes(input);
+    // Make an undirected graph
+    let mut graph = UnGraph::<String, u32>::default();
 
-	// Make an undirected graph
-    let mut graph = UnGraph::<&str, u32>::default();
-
-    let node_map: HashMap<&str, NodeIndex> = unique_list
+    let node_map: HashMap<String, NodeIndex> = unique_list
         .iter()
-        .map(|node| (*node, graph.add_node(&node)))
+        .map(|node| (node.clone(), graph.add_node(node.clone())))
         .collect();
 
-	
-	// In the list I need to make sure we put edges back and forth because not all nodes are in the key
-	for (key, values) in nodelist.iter() {
-		for v in values.iter() {
-			graph.add_edge(
-			node_map[key].into(),
-			node_map[v].into(),
-			1
-			);
-		}
-	}
+    // In the list I need to make sure we put edges back and forth because not all nodes are in the key
+    for (key, values) in nodelist.iter() {
+        for v in values.iter() {
+            graph.add_edge(node_map[key].into(), node_map[v].into(), 1);
+        }
+    }
 
- 	// use rustworkx_core::connectivity::stoer_wagner_min_cut;
+    // use rustworkx_core::connectivity::stoer_wagner_min_cut;
+    let min: rustworkx_core::Result< Option<(usize, Vec<_>)>,
+    > = stoer_wagner_min_cut(&graph, |_| Ok(1));
+    let (_, partition_size) = min.unwrap().unwrap();
 
-	
-	input.len() as u32
+    (unique_list.len() - partition_size.len()) * partition_size.len()
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const INPUT : &str = "jqt: rhn xhk nvd
+    const INPUT: &str = "jqt: rhn xhk nvd
 rsh: frs pzl lsr
 xhk: hfx
 cmg: qnr nvd lhk bvb
