@@ -238,6 +238,6 @@ mod tests {
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 8410);
+        assert_eq!(result, 82000210);
     }
 }
