@@ -34,7 +34,9 @@ fn direction(input: &str) -> IResult<&str, &str> {
 }
 
 fn parse_line(input: &str) -> IResult<&str, Instruction> {
-    let (input, depth) = separated_pair(direction, complete::char(' '), usize)(input);
+    let (input, dir) = branch::alt((forward, down, up))(input);
+    let (input, _) = tag(' ')(input);
+    let (input, length) = character:u32(input)
     dbg!(&depth);
     Ok((input,depth))
 }
