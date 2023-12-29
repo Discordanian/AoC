@@ -39,9 +39,16 @@ fn parse_input(input: &str) -> IResult<&str, Vec<Instruction>> {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let x : Vec<_> = input.lines().map(parse_line).collect();
-    dbg!(&x);
-    input.len() as u32
+    let x : Vec<Instruction> = input.lines().map(parse_line).flat_map(|Ok((_,x))| x).collect();
+    let final_pos: Position = x.iter().fold(Position{depth: 0, distance: 0},|mut pos, inst| {
+                  match inst {
+                    Instruction::Forward(x) => pos.distance += x,
+                    Instruction::Up(x) => pos.depth -= x,
+                    Instruction::Down(x) => pos.depth += x,
+                  };
+                  pos});
+    dbg!(final_pos);
+    23
 }
 
 pub fn process_part2(input: &str) -> u32 {
