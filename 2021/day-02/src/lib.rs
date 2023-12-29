@@ -1,27 +1,34 @@
 use nom::character::complete;
-// use nom::sequence::separated_pair;
 use nom::branch;
 use nom::bytes::complete::tag;
 use nom::IResult;
 
 #[derive(Debug, Clone, Copy)]
 enum Instruction {
-    Forward(u32),
-    Down(u32),
-    Up(u32),
+    Forward(i32),
+    Down(i32),
+    Up(i32),
 }
 
+// Part one only needed position
 #[derive(Debug, Clone, Copy)]
 struct Position {
-    depth: u32,
-    distance: u32,
+    depth: i32,
+    distance: i32,
 }
 
+// Part 2 has 'aim'
+#[derive(Debug, Clone, Copy)]
+struct Submarine {
+    depth: i32,
+    distance: i32,
+    aim: i32,
+}
 
 fn parse_line(input: &str) -> IResult<&str, Instruction> {
-    let (input, dir) = branch::alt((tag("forward"), tag("up"), tag("down")))( input,)?;
+    let (input, dir) = branch::alt((tag("forward"), tag("up"), tag("down")))(input)?;
     let (input, _) = tag(" ")(input)?;
-    let (input, length) = complete::u32(input)?;
+    let (input, length) = complete::i32(input)?;
 
     let retval = match dir {
         "forward" => Instruction::Forward(length),
@@ -30,7 +37,7 @@ fn parse_line(input: &str) -> IResult<&str, Instruction> {
         _ => panic!("In parse line, unknown direction"),
     };
 
-    Ok((input,retval))
+    Ok((input, retval))
 }
 
 #[allow(dead_code)]
@@ -39,25 +46,48 @@ fn parse_input(input: &str) -> IResult<&str, Vec<Instruction>> {
     Ok((input, depths))
 }
 
-pub fn process_part1(input: &str) -> u32 {
-    // let x : Vec<Instruction> = input.lines().map(parse_line).flat_map(|Ok((_,x))| x).collect();
-    let x : Vec<_> = input.lines().map(parse_line).map(|x| { let (_, inst) = x.unwrap(); inst}).collect();
-    // let (_,x) : Vec<_> = parse_input(input).unwrap();
-    
-    let final_pos: Position = x.iter().fold(Position{depth: 0, distance: 0},|mut pos, inst| {
-                  match inst {
-                    Instruction::Forward(x) => pos.distance += x,
-                    Instruction::Up(x) => pos.depth -= x,
-                    Instruction::Down(x) => pos.depth += x,
-                  };
-                  pos});
-    dbg!(&final_pos);
-   //  dbg!(x);
-   final_pos.depth * final_pos.distance
+pub fn process_part1(input: &str) -> i32 {
+    let (_, x) = parse_input(input).unwrap();
+
+    let final_pos: Position = x.iter().fold(
+        Position {
+            depth: 0,
+            distance: 0,
+        },
+        |mut pos, inst| {
+            match inst {
+                Instruction::Forward(x) => pos.distance += x,
+                Instruction::Up(x) => pos.depth -= x,
+                Instruction::Down(x) => pos.depth += x,
+            };
+            pos
+        },
+    );
+    final_pos.depth * final_pos.distance
 }
 
-pub fn process_part2(input: &str) -> u32 {
-    input.len() as u32
+pub fn process_part2(input: &str) -> i32 {
+    let (_, x) = parse_input(input).unwrap();
+
+    let final_pos: Submarine = x.iter().fold(
+        Submarine {
+            depth: 0,
+            distance: 0,
+            aim: 0,
+        },
+        |mut sub, inst| {
+            match inst {
+                Instruction::Forward(x) => {
+                    sub.distance += x;
+                    sub.depth += sub.aim * x;
+                }
+                Instruction::Up(x) => sub.aim -= x,
+                Instruction::Down(x) => sub.aim += x,
+            };
+            sub
+        },
+    );
+    final_pos.depth * final_pos.distance
 }
 
 #[cfg(test)]
@@ -75,6 +105,6 @@ mod tests {
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 900);
     }
 }
