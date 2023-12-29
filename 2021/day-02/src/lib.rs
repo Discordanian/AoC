@@ -33,13 +33,17 @@ fn parse_line(input: &str) -> IResult<&str, Instruction> {
     Ok((input,retval))
 }
 
+#[allow(dead_code)]
 fn parse_input(input: &str) -> IResult<&str, Vec<Instruction>> {
     let (input, depths) = nom::multi::separated_list1(complete::newline, parse_line)(input)?;
     Ok((input, depths))
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let x : Vec<Instruction> = input.lines().map(parse_line).flat_map(|Ok((_,x))| x).collect();
+    // let x : Vec<Instruction> = input.lines().map(parse_line).flat_map(|Ok((_,x))| x).collect();
+    let x : Vec<_> = input.lines().map(parse_line).map(|x| { let (_, inst) = x.unwrap(); inst}).collect();
+    // let (_,x) : Vec<_> = parse_input(input).unwrap();
+    
     let final_pos: Position = x.iter().fold(Position{depth: 0, distance: 0},|mut pos, inst| {
                   match inst {
                     Instruction::Forward(x) => pos.distance += x,
@@ -47,8 +51,9 @@ pub fn process_part1(input: &str) -> u32 {
                     Instruction::Down(x) => pos.depth += x,
                   };
                   pos});
-    dbg!(final_pos);
-    23
+    dbg!(&final_pos);
+   //  dbg!(x);
+   final_pos.depth * final_pos.distance
 }
 
 pub fn process_part2(input: &str) -> u32 {
