@@ -35,10 +35,15 @@ fn direction(input: &str) -> IResult<&str, &str> {
 
 fn parse_line(input: &str) -> IResult<&str, Instruction> {
     let (input, dir) = branch::alt((forward, down, up))(input);
-    let (input, _) = tag(' ')(input);
+    let (input, _) = tag(" ")(input);
     let (input, length) = character:u32(input)
-    dbg!(&depth);
-    Ok((input,depth))
+    let retval = match dir {
+        "forward" => Instruction::Forward(length),
+        "down" => Instruction::Down(length),
+        "up" => Instruction::Up(length),
+        _ => panic!("In parse line, unknown direction"),
+    };
+    Ok((input,retval))
 }
 
 fn parse_input(input: &str) -> IResult<&str, Vec<Instruction>> {
