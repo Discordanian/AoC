@@ -8,6 +8,9 @@ pub fn process_part1(input: &str) -> usize {
         })
         .collect();
     dbg!(&grid);
+    let line_count = grid.len();
+    let col_count = grid[0].len();
+    dbg!((line_count, col_count));
 
     input.len()
 }
