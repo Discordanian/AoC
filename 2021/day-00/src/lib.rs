@@ -29,13 +29,13 @@ mod tests {
     const INPUT: &str = include_str!("../example.txt");
 
     #[test]
-    fn part1_works() {
+    fn part1_example() {
         let result = process_part1(INPUT);
         assert_eq!(result, 0);
     }
 
     #[test]
-    fn part2_works() {
+    fn part2_example() {
         let result = process_part2(INPUT);
         assert_eq!(result, 0);
     }
