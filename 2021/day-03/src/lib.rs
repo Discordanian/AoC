@@ -10,9 +10,24 @@ pub fn process_part1(input: &str) -> usize {
     dbg!(&grid);
     let line_count = grid.len();
     let col_count = grid[0].len();
-    dbg!((line_count, col_count));
+    // dbg!((line_count, col_count));
+    let mut gamma = 0;
+    let mut epsilon = 0;
+    for col in 0..col_count {
+        let one_count = grid.iter().filter(|x| x[col] == 1).count();
+        gamma *= 2;
+        epsilon *= 2;
+        dbg!((one_count, col));
+        match one_count > line_count/2 {
+            true => gamma += 1,
+            false => epsilon += 1,
+        }
+    }
 
-    input.len()
+    dbg!((gamma, epsilon));
+
+
+    gamma * epsilon
 }
 
 pub fn process_part2(input: &str) -> usize {
