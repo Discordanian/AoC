@@ -1,20 +1,14 @@
-use nom::character::complete;
-// use nom::bytes::complete::tag;
-use nom::IResult;
-
-/*
-fn parse_line(input: &str) -> IResult<&str, u32> {
-    let (input, depth) = complete::u32(input)?;
-    Ok((input,depth))
-}
-
-fn parse_input(input: &str) -> IResult<&str, Vec<u32>> {
-    let (input, depths) = nom::multi::separated_list1(complete::newline, parse_line)(input)?;
-    Ok((input, depths))
-}
-*/
-
 pub fn process_part1(input: &str) -> usize {
+    let grid: Vec<Vec<usize>> = input
+        .lines()
+        .map(|line| {
+            line.chars()
+                .map(|x| x.to_digit(10).unwrap_or(0) as usize)
+                .collect::<Vec<usize>>()
+        })
+        .collect();
+    dbg!(&grid);
+
     input.len()
 }
 
