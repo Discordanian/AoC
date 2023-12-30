@@ -31,7 +31,7 @@ mod tests {
     #[test]
     fn part1_works() {
         let result = process_part1(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 198);
     }
 
     #[test]
