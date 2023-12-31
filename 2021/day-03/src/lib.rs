@@ -15,6 +15,9 @@ pub fn process_part1(input: &str) -> usize {
     let mut epsilon = 0;
     for col in 0..col_count {
         let one_count = grid.iter().filter(|x| x[col] == 1).count();
+        if col == 0 {
+            dbg!(grid.iter().filter(|x| x[col] == 1).map(|x| x.clone()).collect::<Vec<Vec<usize>>>());
+        }
         gamma *= 2;
         epsilon *= 2;
         dbg!((one_count, col));
@@ -41,13 +44,13 @@ mod tests {
     const INPUT: &str = include_str!("../example.txt");
 
     #[test]
-    fn part1_works() {
+    fn part1_example() {
         let result = process_part1(INPUT);
         assert_eq!(result, 198);
     }
 
     #[test]
-    fn part2_works() {
+    fn part2_example() {
         let result = process_part2(INPUT);
         assert_eq!(result, 0);
     }
