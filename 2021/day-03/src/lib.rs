@@ -16,19 +16,22 @@ pub fn process_part1(input: &str) -> usize {
     for col in 0..col_count {
         let one_count = grid.iter().filter(|x| x[col] == 1).count();
         if col == 0 {
-            dbg!(grid.iter().filter(|x| x[col] == 1).map(|x| x.clone()).collect::<Vec<Vec<usize>>>());
+            dbg!(grid
+                .iter()
+                .filter(|x| x[col] == 1)
+                .map(|x| x.clone())
+                .collect::<Vec<Vec<usize>>>());
         }
         gamma *= 2;
         epsilon *= 2;
         dbg!((one_count, col));
-        match one_count > line_count/2 {
+        match one_count > line_count / 2 {
             true => gamma += 1,
             false => epsilon += 1,
         }
     }
 
     dbg!((gamma, epsilon));
-
 
     gamma * epsilon
 }
