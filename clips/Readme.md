@@ -3,7 +3,7 @@
 ## Branch and Bound
 https://www.geeksforgeeks.org/branch-and-bound-algorithm/#
 
-```c++
+```
 /* A Naive recursive implementation of 
 0-1 Knapsack problem */
 #include <bits/stdc++.h> 
@@ -54,7 +54,7 @@ int main()
 ```
 
 ## BFS
-```c++
+```
 // C++ code to print BFS traversal from a given
 // source vertex
 
@@ -148,7 +148,7 @@ int main()
 ```
 
 ## Dijkstra
-```c++
+```
 // C++ program for Dijkstra's single source shortest path
 // algorithm. The program is for adjacency matrix
 // representation of the graph
@@ -260,7 +260,7 @@ int main()
 ```
 
 ## Sliding Window
-```c++
+```
 // O(n*k) solution for finding maximum sum of
 // a subarray of size k
 #include <bits/stdc++.h>
