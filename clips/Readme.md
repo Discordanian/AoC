@@ -264,8 +264,6 @@ Left and Right point to start.  Move right pointer until condition is met.
 If looking for min, move left pointer until condition fails.
 If looking for max, move right pointer until condition fails.
 If condition fails, move right pointer.
-
-
 ```
 // O(n*k) solution for finding maximum sum of
 // a subarray of size k
