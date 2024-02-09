@@ -18,22 +18,6 @@ pub fn transpose(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     transposed
 }
 
-/*
-pub fn process_part1(input: &str) -> u32 {
-    let fields: Vec<Vec<Vec<char>>> = input
-        .split("\n\n")
-        .map(|matrix| matrix.lines().map(|line| line.chars().collect()).collect())
-        .collect();
-    // dbg!(&fields);
-    fields.len() as u32
-}
-
-pub fn process_part2(input: &str) -> u32 {
-    // 'smudge' a cell and if there is no reflection, smucde the next cell and so on.
-    0
-}
-
-*/
 use std::collections::VecDeque;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
