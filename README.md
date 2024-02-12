@@ -18,3 +18,4 @@ I did Advent of code for this year in a number of different programming language
 
 ## 2023
 All Rust.
+
