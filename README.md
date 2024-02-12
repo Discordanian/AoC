@@ -13,4 +13,3 @@ I did Advent of code for this year in a number of different programming language
 - javascript
 
 ## 2023
-
