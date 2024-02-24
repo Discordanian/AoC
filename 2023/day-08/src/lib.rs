@@ -7,11 +7,11 @@ pub struct Node {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let lines = input.split("\n").collect::<Vec<&str>>();
+    let lines = input.split('\n').collect::<Vec<&str>>();
     let instructions = lines[0].chars().collect::<Vec<char>>();
     let node_map: HashMap<String, Node> = input
-        .split("\n")
-        .filter(|x| x.to_string().contains("="))
+        .split('\n')
+        .filter(|x| x.to_string().contains('='))
         .fold(HashMap::<String, Node>::new(), |mut hm, line| {
             hm.insert(
                 line[0..3].to_string(),
