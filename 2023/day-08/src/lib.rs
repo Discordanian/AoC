@@ -98,7 +98,7 @@ pub fn process_part2(input: &str) -> u64 {
         .map(|line| {
             let (source, destinations) = line.split_once(" = ").unwrap();
             let destinations = destinations
-                .strip_prefix("(")
+                .strip_prefix('(')
                 .unwrap()
                 .strip_suffix(')')
                 .unwrap();
