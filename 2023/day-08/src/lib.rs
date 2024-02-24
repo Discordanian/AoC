@@ -154,7 +154,7 @@ pub fn process_part2(input: &str) -> u64 {
     let min_shared_cycles = ghosts
         .into_iter()
         .filter_map(|ghost| ghost.cycles)
-        .fold(1, |acc, item| lcm(acc, item));
+        .fold(1, lcm); // ->  .fold(1, |acc, item| lcm(acc, item));
 
     min_shared_cycles * instructions.len() as u64
 }
