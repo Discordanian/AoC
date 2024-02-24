@@ -398,7 +398,7 @@ pub fn process_part1(input: &str) -> usize {
     loop_coords.len() / 2
 }
 
-fn get_start_pipe(map: &Vec<Vec<Tile>>, start: Coord) -> Tile {
+fn get_start_pipe(map: &[Vec<Tile>], start: Coord) -> Tile {
     let neighbours = start.valid_neighbours(map);
     let north = neighbours
         .iter()
