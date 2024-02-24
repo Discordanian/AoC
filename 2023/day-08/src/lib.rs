@@ -52,7 +52,7 @@ pub fn step_count(node_map: HashMap<String, Node>, instructions: Vec<char>, star
             'R' => node_map[&current_node].right.clone(),
             _ => panic!("Unknown instruction received"),
         };
-        if current_node.ends_with("Z") {
+        if current_node.ends_with('Z') {
             return steps;
         }
         index += 1;
@@ -100,7 +100,7 @@ pub fn process_part2(input: &str) -> u64 {
             let destinations = destinations
                 .strip_prefix("(")
                 .unwrap()
-                .strip_suffix(")")
+                .strip_suffix(')')
                 .unwrap();
             let destinations = destinations.split_once(", ").unwrap();
             (
