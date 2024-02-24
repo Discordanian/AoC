@@ -402,20 +402,16 @@ fn get_start_pipe(map: &[Vec<Tile>], start: Coord) -> Tile {
     let neighbours = start.valid_neighbours(map);
     let north = neighbours
         .iter()
-        .find(|coord| coord.row_idx < start.row_idx)
-        .is_some();
+        .any(|coord| coord.row_idx < start.row_idx);
     let south = neighbours
         .iter()
-        .find(|coord| coord.row_idx > start.row_idx)
-        .is_some();
+        .any(|coord| coord.row_idx > start.row_idx);
     let west = neighbours
         .iter()
-        .find(|coord| coord.col_idx < start.col_idx)
-        .is_some();
+        .any(|coord| coord.col_idx < start.col_idx);
     let east = neighbours
         .iter()
-        .find(|coord| coord.col_idx > start.col_idx)
-        .is_some();
+        .any(|coord| coord.col_idx > start.col_idx);
 
     match (north, west, south, east) {
         (true, true, _, _) => Tile::NorthWest,
