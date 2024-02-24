@@ -9,7 +9,7 @@ pub struct Node {
 pub fn process_part1(input: &str) -> u32 {
     let lines = input.split("\n").collect::<Vec<&str>>();
     let instructions = lines[0].chars().collect::<Vec<char>>();
-    let mut node_map: HashMap<String, Node> = input
+    let node_map: HashMap<String, Node> = input
         .split("\n")
         .filter(|x| x.to_string().contains("="))
         .fold(HashMap::<String, Node>::new(), |mut hm, line| {
