@@ -33,7 +33,7 @@ pub fn process_part1(input: &str) -> u32 {
             'R' => node_map[&current_node].right.clone(),
             _ => panic!("Unknown instruction received"),
         };
-        if *current_node == "ZZZ".to_string() {
+        if *current_node == *"ZZZ" {
             return steps;
         }
         index += 1;
