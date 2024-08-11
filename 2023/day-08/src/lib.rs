@@ -7,11 +7,11 @@ pub struct Node {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let lines = input.split("\n").collect::<Vec<&str>>();
+    let lines = input.split('\n').collect::<Vec<&str>>();
     let instructions = lines[0].chars().collect::<Vec<char>>();
-    let mut node_map: HashMap<String, Node> = input
-        .split("\n")
-        .filter(|x| x.to_string().contains("="))
+    let node_map: HashMap<String, Node> = input
+        .split('\n')
+        .filter(|x| x.to_string().contains('='))
         .fold(HashMap::<String, Node>::new(), |mut hm, line| {
             hm.insert(
                 line[0..3].to_string(),
@@ -33,7 +33,7 @@ pub fn process_part1(input: &str) -> u32 {
             'R' => node_map[&current_node].right.clone(),
             _ => panic!("Unknown instruction received"),
         };
-        if *current_node == "ZZZ".to_string() {
+        if *current_node == *"ZZZ" {
             return steps;
         }
         index += 1;
@@ -52,7 +52,7 @@ pub fn step_count(node_map: HashMap<String, Node>, instructions: Vec<char>, star
             'R' => node_map[&current_node].right.clone(),
             _ => panic!("Unknown instruction received"),
         };
-        if current_node.ends_with("Z") {
+        if current_node.ends_with('Z') {
             return steps;
         }
         index += 1;
@@ -98,9 +98,9 @@ pub fn process_part2(input: &str) -> u64 {
         .map(|line| {
             let (source, destinations) = line.split_once(" = ").unwrap();
             let destinations = destinations
-                .strip_prefix("(")
+                .strip_prefix('(')
                 .unwrap()
-                .strip_suffix(")")
+                .strip_suffix(')')
                 .unwrap();
             let destinations = destinations.split_once(", ").unwrap();
             (
@@ -154,7 +154,7 @@ pub fn process_part2(input: &str) -> u64 {
     let min_shared_cycles = ghosts
         .into_iter()
         .filter_map(|ghost| ghost.cycles)
-        .fold(1, |acc, item| lcm(acc, item));
+        .fold(1, lcm); // ->  .fold(1, |acc, item| lcm(acc, item));
 
     min_shared_cycles * instructions.len() as u64
 }

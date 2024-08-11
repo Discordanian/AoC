@@ -27,7 +27,7 @@ pub fn next1_value(arr: Vec<i32>) -> i32 {
 
     let mut last_val = 0;
     for i in (0..(matrix.len() - 1)).rev() {
-        last_val = last_val + matrix[i].last().unwrap();
+        last_val += matrix[i].last().unwrap();
         matrix[i].push(last_val);
     }
 
