@@ -17,7 +17,7 @@ I did Advent of code for this year in a number of different programming language
 - javascript
 
 ## 2023
-All Rust.
+Majority Rust with a tad of python.  
 
 ## 2024
-All Rust.
+Going to attempt all RUST
