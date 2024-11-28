@@ -19,6 +19,7 @@ mkdir $LIBNAME/src/bin/
 sed "s/00/$1/g" $SRCLIB/src/bin/part-1.rs > $LIBNAME/src/bin/part-1.rs
 sed "s/00/$1/g" $SRCLIB/src/bin/part-2.rs $LIBNAME/src/bin/part-2.rs
 cp -v $SRCLIB/src/lib.rs $LIBNAME/src/lib.rs
+cp -v $SRCLIB/session_id $LIBNAME
 
 cd $LIBNAME
 cargo test
