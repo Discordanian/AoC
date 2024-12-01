@@ -1,6 +1,7 @@
 pub fn process_part1(input: &str) -> u32 {
     let mut left_list: Vec<u32> = vec![];
     let mut right_list: Vec<u32> = vec![];
+
     for line in input.lines() {
         let v: Vec<&str> = line.split("   ").collect();
         let l: u32 = v[0].parse().expect("Parse fail");
@@ -8,8 +9,10 @@ pub fn process_part1(input: &str) -> u32 {
         left_list.push(l);
         right_list.push(r);
     }
+
     left_list.sort();
     right_list.sort();
+
     let mut sum = 0;
     for i in 0..left_list.len() {
         sum += left_list[i].abs_diff(right_list[i]);
@@ -20,6 +23,7 @@ pub fn process_part1(input: &str) -> u32 {
 pub fn process_part2(input: &str) -> u32 {
     let mut left_list: Vec<u32> = vec![];
     let mut right_list: Vec<u32> = vec![];
+
     for line in input.lines() {
         let v: Vec<&str> = line.split("   ").collect();
         let l: u32 = v[0].parse().expect("Parse fail");
@@ -27,13 +31,14 @@ pub fn process_part2(input: &str) -> u32 {
         left_list.push(l);
         right_list.push(r);
     }
+
     left_list.sort();
     right_list.sort();
+
     let mut sum = 0;
-    for i in 0..left_list.len() {
-        let target = left_list[i];
-        let mult = right_list.iter().filter(|x| **x == target).count() as u32;
-        sum += target * mult;
+    for val in &left_list {
+        let mult = right_list.iter().filter(|x| **x == *val).count() as u32;
+        sum += val * mult;
     }
     sum
 }
