@@ -13,11 +13,9 @@ pub fn process_part1(input: &str) -> u32 {
     left_list.sort();
     right_list.sort();
 
-    let mut sum = 0;
-    for i in 0..left_list.len() {
-        sum += left_list[i].abs_diff(right_list[i]);
-    }
-    sum
+    std::iter::zip(left_list, right_list)
+        .map(|(l, r)| l.abs_diff(r))
+        .sum()
 }
 
 pub fn process_part2(input: &str) -> u32 {
