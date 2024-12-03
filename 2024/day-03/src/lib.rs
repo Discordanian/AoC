@@ -1,5 +1,13 @@
 use regex::Regex;
 
+pub fn multiply(s: &str) -> u32 {
+    let re = Regex::new(r"mul\((\d+),(\d+)\)").expect("Multiply regex is bad");
+    for (_, [a, b]) in re.captures_iter(s).map(|c| c.extract()) {
+        return a.parse::<u32>().unwrap() * b.parse::<u32>().unwrap();
+    }
+    0
+}
+
 pub fn process_part1(input: &str) -> u32 {
     let re =
         Regex::new(r"mul\(([1-9][0-9]?[0-9]?),([1-9][0-9]?[0-9]?)\)").expect("Poorly formed regex");
@@ -17,18 +25,28 @@ pub fn process_part1(input: &str) -> u32 {
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    let mut result = input
-        .split("\n\n") // Empty line between records
-        .map(|record| {
-            record
-                .lines()
-                .map(|row| row.parse::<u32>().unwrap())
-                .sum::<u32>()
-        })
-        .collect::<Vec<_>>();
+    let re = Regex::new(r"(do\(\))|(don't\(\))|(mul\([1-9][0-9]?[0-9]?,[1-9][0-9]?[0-9]?\))")
+        .expect("Poorly formed regex");
 
-    result.sort_by(|a, b| b.cmp(a)); // reverse sort
-    let sum: u32 = result.iter().take(3).sum();
+    let mut results = vec![];
+    for (_, [a]) in re.captures_iter(input).map(|c| c.extract()) {
+        results.push(a);
+    }
+
+    let mut enabled = true;
+    let mut sum = 0;
+
+    for s in results.iter() {
+        match s {
+            &"do()" => enabled = true,
+            &"don't()" => enabled = false,
+            _ => {
+                if enabled {
+                    sum += multiply(s);
+                }
+            }
+        } // match s
+    }
     sum
 }
 
