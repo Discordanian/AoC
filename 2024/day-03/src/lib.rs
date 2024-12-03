@@ -2,10 +2,13 @@ use regex::Regex;
 
 pub fn multiply(s: &str) -> u32 {
     let re = Regex::new(r"mul\((\d+),(\d+)\)").expect("Multiply regex is bad");
-    for (_, [a, b]) in re.captures_iter(s).map(|c| c.extract()) {
-        return a.parse::<u32>().unwrap() * b.parse::<u32>().unwrap();
-    }
-    0
+
+    let retval = if let Some((_, [a, b])) = re.captures_iter(s).map(|c| c.extract()).next() {
+        a.parse::<u32>().unwrap() * b.parse::<u32>().unwrap()
+    } else {
+        0
+    };
+    retval
 }
 
 pub fn process_part1(input: &str) -> u32 {
@@ -17,7 +20,6 @@ pub fn process_part1(input: &str) -> u32 {
         results.push((a, b));
     }
 
-    // println!("{:?}", &results);
     results
         .iter()
         .map(|(a, b)| a.parse::<u32>().unwrap() * b.parse::<u32>().unwrap())
@@ -37,15 +39,15 @@ pub fn process_part2(input: &str) -> u32 {
     let mut sum = 0;
 
     for s in results.iter() {
-        match s {
-            &"do()" => enabled = true,
-            &"don't()" => enabled = false,
+        match *s {
+            "do()" => enabled = true,
+            "don't()" => enabled = false,
             _ => {
                 if enabled {
                     sum += multiply(s);
                 }
             }
-        } // match s
+        }
     }
     sum
 }
