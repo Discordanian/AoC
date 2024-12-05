@@ -36,6 +36,107 @@ pub fn parse_vec_f32(s: &str) -> Vec<f32> {
     retval
 }
 
+#[derive(Ord, PartialOrd, Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub struct IPoint {
+    x: i32,
+    y: i32,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct FPoint {
+    x: f64,
+    y: f64,
+}
+
+#[allow(dead_code)]
+impl IPoint {
+    pub fn scale(self, z: i32) -> Self {
+        Self {
+            x: self.x * z,
+            y: self.y * z,
+        }
+    }
+}
+
+impl std::ops::Add for IPoint {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self {
+        Self {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+impl std::ops::Sub for IPoint {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
+#[allow(dead_code)]
+impl FPoint {
+    pub fn scale(self, z: f64) -> Self {
+        Self {
+            x: self.x * z,
+            y: self.y * z,
+        }
+    }
+}
+
+impl std::ops::Add for FPoint {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self {
+        Self {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+impl std::ops::Sub for FPoint {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
+pub fn input_to_map(input: &str) -> std::collections::BTreeMap<IPoint, char> {
+    input
+        .lines()
+        .enumerate()
+        .flat_map(|(y, line)| {
+            line.chars().enumerate().map(move |(x, val)| {
+                (
+                    IPoint {
+                        x: x as i32,
+                        y: y as i32,
+                    },
+                    val,
+                )
+            }) //move required for y value in closure
+        })
+        .collect()
+}
+
+pub fn input_to_vecs(input: &str) -> Vec<Vec<char>> {
+    input
+        .lines()
+        .map(|line| line.chars().collect::<Vec<char>>())
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -59,5 +160,66 @@ mod tests {
             parse_vec_f32(INPUT),
             vec![4.0, 23.2, 45.0, -23.0, 412349.123, 0.98, 617.0]
         );
+    }
+
+    const INPUT: &str = "AB
+CD";
+
+    #[test]
+    fn btree_from_input() {
+        let result = input_to_map(INPUT);
+        let mut bt = std::collections::BTreeMap::new();
+        bt.insert(IPoint { x: 0, y: 0 }, 'A');
+        bt.insert(IPoint { x: 1, y: 0 }, 'B');
+        bt.insert(IPoint { x: 0, y: 1 }, 'C');
+        bt.insert(IPoint { x: 1, y: 1 }, 'D');
+        assert_eq!(result, bt);
+    }
+
+    #[test]
+    fn vec_vec_from_input() {
+        let result = input_to_vecs(INPUT);
+        let vofv = vec![vec!['A', 'B'], vec!['C', 'D']];
+        assert_eq!(result, vofv);
+    }
+
+    #[test]
+    fn ipoint_test_add() {
+        let a = IPoint { x: 1, y: 2 };
+        let b = IPoint { x: 3, y: 4 };
+        assert_eq!(a + b, IPoint { x: 4, y: 6 });
+    }
+
+    #[test]
+    fn ipoint_test_sub() {
+        let a = IPoint { x: 1, y: 2 };
+        let b = IPoint { x: 3, y: 4 };
+        assert_eq!(a - b, IPoint { x: -2, y: -2 });
+    }
+
+    #[test]
+    fn ipoint_test_scale() {
+        let a = IPoint { x: 1, y: 2 };
+        assert_eq!(a.scale(10), IPoint { x: 10, y: 20 });
+    }
+
+    #[test]
+    fn fpoint_test_add() {
+        let a = FPoint { x: 1.0, y: 2.0 };
+        let b = FPoint { x: 3.0, y: 4.0 };
+        assert_eq!(a + b, FPoint { x: 4.0, y: 6.0 });
+    }
+
+    #[test]
+    fn fpoint_test_sub() {
+        let a = FPoint { x: 1.0, y: 2.0 };
+        let b = FPoint { x: 3.0, y: 4.0 };
+        assert_eq!(a - b, FPoint { x: -2.0, y: -2.0 });
+    }
+
+    #[test]
+    fn fpoint_test_scale() {
+        let a = FPoint { x: 1.0, y: 2.0 };
+        assert_eq!(a.scale(10.0), FPoint { x: 10.0, y: 20.0 });
     }
 }
