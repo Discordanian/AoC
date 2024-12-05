@@ -1,15 +1,4 @@
-use std::collections::{BTreeMap, BTreeSet};
-
-/*
-pub fn set_from_vec(v: Vec<i32>) -> BTreeSet<i32> {
-    let mut retval = BTreeSet::new();
-    for val in v.iter() {
-        retval.insert(*val);
-    }
-    retval
-}
-*/
-pub fn sorted_update(rules: &Vec<Vec<i32>>, update: &Vec<i32>) -> Vec<i32> {
+pub fn sorted_update(rules: &[Vec<i32>], update: &[i32]) -> Vec<i32> {
     let mut retval = vec![];
     let mut remaining = update.to_vec();
 
@@ -30,7 +19,7 @@ pub fn sorted_update(rules: &Vec<Vec<i32>>, update: &Vec<i32>) -> Vec<i32> {
     retval
 }
 
-pub fn good_update(rules: &Vec<Vec<i32>>, update: &Vec<i32>) -> bool {
+pub fn good_update(rules: &[Vec<i32>], update: &[i32]) -> bool {
     let mut illegal: Vec<i32> = Vec::new();
 
     for v in update.iter() {
@@ -45,7 +34,7 @@ pub fn good_update(rules: &Vec<Vec<i32>>, update: &Vec<i32>) -> bool {
     true
 }
 
-pub fn middle_of_update(a: &Vec<i32>) -> i32 {
+pub fn middle_of_update(a: &[i32]) -> i32 {
     if a.is_empty() {
         return 0;
     }
