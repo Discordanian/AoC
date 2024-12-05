@@ -1,3 +1,4 @@
+use std::collections::{BTreeMap, BTreeSet};
 pub fn sorted_update(rules: &[Vec<i32>], update: &[i32]) -> Vec<i32> {
     let mut retval = vec![];
     let mut remaining = update.to_vec();
@@ -17,6 +18,22 @@ pub fn sorted_update(rules: &[Vec<i32>], update: &[i32]) -> Vec<i32> {
     }
 
     retval
+}
+
+pub fn good_update_set(rules: &BTreeMap<i32, BTreeSet<i32>>, update: &[i32]) -> bool {
+    let mut illegal: BTreeSet<i32> = BTreeSet::new();
+
+    for v in update.iter() {
+        if illegal.contains(v) {
+            return false;
+        }
+        // If page v has rules append it to the set of non-legal pages
+        if rules.contains_key(v) {
+            illegal.extend(rules[v].clone());
+        }
+    }
+
+    true
 }
 
 pub fn good_update(rules: &[Vec<i32>], update: &[i32]) -> bool {
@@ -57,25 +74,32 @@ pub fn process_part1(input: &str) -> i32 {
     let mut sections = input.split("\n\n");
     let rules_str = sections.next().unwrap();
     let updates_str = sections.next().unwrap();
-
-    let mut rules: Vec<Vec<i32>> = vec![];
-    for _ in 0..=99 {
-        rules.push(vec![]);
-    }
+    let mut rule_tree: BTreeMap<i32, BTreeSet<i32>> = BTreeMap::new();
 
     for rule_line in rules_str.lines() {
         let mut i = rule_line.split("|");
         let first: i32 = i.next().unwrap().parse().unwrap();
         let second: usize = i.next().unwrap().parse().unwrap();
 
-        rules[second].push(first);
+        match rule_tree.contains_key(&(second as i32)) {
+            false => {
+                let mut j: BTreeSet<i32> = BTreeSet::new();
+                j.insert(first);
+                rule_tree.insert(second as i32, j);
+            }
+            true => {
+                rule_tree.entry(second as i32).and_modify(|set| {
+                    set.insert(first);
+                });
+            }
+        }
     }
 
     let updates: Vec<Vec<i32>> = updates_str.lines().map(parse_vec_i32).collect();
 
     let mut ans = 0;
     for update in updates.iter() {
-        if good_update(&rules, update) {
+        if good_update_set(&rule_tree, update) {
             ans += middle_of_update(update);
         }
     }
@@ -88,6 +112,7 @@ pub fn process_part2(input: &str) -> i32 {
     let updates_str = sections.next().unwrap();
 
     let mut rules: Vec<Vec<i32>> = vec![];
+    // Bit of a cheat  The input has no page numbers > 99
     for _ in 0..=99 {
         rules.push(vec![]);
     }
