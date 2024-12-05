@@ -1,4 +1,5 @@
 use std::collections::{BTreeMap, BTreeSet};
+
 pub fn sorted_update(rules: &[Vec<i32>], update: &[i32]) -> Vec<i32> {
     let mut retval = vec![];
     let mut remaining = update.to_vec();
