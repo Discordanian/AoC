@@ -1,11 +1,11 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 pub fn process_part1(input: &str) -> u32 {
-    let mut hm = HashMap::new();
+    let mut bt = BTreeMap::new();
 
     for (row, line) in input.lines().enumerate() {
         for (col, c) in line.chars().enumerate() {
-            hm.insert((row as i32, col as i32), c);
+            bt.insert((row as i32, col as i32), c);
         }
     }
 
@@ -21,12 +21,12 @@ pub fn process_part1(input: &str) -> u32 {
     ];
 
     let mut retval = 0;
-    for (k, v) in hm.clone().into_iter() {
+    for (k, v) in bt.clone().into_iter() {
         if v == 'X' {
             for d in dirs.iter() {
-                let m = hm.get(&(k.0 + d[0].0, k.1 + d[0].1));
-                let a = hm.get(&(k.0 + d[1].0, k.1 + d[1].1));
-                let s = hm.get(&(k.0 + d[2].0, k.1 + d[2].1));
+                let m = bt.get(&(k.0 + d[0].0, k.1 + d[0].1));
+                let a = bt.get(&(k.0 + d[1].0, k.1 + d[1].1));
+                let s = bt.get(&(k.0 + d[2].0, k.1 + d[2].1));
                 if m == Some(&'M') && a == Some(&'A') && s == Some(&'S') {
                     retval += 1;
                 }
@@ -38,21 +38,21 @@ pub fn process_part1(input: &str) -> u32 {
 }
 
 pub fn process_part2(input: &str) -> u32 {
-    let mut hm = HashMap::new();
+    let mut bt = BTreeMap::new();
 
     for (row, line) in input.lines().enumerate() {
         for (col, c) in line.chars().enumerate() {
-            hm.insert((row as i32, col as i32), c);
+            bt.insert((row as i32, col as i32), c);
         }
     }
 
     let mut retval = 0;
-    for (k, v) in hm.clone().into_iter() {
+    for (k, v) in bt.clone().into_iter() {
         if v == 'A' {
-            let c1 = hm.get(&(k.0 + 1, k.1 + 1));
-            let c2 = hm.get(&(k.0 - 1, k.1 - 1));
-            let c3 = hm.get(&(k.0 + 1, k.1 - 1));
-            let c4 = hm.get(&(k.0 - 1, k.1 + 1));
+            let c1 = bt.get(&(k.0 + 1, k.1 + 1));
+            let c2 = bt.get(&(k.0 - 1, k.1 - 1));
+            let c3 = bt.get(&(k.0 + 1, k.1 - 1));
+            let c4 = bt.get(&(k.0 - 1, k.1 + 1));
             let diag1: bool =
                 (c1 == Some(&'M') && c2 == Some(&'S')) || (c1 == Some(&'S') && c2 == Some(&'M'));
             let diag2: bool =
