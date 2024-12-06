@@ -98,7 +98,7 @@ pub fn process_part1(input: &str) -> i32 {
         }
     }
 
-    for _ in 0..123456 {
+    loop {
         // dbg!(&guard);
         let delta: (i32, i32) = match guard.2 {
             Direction::South => (0, 1),
@@ -122,10 +122,10 @@ pub fn process_part1(input: &str) -> i32 {
             }
         }
     }
-
-    0
 }
 
+// Optimization possible.  Instead of looking at all 'free' spaces
+// Use the list of visited cells from part1
 pub fn process_part2(input: &str) -> i32 {
     let mut grid: BTreeMap<(i32, i32), Tile> = BTreeMap::new();
     let mut guard = (0_i32, 0_i32, Direction::North);
