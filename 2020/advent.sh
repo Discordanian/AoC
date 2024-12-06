@@ -22,8 +22,6 @@ sed "s/00/$1/g" $SRCLIB/src/bin/solution.rs > $LIBNAME/src/bin/solution.rs
 cp -v $SRCLIB/src/lib.rs $LIBNAME/src/lib.rs
 
 cd $LIBNAME
-cargo add itertools
-cargo add nom
 cargo test
 cargo clean
 cd ..
