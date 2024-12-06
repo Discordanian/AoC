@@ -1,42 +1,56 @@
-use nom::character::complete;
-// use nom::bytes::complete::tag;
-use nom::IResult;
-
-/*
-fn parse_line(input: &str) -> IResult<&str, u32> {
-    let (input, depth) = complete::u32(input)?;
-    Ok((input,depth))
+pub fn process_part1(input: &str) -> u32 {
+    let result = input
+        .split("\n\n") // Empty line between records
+        .map(|record| {
+            record
+                .lines()
+                .map(|row| row.parse::<u32>().unwrap())
+                .sum::<u32>()
+        })
+        .max()
+        .unwrap();
+    result
 }
 
-fn parse_input(input: &str) -> IResult<&str, Vec<u32>> {
-    let (input, depths) = nom::multi::separated_list1(complete::newline, parse_line)(input)?;
-    Ok((input, depths))
-}
-*/
+pub fn process_part2(input: &str) -> u32 {
+    let mut result = input
+        .split("\n\n") // Empty line between records
+        .map(|record| {
+            record
+                .lines()
+                .map(|row| row.parse::<u32>().unwrap())
+                .sum::<u32>()
+        })
+        .collect::<Vec<_>>();
 
-pub fn process_part1(input: &str) -> usize {
-    input.len()
-}
-
-pub fn process_part2(input: &str) -> usize {
-    input.len()
+    result.sort_by(|a, b| b.cmp(a)); // reverse sort
+    let sum: u32 = result.iter().take(3).sum();
+    sum
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const INPUT: &str = include_str!("../example.txt");
+    const INPUT: &str = "1
+2
+
+5
+
+1
+
+3
+4";
 
     #[test]
-    fn part1_example() {
+    fn part1_works() {
         let result = process_part1(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 7);
     }
 
     #[test]
-    fn part2_example() {
+    fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 15);
     }
 }
