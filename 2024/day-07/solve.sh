@@ -1,3 +1,6 @@
 #!/bin/sh
 
-cargo run --bin solution
+if [ -f src/bin/solution.rs ]
+then
+	cargo run --bin solution
+fi
