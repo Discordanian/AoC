@@ -123,13 +123,10 @@ pub fn process_part1(input: &str) -> i32 {
         }
     }
 }
-
-// Optimization possible.  Instead of looking at all 'free' spaces
-// Use the list of visited cells from part1
-pub fn process_part2(input: &str) -> i32 {
+pub fn loop_possible_set(input: &str) -> BTreeSet<(i32, i32)> {
     let mut grid: BTreeMap<(i32, i32), Tile> = BTreeMap::new();
     let mut guard = (0_i32, 0_i32, Direction::North);
-    let mut freeset: BTreeSet<(i32, i32)> = BTreeSet::new();
+    let mut seen: BTreeSet<(i32, i32)> = BTreeSet::new();
 
     for (row, line) in input.lines().enumerate() {
         for (col, c) in line.chars().enumerate() {
@@ -138,7 +135,74 @@ pub fn process_part2(input: &str) -> i32 {
             match c {
                 '.' => {
                     grid.insert((col, row), Tile::Free);
-                    freeset.insert((col, row));
+                }
+                '#' => {
+                    grid.insert((col, row), Tile::Obstacle);
+                }
+                '^' => {
+                    grid.insert((col, row), Tile::Free);
+                    seen.insert((col, row));
+                    guard = (col, row, Direction::North);
+                }
+                '>' => {
+                    grid.insert((col, row), Tile::Free);
+                    seen.insert((col, row));
+                    guard = (col, row, Direction::East);
+                }
+                '<' => {
+                    grid.insert((col, row), Tile::Free);
+                    seen.insert((col, row));
+                    guard = (col, row, Direction::West);
+                }
+                'v' => {
+                    grid.insert((col, row), Tile::Free);
+                    seen.insert((col, row));
+                    guard = (col, row, Direction::South);
+                }
+                _ => panic!("at the disco"),
+            }
+        }
+    }
+
+    loop {
+        // dbg!(&guard);
+        let delta: (i32, i32) = match guard.2 {
+            Direction::South => (0, 1),
+            Direction::North => (0, -1),
+            Direction::East => (1, 0),
+            Direction::West => (-1, 0),
+        };
+        let next_spot = (guard.0 + delta.0, guard.1 + delta.1);
+        let next_tile = grid.get(&next_spot);
+        match next_tile {
+            Some(Tile::Obstacle) => {
+                guard = turn_guard_right(guard);
+            }
+            Some(Tile::Free) => {
+                // Move guard
+                seen.insert(next_spot);
+                guard = (next_spot.0, next_spot.1, guard.2);
+            }
+            None => return seen,
+        }
+    }
+}
+
+// Optimization possible.  Instead of looking at all 'free' spaces
+// Use the list of visited cells from part1
+pub fn process_part2(input: &str) -> i32 {
+    let mut grid: BTreeMap<(i32, i32), Tile> = BTreeMap::new();
+    let mut guard = (0_i32, 0_i32, Direction::North);
+    let freeset: BTreeSet<(i32, i32)> = loop_possible_set(input);
+
+    for (row, line) in input.lines().enumerate() {
+        for (col, c) in line.chars().enumerate() {
+            let row = row as i32;
+            let col = col as i32;
+            match c {
+                '.' => {
+                    grid.insert((col, row), Tile::Free);
+                    // freeset.insert((col, row));
                 }
                 '#' => {
                     grid.insert((col, row), Tile::Obstacle);
