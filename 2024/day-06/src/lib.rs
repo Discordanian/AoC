@@ -167,15 +167,15 @@ pub fn process_part2(input: &str) -> i32 {
     let mut ans = 0;
     for (col, row) in freeset.iter() {
         let pos = (*col, *row);
-        grid.get_mut(&pos).map(|v| {
+        if let Some(v) = grid.get_mut(&pos) {
             *v = Tile::Obstacle;
-        });
+        }
         if loop_check(&guard, &grid) {
             ans += 1;
         }
-        grid.get_mut(&pos).map(|v| {
+        if let Some(v) = grid.get_mut(&pos) {
             *v = Tile::Free;
-        });
+        }
     }
 
     ans
