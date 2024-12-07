@@ -24,7 +24,7 @@ pub fn recursion_possible(target: u64, v: &[u64]) -> bool {
     let mut mul_copy: Vec<u64> = Vec::new();
     add_copy.push(v[0] + v[1]);
     mul_copy.push(v[0] * v[1]);
-    let rest: Vec<u64> = v[2..].iter().map(|x| *x).collect();
+    let rest: Vec<u64> = v[2..].to_vec();
     add_copy.extend(rest.clone());
     mul_copy.extend(rest);
 
@@ -62,7 +62,7 @@ pub fn recursion_possible2(target: u64, v: &[u64]) -> bool {
     let cat_str = format!("{}{}", v[0], v[1]);
     cat_copy.push(cat_str.parse().expect("Can make a u64"));
 
-    let rest: Vec<u64> = v[2..].iter().map(|x| *x).collect();
+    let rest: Vec<u64> = v[2..].to_vec();
     add_copy.extend(rest.clone());
     mul_copy.extend(rest.clone());
     cat_copy.extend(rest);
