@@ -13,6 +13,11 @@ pub fn parse_vec_u64(s: &str) -> Vec<u64> {
 }
 
 pub fn recursion_possible(target: u64, v: &[u64]) -> bool {
+    // No amount of multiplication, addition or concatenation
+    // will make the number smaller
+    if v[0] > target {
+        return false;
+    }
     if v.len() == 1 && v[0] == target {
         return true;
     };
@@ -46,6 +51,11 @@ pub fn equation_possible2(v: &[u64]) -> bool {
 }
 
 pub fn recursion_possible2(target: u64, v: &[u64]) -> bool {
+    // No amount of multiplication, addition or concatenation
+    // will make the number smaller
+    if v[0] > target {
+        return false;
+    }
     if v.len() == 1 && v[0] == target {
         return true;
     };
