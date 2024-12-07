@@ -1,15 +1,20 @@
-use regex::Regex;
+use nom::{
+    bytes::complete::tag,
+    character::complete::{self, line_ending, space1},
+    multi::separated_list1,
+    sequence::separated_pair,
+    IResult,
+};
 
-// Ignores everything else in the str slice and returns all positive integers found
-pub fn parse_vec_u64(s: &str) -> Vec<u64> {
-    let re = Regex::new(r"(\d+)").expect("parse_vec_u64 regex failure");
-    let mut retval = vec![];
-
-    for (_, [x]) in re.captures_iter(s).map(|c| c.extract()) {
-        retval.push(x.parse::<u64>().unwrap());
-    }
-
-    retval
+fn parse(input: &str) -> IResult<&str, Vec<(u64, Vec<u64>)>> {
+    separated_list1(
+        line_ending,
+        separated_pair(
+            complete::u64,
+            tag(": "),
+            separated_list1(space1, complete::u64),
+        ),
+    )(input)
 }
 
 pub fn recursion_possible(target: u64, v: &[u64]) -> bool {
@@ -36,18 +41,12 @@ pub fn recursion_possible(target: u64, v: &[u64]) -> bool {
     recursion_possible(target, &add_copy) || recursion_possible(target, &mul_copy)
 }
 
-pub fn equation_possible(v: &[u64]) -> bool {
-    let target = v[0];
-    let rest = &v[1..];
-
-    recursion_possible(target, rest)
+pub fn equation_possible(p: (u64, Vec<u64>)) -> bool {
+    recursion_possible(p.0, &p.1)
 }
 
-pub fn equation_possible2(v: &[u64]) -> bool {
-    let target = v[0];
-    let rest = &v[1..];
-
-    recursion_possible2(target, rest)
+pub fn equation_possible2(p: (u64, Vec<u64>)) -> bool {
+    recursion_possible2(p.0, &p.1)
 }
 
 pub fn recursion_possible2(target: u64, v: &[u64]) -> bool {
@@ -83,22 +82,22 @@ pub fn recursion_possible2(target: u64, v: &[u64]) -> bool {
 }
 
 pub fn process_part1(input: &str) -> u64 {
-    let equations: Vec<Vec<u64>> = input.lines().map(parse_vec_u64).collect();
+    let (_, equations) = parse(input).expect("Unable to parse using nom");
 
     equations
         .into_iter()
-        .filter(|v| equation_possible(v))
-        .map(|v| v[0])
+        .filter(|v| equation_possible(v.clone()))
+        .map(|v| v.0)
         .sum()
 }
 
 pub fn process_part2(input: &str) -> u64 {
-    let equations: Vec<Vec<u64>> = input.lines().map(parse_vec_u64).collect();
+    let (_, equations) = parse(input).expect("Unable to parse using nom");
 
     equations
         .into_iter()
-        .filter(|v| equation_possible2(v))
-        .map(|v| v[0])
+        .filter(|v| equation_possible2(v.clone()))
+        .map(|v| v.0)
         .sum()
 }
 
