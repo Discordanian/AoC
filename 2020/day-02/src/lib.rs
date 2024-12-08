@@ -1,31 +1,23 @@
-#[derive(Clone, Debug)]
-pub struct Policy {
-    min: i32,
-    max: i32,
-    character: char,
-    password: Vec<char>,
-}
+use nom::{
+    bytes::complete::tag,
+    character::complete::{self, line_ending, space1},
+    multi::separated_list1,
+    sequence::separated_pair,
+    IResult,
+};
 
-impl From<&str> for Policy {
-    fn from(line: &str) -> Self {
-        let parts: Vec<&str> = line.split_whitespace().collect(); // A-B C: D
-                                                                  /*
-                                                                  let counts: Vec<i32> = parts[0].split("-").map(|x| x.parse::<i32>()).collect();
-                                                                  let character: char = parts[1].chars().nth(0).unwrap();
-
-                                                                  Self {
-                                                                      min: counts[0],
-                                                                      max: counts[1],
-                                                                      character: character,
-                                                                      password: parts[2].chars().collect(),
-                                                                  } */
-        Self {
-            min: 0,
-            max: 0,
-            character: 'X',
-            password: parts[2].chars().collect(),
-        }
-    }
+// 1-3 b: cdefg
+fn parse(input: &str) -> IResult<&str, Vec<((u32, u32), char, &str)>> {
+    seperated_list1(
+        line_ending,
+        tuple(
+            seperated_pair(complete::u32, tag("-"), complete::u32),
+            tag(" "),
+            complete::char,
+            tag(": "),
+            complete::alpha1,
+        ),
+    )(input)
 }
 
 pub fn process_part1(input: &str) -> i32 {
