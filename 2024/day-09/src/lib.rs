@@ -1,7 +1,7 @@
 pub fn none_length(i: usize, fs: &[Option<u64>]) -> usize {
     let mut l = 0;
-    for idx in i..fs.len() {
-        if fs[idx].is_none() {
+    for id in fs.iter().skip(i) {
+        if id.is_none() {
             l += 1;
         } else {
             return l;
@@ -11,7 +11,7 @@ pub fn none_length(i: usize, fs: &[Option<u64>]) -> usize {
 }
 
 // Vec of indexes and lengths
-pub fn spaces(fs: &Vec<Option<u64>>) -> Vec<(usize, usize)> {
+pub fn spaces(fs: &[Option<u64>]) -> Vec<(usize, usize)> {
     let mut retval = vec![];
     let mut idx = 0;
     while fs[idx].is_some() {
