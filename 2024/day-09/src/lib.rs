@@ -1,7 +1,7 @@
-pub fn none_length(i: usize, fs: &Vec<Option<u64>>) -> usize {
+pub fn none_length(i: usize, fs: &[Option<u64>]) -> usize {
     let mut l = 0;
     for idx in i..fs.len() {
-        if fs[idx] == None {
+        if fs[idx].is_none() {
             l += 1;
         } else {
             return l;
@@ -14,24 +14,23 @@ pub fn none_length(i: usize, fs: &Vec<Option<u64>>) -> usize {
 pub fn spaces(fs: &Vec<Option<u64>>) -> Vec<(usize, usize)> {
     let mut retval = vec![];
     let mut idx = 0;
-    while fs[idx] != None {
+    while fs[idx].is_some() {
         idx += 1;
     }
 
     while idx < fs.len() {
-        let length = none_length(idx, &fs);
+        let length = none_length(idx, fs);
         retval.push((idx, length));
         idx += length;
-        while idx < fs.len() && fs[idx] != None {
+        while idx < fs.len() && fs[idx].is_some() {
             idx += 1;
         }
     }
-    // dbg!(&retval);
     retval
 }
 
 // Return the start index and length
-pub fn id_length(i: usize, fs: &Vec<Option<u64>>) -> (usize, usize) {
+pub fn id_length(i: usize, fs: &[Option<u64>]) -> (usize, usize) {
     let mut start_idx = i;
     while start_idx > 0 && fs[start_idx] == fs[i] {
         start_idx -= 1;
@@ -43,14 +42,14 @@ pub fn id_length(i: usize, fs: &Vec<Option<u64>>) -> (usize, usize) {
 }
 
 // return vec of id starting positions and lengths
-pub fn id_fs(fs: &Vec<Option<u64>>) -> Vec<(usize, usize)> {
+pub fn id_fs(fs: &[Option<u64>]) -> Vec<(usize, usize)> {
     let mut retval = Vec::new();
     let mut idx = fs.len() - 1;
-    while idx > 0 && fs[idx] == None {
+    while idx > 0 && fs[idx].is_none() {
         idx -= 1;
     }
     while idx > 0 {
-        let (start, length) = id_length(idx, &fs);
+        let (start, length) = id_length(idx, fs);
         retval.push((start, length));
         match start > 0 {
             true => {
@@ -58,7 +57,7 @@ pub fn id_fs(fs: &Vec<Option<u64>>) -> Vec<(usize, usize)> {
             }
             false => idx = start,
         }
-        while idx > 0 && fs[idx] == None {
+        while idx > 0 && fs[idx].is_none() {
             idx -= 1;
         }
     }
@@ -74,7 +73,8 @@ pub fn make_fs(input: &str) -> Vec<Option<u64>> {
     for c in input.trim().chars() {
         let length = c
             .to_digit(10)
-            .expect(format!("{} should be a digit", c).as_str());
+            // .expect(format!("{} should be a digit", c).as_str());
+            .unwrap_or_else(|| panic!("[{}] should be a digit", c));
         for _ in 0..length {
             match is_file {
                 true => fs.push(Some(id)),
@@ -93,9 +93,7 @@ pub fn process_part2(input: &str) -> u64 {
     let mut fs = make_fs(input);
 
     let mut fs_free = spaces(&fs);
-    // dbg!(fs_free);
     let ids = id_fs(&fs);
-    // dbg!(&ids);
     // For all the filesystem blocks of ids see if we can move it
     // and if we can do.
     for (id, length) in ids.iter() {
@@ -104,7 +102,6 @@ pub fn process_part2(input: &str) -> u64 {
             let (free, freel) = fs_free[free_id];
 
             if !swapped && free < *id && freel >= *length {
-                // dbg!((id, free_id, length));
                 for delta_idx in 0..(*length as u64) {
                     fs[free + delta_idx as usize] = fs[id + delta_idx as usize];
                     fs[id + delta_idx as usize] = None;
@@ -114,15 +111,6 @@ pub fn process_part2(input: &str) -> u64 {
             }
         }
     }
-    /*
-    dbg!(fs
-        .iter()
-        .map(|c| match c {
-            Some(x) => format!("{}", x % 10),
-            None => ".".to_string(),
-        })
-        .collect::<String>());
-    */
     checksum(fs)
 }
 
@@ -131,23 +119,23 @@ pub fn process_part1(input: &str) -> u64 {
 
     let mut left = 0;
     let mut right = fs.len() - 1;
-    while fs[left] != None {
+    while fs[left].is_some() {
         left += 1;
     }
-    while fs[right] == None {
+    while fs[right].is_none() {
         right -= 1;
     }
     while left < right {
-        if fs[left] == None && fs[right] != None {
+        if fs[left].is_none() && fs[right].is_some() {
             fs[left] = fs[right];
             fs[right] = None;
             left += 1;
             right -= 1;
         } else {
-            while fs[left] != None {
+            while fs[left].is_some() {
                 left += 1;
             }
-            while fs[right] == None {
+            while fs[right].is_none() {
                 right -= 1;
             }
         }
