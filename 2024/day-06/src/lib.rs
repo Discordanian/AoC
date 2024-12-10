@@ -228,21 +228,23 @@ pub fn process_part2(input: &str) -> i32 {
         }
     }
 
-    let mut ans = 0;
-    for (col, row) in freeset.iter() {
-        let pos = (*col, *row);
-        if let Some(v) = grid.get_mut(&pos) {
-            *v = Tile::Obstacle;
-        }
-        if loop_check(&guard, &grid) {
-            ans += 1;
-        }
-        if let Some(v) = grid.get_mut(&pos) {
-            *v = Tile::Free;
-        }
-    }
-
-    ans
+    freeset
+        .iter()
+        .map(|(col, row)| {
+            let pos = (*col, *row);
+            let mut count = 0;
+            if let Some(v) = grid.get_mut(&pos) {
+                *v = Tile::Obstacle;
+            }
+            if loop_check(&guard, &grid) {
+                count = 1;
+            }
+            if let Some(v) = grid.get_mut(&pos) {
+                *v = Tile::Free;
+            }
+            count
+        })
+        .sum()
 }
 
 #[cfg(test)]
