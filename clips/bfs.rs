@@ -1,3 +1,4 @@
+// Check out 2024 Day 10
 // https://www.sotr.blog/articles/breadth-first-search
 use std::collections::VecDeque;
 
@@ -69,6 +70,8 @@ fn bfs(graph: Graph, start_node: u32, end_node: u32) -> Option<Vec<Option<u32>>>
         _ => None,
     };
 }
+
+pub fn main() {}
 
 /* Psuedo Code
 
