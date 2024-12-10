@@ -1,30 +1,92 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-pub fn trail_heads(grid: &[Vec<i32>]) -> BTreeSet<(i32, i32)> {
-    let mut retval = BTreeSet::new();
-    for (row, line) in grid.iter().enumerate() {
-        for (col, height) in line.iter().enumerate() {
-            if *height == 0 {
-                retval.insert((row as i32, col as i32));
+pub fn make_grid(input: &str) -> BTreeMap<(i32, i32), i32> {
+    let mut retval = BTreeMap::new();
+    for (row, line) in input.lines().enumerate() {
+        for (col, c) in line.chars().enumerate() {
+            retval.insert((row as i32, col as i32), c.to_digit(10).unwrap() as i32);
+        }
+    }
+    retval
+}
+
+pub fn zero_score(grid: &BTreeMap<(i32, i32), i32>, row: i32, col: i32) -> i32 {
+    let mut retval = 0;
+    let mut seen: BTreeSet<(i32, i32)> = BTreeSet::new();
+
+    // down up right left
+    let directions: Vec<(i32, i32)> = vec![(1, 0), (-1, 0), (0, 1), (0, -1)];
+
+    // No score for non zero starts
+    if grid[&(row, col)] != 0 {
+        return 0;
+    }
+
+    let mut stack: Vec<(i32, i32)> = vec![(row, col)];
+
+    while let Some((r, c)) = stack.pop() {
+        let height = grid[&(r, c)];
+
+        // skip if already seen
+        if seen.contains(&(r, c)) {
+            continue;
+        }
+        seen.insert((r, c));
+
+        if height == 9 {
+            retval += 1;
+            continue;
+        }
+
+        for (dr, dc) in directions.iter() {
+            let newpair = (r + dr, c + dc);
+            if grid.contains_key(&newpair) && grid[&newpair] == (height + 1) {
+                stack.push(newpair);
             }
         }
     }
     retval
 }
 
-pub fn process_part1(input: &str) -> u64 {
-    let grid: Vec<Vec<i32>> = input
-        .lines()
-        .map(|l| l.chars().map(|c| c.to_digit(10).unwrap() as i32).collect())
-        .collect::<Vec<Vec<i32>>>();
+pub fn process_part1(input: &str) -> i32 {
+    let grid = make_grid(input);
 
-    let heads = trail_heads(&grid);
-    // dbg!(&heads);
-    grid.len() as u64
+    grid.keys()
+        .map(|(row, col)| zero_score(&grid, *row, *col))
+        .sum()
 }
 
-pub fn process_part2(_input: &str) -> u64 {
-    0
+pub fn score(grid: &BTreeMap<(i32, i32), i32>, row: i32, col: i32) -> i32 {
+    let directions: Vec<(i32, i32)> = vec![(1, 0), (-1, 0), (0, 1), (0, -1)];
+    let height = grid[&(row, col)];
+    if height == 9 {
+        return 1;
+    }
+    let mut retval = 0;
+
+    retval += directions
+        .iter()
+        .map(|(dr, dc)| {
+            let proposed = (dr + row, dc + col);
+            match grid.contains_key(&proposed) && grid[&proposed] == height + 1 {
+                true => score(grid, proposed.0, proposed.1),
+                false => 0,
+            }
+        })
+        .sum::<i32>();
+
+    retval
+}
+
+pub fn process_part2(input: &str) -> i32 {
+    let grid = make_grid(input);
+
+    grid.iter()
+        .map(|(k, v)| match *v == 0 {
+            true => score(&grid, k.0, k.1),
+            false => 0,
+        })
+        .sum()
 }
 
 #[cfg(test)]
@@ -49,6 +111,6 @@ mod tests {
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 81);
     }
 }
