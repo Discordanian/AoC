@@ -1,19 +1,36 @@
-pub fn stone_after_x(stone: u128, blink: usize) -> u128 {
-    let stone_string = format!("{}", stone);
+use std::collections::HashMap;
+
+pub fn cached_count(cache: &mut HashMap<(u64, u64), u64>, stone: u64, blink: u64) -> u64 {
+    let even_length = (stone.checked_ilog10().unwrap_or(0) + 1) % 2 == 0;
+    let key = (stone, blink);
+
+    // Default case
     if blink == 0 {
         return 1;
     }
-    if blink == 1 && stone_string.len() % 2 == 1 {
-        return 1;
+    // Cached value check
+    if let Some(&value) = cache.get(&key) {
+        return value;
     }
-    if stone_string.len() % 2 == 1 {
-        return stone_after_x(stone * 2024, blink - 1);
-    }
-    let half = stone_string.len() / 2;
-    let first = &stone_string[0..half];
-    let second = &stone_string[half..];
-    stone_after_x(first.parse().unwrap(), blink - 1)
-        + stone_after_x(second.parse().unwrap(), blink - 1)
+
+    let retval = match (stone == 0, even_length) {
+        (true, _) => cached_count(cache, 1, blink - 1),
+        (false, false) => cached_count(cache, 2024 * stone, blink - 1),
+        (false, true) => {
+            let x = split(stone);
+            cached_count(cache, x.0, blink - 1) + cached_count(cache, x.1, blink - 1)
+        }
+    };
+
+    cache.insert(key, retval);
+    retval
+}
+
+pub fn split(stone: u64) -> (u64, u64) {
+    let num_digits = stone.ilog10() + 1;
+    assert_eq!(num_digits % 2, 0);
+    let power = 10_u64.pow(num_digits / 2);
+    (stone / power, stone % power)
 }
 
 pub fn next_stones(stones: &[u128]) -> Vec<u128> {
@@ -46,13 +63,15 @@ pub fn process_part1(input: &str) -> u128 {
     stones.len() as u128
 }
 
-pub fn process_part2(input: &str) -> u128 {
-    let mut stones: Vec<u128> = input
-        .split_whitespace()
+pub fn process_part2(input: &str) -> u64 {
+    let cache = &mut HashMap::new();
+
+    let x: Vec<u64> = input
+        .split_ascii_whitespace()
         .map(|x| x.parse().unwrap())
         .collect();
 
-    stones.iter().map(|x| stone_after_x(*x, 55)).sum()
+    x.iter().map(|x| cached_count(cache, *x, 75)).sum::<u64>()
 }
 
 #[cfg(test)]
@@ -70,6 +89,6 @@ mod tests {
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 65601038650482);
     }
 }
