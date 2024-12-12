@@ -15,6 +15,7 @@ git add $LIBNAME
 
 # All the template copying
 cp $SRCLIB/solve.sh $LIBNAME/solve.sh
+cp $SRCLIB/session_id $LIBNAME/session_id
 mkdir $LIBNAME/src/bin/
 sed "s/00/$1/g" $SRCLIB/src/bin/part-1.rs > $LIBNAME/src/bin/part-1.rs
 sed "s/00/$1/g" $SRCLIB/src/bin/part-2.rs $LIBNAME/src/bin/part-2.rs
