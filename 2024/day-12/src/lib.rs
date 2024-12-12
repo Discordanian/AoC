@@ -97,41 +97,36 @@ pub fn process_part1(input: &str) -> u32 {
 
 pub fn process_part2(input: &str) -> i32 {
     let garden = make_garden(input);
-    let mut retval = 0;
     let mut queue = VecDeque::<IPoint>::new();
     let mut seen = BTreeSet::<IPoint>::new();
-    let mut plot = BTreeSet::<IPoint>::new();
+    // let mut plot = BTreeSet::<IPoint>::new();
     let mut plot_map: BTreeMap<IPoint, BTreeSet<IPoint>> = BTreeMap::new();
 
     for key_point in garden.keys() {
         if seen.contains(key_point) {
             continue;
         }
-
         let plant = garden[key_point];
-        let mut area = 0;
-        let mut perimeter = 0;
 
         queue.push_back(*key_point);
         seen.insert(*key_point);
-        plot = BTreeSet::new();
+        let mut plot = BTreeSet::<IPoint>::new();
         plot.insert(*key_point);
         plot_map.insert(*key_point, plot.clone());
 
         // Gather up plots
         while let Some(point) = queue.pop_front() {
-            area += 1;
-            perimeter += 4; //Assume a lone disconnected island
             if let Some(p) = plot_map.get_mut(key_point) {
                 p.insert(point);
             }
 
             for next_point in DIRECTIONS.map(|dir| point + dir) {
-                if garden.contains_key(&next_point) && garden[&next_point] == plant {
-                    if !seen.contains(&next_point) {
-                        seen.insert(next_point);
-                        queue.push_back(next_point);
-                    }
+                if garden.contains_key(&next_point)
+                    && garden[&next_point] == plant
+                    && !seen.contains(&next_point)
+                {
+                    seen.insert(next_point);
+                    queue.push_back(next_point);
                 }
             }
         }
