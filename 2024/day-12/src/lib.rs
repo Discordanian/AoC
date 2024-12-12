@@ -58,7 +58,7 @@ pub fn process_part1(input: &str) -> u32 {
     let mut retval = 0;
     let mut queue = VecDeque::<IPoint>::new();
     let mut seen = BTreeSet::<IPoint>::new();
-    let mut added = BTreeSet::<IPoint>::new();
+    let mut plot = BTreeSet::<IPoint>::new();
 
     for point in garden.keys() {
         if seen.contains(point) {
@@ -75,7 +75,7 @@ pub fn process_part1(input: &str) -> u32 {
         while let Some(point) = queue.pop_front() {
             area += 1;
             perimeter += 4; //Assume a lone disconnected island
-            added.insert(point);
+            plot.insert(point);
 
             for next_point in DIRECTIONS.map(|dir| point + dir) {
                 if garden.contains_key(&next_point) && garden[&next_point] == plant {
@@ -83,7 +83,7 @@ pub fn process_part1(input: &str) -> u32 {
                         seen.insert(next_point);
                         queue.push_back(next_point);
                     }
-                    if added.contains(&next_point) {
+                    if plot.contains(&next_point) {
                         perimeter -= 2; // Subtract 2 from perimeter if adjacent
                     }
                 }
