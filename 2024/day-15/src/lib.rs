@@ -15,12 +15,12 @@ mod tests {
     #[test]
     fn part1_works() {
         let result = process_part1(INPUT);
-        assert_eq!(result, 7);
+        assert_eq!(result, 0);
     }
 
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 15);
+        assert_eq!(result, 0);
     }
 }
