@@ -84,6 +84,7 @@ pub fn process_part2(input: &str) -> i64 {
         let by = m.button_b.1;
 
         // Let's Math solve.
+        // https://en.wikipedia.org/wiki/Cramer%27s_rule
         let apresses: i64 = ((px * by) - (bx * py)) / ((by * ax) - (bx * ay));
         let bpresses: i64 = (py - (ay * apresses)) / by;
 
