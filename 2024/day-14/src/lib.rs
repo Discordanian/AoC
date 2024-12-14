@@ -24,8 +24,8 @@ pub fn parse_vec_i32(s: &str) -> Vec<i32> {
 
 pub fn bot_from_line(line: &str) -> Bot {
     let numbers = parse_vec_i32(line);
-    let pos_x = numbers[0].abs() as usize;
-    let pos_y = numbers[1].abs() as usize;
+    let pos_x = numbers[0].unsigned_abs() as usize;
+    let pos_y = numbers[1].unsigned_abs() as usize;
     let vel_x = numbers[2];
     let vel_y = numbers[3];
 
