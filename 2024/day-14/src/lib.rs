@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::collections::HashSet;
 
 pub fn wrapped_coordinates(
     pos: (usize, usize),
@@ -88,45 +89,27 @@ pub fn process_part1(input: &str, height: usize, width: usize) -> u32 {
     up_left * up_right * down_left * down_right
 }
 
+pub fn unique(bots: &[Bot]) -> bool {
+    let botset: HashSet<(usize, usize)> = bots.iter().map(|b| b.position).collect();
+
+    bots.len() == botset.len()
+}
+
 pub fn process_part2(input: &str, height: usize, width: usize) -> u32 {
     let mut bots: Vec<Bot> = input.lines().map(bot_from_line).collect();
 
-    let mid_x: usize = (width - 1) / 2;
-    let mid_y: usize = (height - 1) / 2;
+    let mut solved = unique(&bots);
+    let mut retval = 0;
 
-    dbg!((mid_x, mid_y));
-
-    for _ in 0..100 {
+    while !solved {
+        retval += 1;
         for bot in bots.iter_mut() {
             bot.step(height, width);
         }
+        solved = unique(&bots);
     }
 
-    let mut up_left = 0;
-    let mut up_right = 0;
-    let mut down_left = 0;
-    let mut down_right = 0;
-    for bot in bots.iter() {
-        let left = bot.position.0 < mid_x;
-        let right = bot.position.0 > mid_x;
-        let up = bot.position.1 < mid_y;
-        let down = bot.position.1 > mid_y;
-
-        if left && up {
-            up_left += 1;
-        }
-        if left && down {
-            down_left += 1;
-        }
-        if right && up {
-            up_right += 1;
-        }
-        if right && down {
-            down_right += 1;
-        }
-    }
-
-    up_left * up_right * down_left * down_right
+    retval
 }
 
 #[cfg(test)]
