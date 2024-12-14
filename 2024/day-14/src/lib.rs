@@ -93,35 +93,44 @@ pub fn unique(bots: &[Bot]) -> bool {
     bots.len() == botset.len()
 }
 
-pub fn print_tree(bots: &[Bot], height: usize, width: usize) {
+pub fn print_tree(bots: &[Bot], height: usize, width: usize, iteration: usize) {
+    use std::io::prelude::*;
+
     let botset: HashSet<(usize, usize)> = bots.iter().map(|b| b.position).collect();
+    let filename = format!("{:08}.txt", iteration);
+
+    let mut outstring: Vec<u8> = Vec::new();
 
     for row in 0..height {
         for col in 0..width {
             let pos = (col, row);
             match botset.contains(&pos) {
-                true => print!("#"),
-                false => print!("."),
+                true => outstring.push(b'#'),
+                false => outstring.push(b'.'),
             }
         }
-        println!();
+        outstring.push(b'\n');
     }
+
+    let mut file = std::fs::File::create(filename).unwrap();
+    file.write_all(&outstring).unwrap();
 }
 
 pub fn process_part2(input: &str, height: usize, width: usize) -> u32 {
     let mut bots: Vec<Bot> = input.lines().map(bot_from_line).collect();
 
     let mut solved = unique(&bots);
-    let mut retval = 0;
+    let mut retval: u32 = 0;
 
     while !solved {
+        print_tree(&bots, height, width, retval as usize);
         retval += 1;
         for bot in bots.iter_mut() {
             bot.step(height, width);
         }
         solved = unique(&bots);
     }
-    print_tree(&bots, height, width);
+    print_tree(&bots, height, width, retval as usize);
 
     retval
 }
