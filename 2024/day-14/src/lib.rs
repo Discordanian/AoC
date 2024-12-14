@@ -54,8 +54,6 @@ pub fn process_part1(input: &str, height: usize, width: usize) -> u32 {
     let mid_x: usize = (width - 1) / 2;
     let mid_y: usize = (height - 1) / 2;
 
-    dbg!((mid_x, mid_y));
-
     for _ in 0..100 {
         for bot in bots.iter_mut() {
             bot.step(height, width);
@@ -95,6 +93,21 @@ pub fn unique(bots: &[Bot]) -> bool {
     bots.len() == botset.len()
 }
 
+pub fn print_tree(bots: &[Bot], height: usize, width: usize) {
+    let botset: HashSet<(usize, usize)> = bots.iter().map(|b| b.position).collect();
+
+    for row in 0..height {
+        for col in 0..width {
+            let pos = (col, row);
+            match botset.contains(&pos) {
+                true => print!("#"),
+                false => print!("."),
+            }
+        }
+        println!();
+    }
+}
+
 pub fn process_part2(input: &str, height: usize, width: usize) -> u32 {
     let mut bots: Vec<Bot> = input.lines().map(bot_from_line).collect();
 
@@ -108,6 +121,7 @@ pub fn process_part2(input: &str, height: usize, width: usize) -> u32 {
         }
         solved = unique(&bots);
     }
+    print_tree(&bots, height, width);
 
     retval
 }

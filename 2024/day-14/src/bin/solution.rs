@@ -9,4 +9,8 @@ fn main() {
     let file = fs::read_to_string("./input.txt").unwrap();
     println!("Day Part 1 answer: {}", process_part1(&file, HEIGHT, WIDTH));
     println!("Day Part 2 answer: {}", process_part2(&file, HEIGHT, WIDTH));
+    println!(
+        "Day Part 1 (in case you missed it with the tree print) answer: {}",
+        process_part1(&file, HEIGHT, WIDTH)
+    );
 }
