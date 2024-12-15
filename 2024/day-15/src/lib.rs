@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 // I like BTree over Hash because it makes debugging easier
 // If you want speed, use Hash instead
 
-pub fn make_grid(input: &str) -> BTreeMap<(i32, i32), char> {
+pub fn make_grid1(input: &str) -> BTreeMap<(i32, i32), char> {
     let mut grid = BTreeMap::new();
     for (row, line) in input.lines().enumerate() {
         for (col, c) in line.chars().enumerate() {
@@ -57,16 +57,14 @@ pub fn process_part1(input: &str) -> i32 {
                 Some(&'#') => {
                     canmove = false;
                     look = false;
-                    break;
                 }
                 Some(&'.') => {
                     targets.push(next);
                     look = false;
                 }
                 Some(x) => {
-                    look = false;
                     dbg!(x);
-                    panic!("What???");
+                    panic!("");
                 }
                 None => panic!("None received moving along look"),
             }
@@ -94,31 +92,6 @@ pub fn process_part1(input: &str) -> i32 {
                 }
             }
         }
-
-        /*
-        targets = [(r, c)]
-        cr = r
-        cc = c
-        go = True
-        while True:
-            cr += dr
-            cc += dc
-            char = grid[cr][cc]
-            if char == "#":
-                go = False
-                break
-            if char == "O":
-                targets.append((cr, cc))
-            if char == ".":
-                break
-        if not go: continue
-        grid[r][c] = "."
-        grid[r + dr][c + dc] = "@"
-        for br, bc in targets[1:]:
-            grid[br + dr][bc + dc] = "O"
-        r += dr
-        c += dc
-            */
     }
 
     score_part1(grid)
