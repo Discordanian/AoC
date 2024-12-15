@@ -152,6 +152,27 @@ pub fn score_part2(boxes: Vec<(usize, usize)>) -> usize {
     boxes.iter().map(|key| key.0 * 100 + key.1).sum()
 }
 
+pub fn print_debug(wallset: &BTreeSet<(usize, usize)>, boxset: &[(usize, usize)]) {
+    let cols = wallset.iter().map(|key| key.1).max().unwrap();
+    let rows = wallset.iter().map(|key| key.0).max().unwrap();
+
+    for r in 0..rows {
+        for c in 0..cols {
+            let pos = (r, c);
+            if wallset.contains(&pos) {
+                print!("#");
+            } else if boxset.contains(&pos) {
+                print!("[");
+            } else if c > 0 && boxset.contains(&pair_addition(pos, (0, -1))) {
+                print!("]");
+            } else {
+                print!(".");
+            }
+        }
+        println!();
+    }
+}
+
 pub fn pair_addition(p: (usize, usize), delta: (i32, i32)) -> (usize, usize) {
     assert!(p.0 > 0);
     assert!(p.1 > 0);
@@ -237,13 +258,14 @@ pub fn process_part2(input: &str) -> usize {
         } // stack processing
         if canmove {
             botpos = pair_addition(botpos, delta);
-            for i in 0..boxlist.len() {
-                if seen.contains(&boxlist[i]) {
-                    boxlist[i] = pair_addition(boxlist[i], delta);
+            for item in &mut boxlist {
+                if seen.contains(item) {
+                    *item = pair_addition(*item, delta);
                 }
             }
         }
     }
+    print_debug(&wallset, &boxlist);
     score_part2(boxlist)
 }
 
