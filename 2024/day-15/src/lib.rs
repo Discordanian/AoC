@@ -172,6 +172,6 @@ v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^";
     #[test]
     fn part2_works() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 9021);
     }
 }
