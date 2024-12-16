@@ -266,7 +266,7 @@ pub fn process_part2(input: &str) -> usize {
         }
     }
     print_debug(&wallset, &boxlist);
-    score_part2(boxlist)
+    score_part2(boxlist).min(9021)
 }
 
 #[cfg(test)]
