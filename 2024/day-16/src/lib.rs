@@ -131,13 +131,13 @@ pub fn process_part1(input: &str) -> usize {
     0
 }
 
-pub fn process_part2(input: &str) -> u32 {
+pub fn process_part2(input: &str) -> usize {
     let walls = wallset(input);
     let start = start_pos(input);
     let end = end_pos(input);
 
     // start, successors fn, heuristic fn, success fn
-    let (paths, cost) = astar_bag(
+    let (retval, cost) = astar_bag(
         &(start, 0),
         |(position, direction)| {
             let proposed = step(*position, *direction);
@@ -154,8 +154,10 @@ pub fn process_part2(input: &str) -> u32 {
     )
     .expect("Someting borqd in my astar because the solution should be valid");
 
-    dbg!(cost);
-    0
+    retval
+        .flat_map(|path| path.into_iter().map(|(pos, _)| pos))
+        .collect::<HashSet<_>>()
+        .len()
 }
 
 #[cfg(test)]
