@@ -131,6 +131,31 @@ pub fn process_part1(input: &str) -> usize {
     0
 }
 
+pub fn process_part1_astar(input: &str) -> usize {
+    let walls = wallset(input);
+    let start = start_pos(input);
+    let end = end_pos(input);
+
+    // start, successors fn, heuristic fn, success fn
+    let (retval, cost) = astar(
+        &(start, 0),
+        |(position, direction)| {
+            let proposed = step(*position, *direction);
+            let mut adjacent: Vec<_> = Vec::new();
+            if !walls.contains(&proposed) {
+                adjacent.push(((proposed, *direction), 1));
+            }
+            adjacent.push(((*position, (*direction + 1) % 4), 1000));
+            adjacent.push(((*position, (*direction + 3) % 4), 1000));
+            adjacent
+        },
+        |_| 0,                  // Heuristic just return zero
+        |&(pos, _)| pos == end, // Success condition
+    )
+    .expect("Someting borqd in my astar because the solution should be valid");
+
+    cost
+}
 pub fn process_part2(input: &str) -> usize {
     let walls = wallset(input);
     let start = start_pos(input);
@@ -207,6 +232,18 @@ mod tests {
     #[test]
     fn part1b_works() {
         let result = process_part1(INPUT2);
+        assert_eq!(result, 11048);
+    }
+
+    #[test]
+    fn part1a_aster_works() {
+        let result = process_part1_astar(INPUT1);
+        assert_eq!(result, 7036);
+    }
+
+    #[test]
+    fn part1b_astar_works() {
+        let result = process_part1_astar(INPUT2);
         assert_eq!(result, 11048);
     }
 
