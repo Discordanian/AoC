@@ -2,6 +2,8 @@ use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::collections::{HashMap, HashSet};
 
+use pathfinding::prelude::*;
+
 #[derive(Copy, Clone, Debug)]
 pub struct Bot {
     cost: usize,
@@ -129,7 +131,30 @@ pub fn process_part1(input: &str) -> usize {
     0
 }
 
-pub fn process_part2(_input: &str) -> u32 {
+pub fn process_part2(input: &str) -> u32 {
+    let walls = wallset(input);
+    let start = start_pos(input);
+    let end = end_pos(input);
+
+    // start, successors fn, heuristic fn, success fn
+    let (paths, cost) = astar_bag(
+        &(start, 0),
+        |(position, direction)| {
+            let proposed = step(*position, *direction);
+            let mut adjacent: Vec<_> = Vec::new();
+            if !walls.contains(&proposed) {
+                adjacent.push(((proposed, *direction), 1));
+            }
+            adjacent.push(((*position, (*direction + 1) % 4), 1000));
+            adjacent.push(((*position, (*direction + 3) % 4), 1000));
+            adjacent
+        },
+        |_| 0,                  // Heuristic just return zero
+        |&(pos, _)| pos == end, // Success condition
+    )
+    .expect("Someting borqd in my astar because the solution should be valid");
+
+    dbg!(cost);
     0
 }
 
@@ -184,8 +209,14 @@ mod tests {
     }
 
     #[test]
-    fn part2_works() {
+    fn part2a_works() {
         let result = process_part2(INPUT1);
-        assert_eq!(result, 0);
+        assert_eq!(result, 45);
+    }
+
+    #[test]
+    fn part2b_works() {
+        let result = process_part2(INPUT2);
+        assert_eq!(result, 64);
     }
 }
