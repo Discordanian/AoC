@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Bot {
@@ -97,6 +97,9 @@ pub fn process_part1(input: &str) -> usize {
         direction: 0,
     });
 
+    let mut seen: HashMap<(usize, usize), usize> = HashMap::new();
+    seen.insert(start, 0);
+
     while let Some(bot) = heap.pop() {
         if bot.pos == end {
             return bot.cost;
@@ -104,11 +107,21 @@ pub fn process_part1(input: &str) -> usize {
         let adj = adjacency(bot.pos, bot.direction);
         for (cost, pos, dir) in adj.iter() {
             if !walls.contains(pos) {
-                heap.push(Bot {
-                    cost: bot.cost + cost,
-                    pos: *pos,
-                    direction: *dir,
-                });
+                if !seen.contains_key(pos) {
+                    seen.insert(*pos, *cost);
+                    heap.push(Bot {
+                        cost: bot.cost + cost,
+                        pos: *pos,
+                        direction: *dir,
+                    });
+                } else if seen.get(pos).unwrap() > cost {
+                    seen.entry(*pos).and_modify(|key| *key = *cost);
+                    heap.push(Bot {
+                        cost: bot.cost + cost,
+                        pos: *pos,
+                        direction: *dir,
+                    });
+                }
             }
         }
     }
