@@ -86,22 +86,24 @@ pub fn process_part2(input: &str) -> u64 {
     line_iter.next().unwrap();
     let instructions = parse_vec_u64(line_iter.next().unwrap());
 
+    let mut stack: Vec<(usize, u64)> = Vec::new();
+    stack.push((instructions.len() - 1, 0));
+
     let mut output = 23; // can never be 23
-    let mut scan_idx = instructions.len() - 1;
-    while scan_idx >= 0 {
-        dbg!("Loop start");
+    while let Some((scan_idx, retval)) = stack.pop() {
+        if scan_idx == 0 {
+            return retval;
+        }
         let targetnum = instructions[scan_idx];
         for d in 0..8 {
             let mut a = retval << 3 | d;
             let mut b = 0;
             let mut c = 0;
             let mut pc = 0;
-            // dbg!(("Starting A", a));
             while pc < (instructions.len() - 2) {
                 assert!(pc < instructions.len() - 2);
                 let ins = instructions[pc];
                 let operand = instructions[pc + 1];
-                // dbg!((output, ins, operand));
                 match ins {
                     0 => a = a >> combo(operand, a, b, c),
                     1 => b ^= operand,
@@ -115,23 +117,14 @@ pub fn process_part2(input: &str) -> u64 {
                 }
                 pc += 2;
             } // going through instructions
-              // dbg!((output, targetnum, d, retval));
             if output == targetnum {
-                retval = retval << 3 | d;
-                if scan_idx == 0 {
-                    return retval >> 3;
-                }
-                assert!(scan_idx > 0);
-                scan_idx -= 1;
-                break;
-            } else if d == 7 {
-                retval = retval << 3;
-                dbg!(retval);
-                assert!(retval < 1_123_456_789_012);
-                // panic!("Ouch");
+                // stack.push((sidx, retval << 3 | d));
+                stack.push((scan_idx - 1, a));
+                dbg!(&stack);
             }
         }
     }
+    dbg!("Outside of stack");
     retval
 }
 
