@@ -115,17 +115,23 @@ pub fn process_part2(input: &str) -> u64 {
                 }
                 pc += 2;
             } // going through instructions
-            dbg!((output, targetnum, d, retval));
+              // dbg!((output, targetnum, d, retval));
             if output == targetnum {
-                retval = a << 3;
+                retval = retval << 3 | d;
+                if scan_idx == 0 {
+                    return retval >> 3;
+                }
+                assert!(scan_idx > 0);
                 scan_idx -= 1;
                 break;
             } else if d == 7 {
-                panic!("Ouch");
+                retval = retval << 3;
+                dbg!(retval);
+                assert!(retval < 1_123_456_789_012);
+                // panic!("Ouch");
             }
         }
     }
-
     retval
 }
 
