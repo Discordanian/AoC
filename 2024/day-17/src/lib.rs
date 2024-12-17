@@ -78,27 +78,30 @@ pub fn process_part1(input: &str) -> String {
 
 pub fn process_part2(input: &str) -> u64 {
     let mut line_iter = input.lines();
-    let mut retval: Vec<u64> = Vec::new();
+    let mut retval = 0;
 
-    let mut retval: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
-    let b: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
-    let c: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
     line_iter.next().unwrap();
     let instructions = parse_vec_u64(line_iter.next().unwrap());
 
-    let mut target_instructions = instructions.clone();
-
-    while !target_instructions.is_empty() {
+    let mut output = 23; // can never be 23
+    let mut scan_idx = instructions.len() - 1;
+    while scan_idx >= 0 {
+        dbg!("Loop start");
+        let targetnum = instructions[scan_idx];
         for d in 0..8 {
             let mut a = retval << 3 | d;
             let mut b = 0;
             let mut c = 0;
-            let mut output = 23; // can never be 23
             let mut pc = 0;
+            // dbg!(("Starting A", a));
             while pc < (instructions.len() - 2) {
                 assert!(pc < instructions.len() - 2);
                 let ins = instructions[pc];
                 let operand = instructions[pc + 1];
+                // dbg!((output, ins, operand));
                 match ins {
                     0 => a = a >> combo(operand, a, b, c),
                     1 => b ^= operand,
@@ -112,10 +115,13 @@ pub fn process_part2(input: &str) -> u64 {
                 }
                 pc += 2;
             } // going through instructions
-            if output == target_instructions[target_instructions.len() - 1] {
-                retval = a;
-                target_instructions.truncate(target_instructions.len() - 1);
-                continue;
+            dbg!((output, targetnum, d, retval));
+            if output == targetnum {
+                retval = a << 3;
+                scan_idx -= 1;
+                break;
+            } else if d == 7 {
+                panic!("Ouch");
             }
         }
     }
