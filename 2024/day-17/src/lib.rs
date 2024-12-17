@@ -22,7 +22,7 @@ pub fn parse_vec_u64(s: &str) -> Vec<u64> {
     retval
 }
 
-pub fn combo(operand: u32, a: u64, b: u64, c: u64) -> u64 {
+pub fn combo(operand: u64, a: u64, b: u64, c: u64) -> u64 {
     assert!(operand < 7);
     match operand {
         0..=3 => operand as u64,
@@ -42,7 +42,7 @@ pub fn process_part1(input: &str) -> String {
     let mut c: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
     let mut pc: usize = 0;
     line_iter.next().unwrap();
-    let instructions = parse_vec_u32(line_iter.next().unwrap());
+    let instructions = parse_vec_u64(line_iter.next().unwrap());
 
     while pc < instructions.len() {
         assert!(pc < (instructions.len() - 1));
@@ -52,7 +52,7 @@ pub fn process_part1(input: &str) -> String {
 
         match operation {
             0 => a = a >> combo(operand, a, b, c),
-            1 => b ^= (operand as u64),
+            1 => b ^= operand,
             2 => b = combo(operand, a, b, c) % 8,
             3 => {
                 if a != 0 {
@@ -76,8 +76,51 @@ pub fn process_part1(input: &str) -> String {
         .join(",")
 }
 
-pub fn process_part2(input: &str) -> u32 {
-    input.len() as u32
+pub fn process_part2(input: &str) -> u64 {
+    let mut line_iter = input.lines();
+    let mut retval: Vec<u64> = Vec::new();
+
+    let mut retval: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    let b: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    let c: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    line_iter.next().unwrap();
+    let instructions = parse_vec_u64(line_iter.next().unwrap());
+
+    let mut target_instructions = instructions.clone();
+
+    while !target_instructions.is_empty() {
+        for d in 0..8 {
+            let mut a = retval << 3 | d;
+            let mut b = 0;
+            let mut c = 0;
+            let mut output = 23; // can never be 23
+            let mut pc = 0;
+            while pc < (instructions.len() - 2) {
+                assert!(pc < instructions.len() - 2);
+                let ins = instructions[pc];
+                let operand = instructions[pc + 1];
+                match ins {
+                    0 => a = a >> combo(operand, a, b, c),
+                    1 => b ^= operand,
+                    2 => b = combo(operand, a, b, c) % 8,
+                    3 => panic!(),
+                    4 => b ^= c,
+                    5 => output = combo(operand, a, b, c) % 8,
+                    6 => b = a >> combo(operand, a, b, c),
+                    7 => c = a >> combo(operand, a, b, c),
+                    _ => unreachable!(),
+                }
+                pc += 2;
+            } // going through instructions
+            if output == target_instructions[target_instructions.len() - 1] {
+                retval = a;
+                target_instructions.truncate(target_instructions.len() - 1);
+                continue;
+            }
+        }
+    }
+
+    retval
 }
 
 #[cfg(test)]
@@ -88,7 +131,7 @@ mod tests {
 Register B: 0
 Register C: 0
 
-Program: 0,1,5,4,3,0";
+instructions: 0,1,5,4,3,0";
 
     #[test]
     fn part1_works() {
