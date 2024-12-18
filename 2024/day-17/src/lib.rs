@@ -78,7 +78,7 @@ pub fn process_part1(input: &str) -> String {
 
 pub fn process_part2(input: &str) -> u64 {
     let mut line_iter = input.lines();
-    let mut retval = 0;
+    // let mut retval = 0;
 
     let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
     let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
@@ -87,14 +87,14 @@ pub fn process_part2(input: &str) -> u64 {
     let instructions = parse_vec_u64(line_iter.next().unwrap());
 
     let mut stack: Vec<(usize, u64)> = Vec::new();
-    stack.push((instructions.len() - 1, 0));
+    stack.push((instructions.len(), 0));
 
     let mut output = 23; // can never be 23
-    while let Some((scan_idx, retval)) = stack.pop() {
-        if scan_idx == 0 {
+    while let Some((inst_length, retval)) = stack.pop() {
+        if inst_length == 0 {
             return retval;
         }
-        let targetnum = instructions[scan_idx];
+        let targetnum = instructions[inst_length - 1];
         for d in 0..8 {
             let mut a = retval << 3 | d;
             let mut b = 0;
@@ -118,14 +118,13 @@ pub fn process_part2(input: &str) -> u64 {
                 pc += 2;
             } // going through instructions
             if output == targetnum {
-                // stack.push((sidx, retval << 3 | d));
-                stack.push((scan_idx - 1, a));
+                stack.push((inst_length - 1, a));
                 dbg!(&stack);
             }
         }
     }
     dbg!("Outside of stack");
-    retval
+    123
 }
 
 #[cfg(test)]
