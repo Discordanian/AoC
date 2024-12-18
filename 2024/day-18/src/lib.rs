@@ -47,8 +47,7 @@ pub fn adjacent(p: (usize, usize), w: usize) -> Vec<(usize, usize)> {
     retval
 }
 
-pub fn process_part1(input: &str, w: usize, t: usize) -> usize {
-    let grid = make_grid(input, w);
+pub fn solve_in_t(grid: &[Vec<usize>], w: usize, t: usize) -> usize {
     let start = (0_usize, 0_usize);
     let end = (w - 1, w - 1);
     let mut seen: HashSet<(usize, usize)> = HashSet::new();
@@ -75,7 +74,13 @@ pub fn process_part1(input: &str, w: usize, t: usize) -> usize {
 
     0
 }
+
+pub fn process_part1(input: &str, w: usize, t: usize) -> usize {
+    let grid = make_grid(input, w);
+    solve_in_t(&grid, w, t)
+}
 pub fn process_part2(input: &str, w: usize) -> String {
+    let grid = make_grid(input, w);
     let mut min: usize = 0;
     let mut max = input.len();
     let pairs: Vec<String> = input.lines().map(|x| x.to_string()).collect();
@@ -83,7 +88,7 @@ pub fn process_part2(input: &str, w: usize) -> String {
     // Binary search
     while min < max {
         let t: usize = (max + min) / 2;
-        if process_part1(input, w, t) != 0 {
+        if solve_in_t(&grid, w, t) != 0 {
             min = t + 1;
         } else {
             max = t;
