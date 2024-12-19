@@ -5,18 +5,8 @@ pub fn design_possible(
     patterns: Vec<String>,
     design: String,
 ) -> bool {
-    // Is it trivial
-    if design.len() == 0 {
-        return true;
-    }
-    // Is it cached
     if let Some(result) = cache.get(&design) {
         return *result;
-    }
-    // Is it trivial
-    if design.len() == 1 && patterns.contains(&design) {
-        cache.insert(design, true);
-        return true;
     }
 
     let design_l = design.len();
@@ -52,6 +42,11 @@ pub fn process_part1(input: &str) -> usize {
     }
 
     let mut cache: HashMap<String, bool> = HashMap::new();
+    // Set up trivial cache
+    cache.insert(String::from(""), true); // Insert default case
+    for p in patterns.clone().into_iter() {
+        cache.insert(p.clone(), true);
+    }
 
     let x = designs
         .into_iter()
