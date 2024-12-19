@@ -63,31 +63,28 @@ pub fn designs_possible(
     if let Some(result) = cache.get(&design) {
         return *result;
     }
-    let mut retval = 0;
-
-    let design_l = design.len();
-
-    for i in 0..design_l {
-        let firstpart = design[0..i].to_string();
-        let secondpart = design[i..design_l].to_string();
-        if patterns.contains(&firstpart) {
-            dbg!(("before", firstpart.clone(), secondpart.clone(), retval));
-            retval += designs_possible(cache, patterns.clone(), secondpart.clone());
-            dbg!(("after", firstpart.clone(), secondpart.clone(), retval));
-        }
+    if design.is_empty() {
+        return 1;
     }
-    /*
-    @cache
-    def designs_possible(design):
-        if design == "": return 1
-        count = 0
-        for i in range(len(design)):
-            if design[:i] in patterns:
-                count += designs_possible(design[i:])
-        return count
+    let retval = patterns
+        .iter()
+        .filter_map(|towel| {
+            if design.starts_with(towel) {
+                let secondpart = &design[towel.len()..];
+                if secondpart.is_empty() {
+                    return Some(1);
+                }
+                Some(designs_possible(
+                    cache,
+                    patterns.clone(),
+                    secondpart.to_string(),
+                ))
+            } else {
+                None
+            }
+        })
+        .sum();
 
-    print(sum(num_possibilities(design) for design in lines[2:]))
-        */
     cache.insert(design.clone(), retval);
     retval
 }
@@ -117,14 +114,11 @@ pub fn process_part2(input: &str) -> u64 {
             cache.insert(p.clone(), 1);
         }
     }
-    dbg!(&cache);
 
-    let x = designs
+    designs
         .into_iter()
         .map(|x| designs_possible(&mut cache, patterns.clone(), x.to_string()))
-        .sum();
-    dbg!(&cache);
-    x
+        .sum()
 }
 
 #[cfg(test)]
@@ -153,7 +147,6 @@ bbrgwb";
     }
 
     #[test]
-    #[ignore]
     fn part2_works() {
         let result = process_part2(INPUT);
         assert_eq!(result, 16);
