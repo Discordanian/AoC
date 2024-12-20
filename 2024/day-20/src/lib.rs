@@ -112,7 +112,7 @@ pub fn original_path(walls: &HashSet<IPoint>, start: IPoint, end: IPoint) -> Vec
 
 pub fn process_part1(input: &str, _cheat: usize, save: usize) -> usize {
     let wallset = make_wall_set(input);
-    let _dimensions = maze_dimensions(&wallset);
+    // let _dimensions = maze_dimensions(&wallset);
     let (start, end) = find_start_and_end(input);
     let solution = original_path(&wallset, start, end);
     let mut retval = 0;
@@ -133,7 +133,7 @@ pub fn process_part1(input: &str, _cheat: usize, save: usize) -> usize {
     for p in solution.iter() {
         for delta in two_step.iter() {
             let np: IPoint = *p + *delta;
-            let saved = match (step_map.get(&np), step_map.get(&p)) {
+            let saved = match (step_map.get(&np), step_map.get(p)) {
                 (Some(dst), Some(src)) => {
                     if dst > src {
                         dst - src
@@ -151,9 +151,78 @@ pub fn process_part1(input: &str, _cheat: usize, save: usize) -> usize {
     retval
 }
 
+pub fn adjacency(p: IPoint, cheat: usize) -> Vec<(IPoint, usize)> {
+    assert!(cheat > 2);
+    let mut retval = Vec::new();
+
+    for x in 0..cheat {
+        for y in 0..cheat {
+            if x + y <= cheat {
+                if x != 0 {
+                    retval.push((
+                        p + IPoint {
+                            x: x as i32,
+                            y: y as i32,
+                        },
+                        x + y,
+                    ));
+                    retval.push((
+                        p + IPoint {
+                            x: -(x as i32),
+                            y: y as i32,
+                        },
+                        x + y,
+                    ));
+                }
+                if y != 0 {
+                    retval.push((
+                        p + IPoint {
+                            x: x as i32,
+                            y: y as i32,
+                        },
+                        x + y,
+                    ));
+                    retval.push((
+                        p + IPoint {
+                            x: x as i32,
+                            y: -(y as i32),
+                        },
+                        x + y,
+                    ));
+                }
+            }
+        }
+    }
+    retval
+}
+
 pub fn process_part2(input: &str, cheat: usize, save: usize) -> usize {
     let wallset = make_wall_set(input);
-    input.len() + cheat + save
+    let (start, end) = find_start_and_end(input);
+    let solution = original_path(&wallset, start, end);
+    let mut retval = 0;
+
+    let step_map: HashMap<IPoint, usize> =
+        solution.iter().enumerate().map(|(i, p)| (*p, i)).collect();
+
+    for p in solution.iter() {
+        for (np, cost) in adjacency(*p, cheat).iter() {
+            let saved = match (step_map.get(np), step_map.get(p)) {
+                (Some(dst), Some(src)) => {
+                    if dst > src {
+                        dst - src
+                    } else {
+                        0
+                    }
+                }
+                (_, _) => 0,
+            };
+            if saved > *cost + save {
+                retval += 1;
+            }
+        }
+    }
+    retval
 }
 
 #[cfg(test)]
@@ -195,14 +264,12 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn part2a_works() {
         let result = process_part2(INPUT, CHEAT2, SAVE3);
         assert_eq!(result, 3);
     }
 
     #[test]
-    #[ignore]
     fn part2b_works() {
         let result = process_part2(INPUT, CHEAT2, SAVE4);
         assert_eq!(result, 7);
