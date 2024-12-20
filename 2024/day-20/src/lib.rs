@@ -196,15 +196,15 @@ pub fn adjacency(p: IPoint, cheat: usize) -> Vec<(IPoint, usize)> {
     retval
 }
 
-pub fn process_part2(input: &str, cheat: usize, save: usize) -> usize {
+pub fn process_part2(input: &str, cheat: usize, save: usize) -> u64 {
     let wallset = make_wall_set(input);
     let (start, end) = find_start_and_end(input);
     let solution = original_path(&wallset, start, end);
-    let mut retval = 0;
 
     let step_map: HashMap<IPoint, usize> =
         solution.iter().enumerate().map(|(i, p)| (*p, i)).collect();
 
+    let mut p2p: HashSet<(IPoint, IPoint, i32, i32)> = HashSet::new();
     for p in solution.iter() {
         for (np, cost) in adjacency(*p, cheat).iter() {
             let saved = match (step_map.get(np), step_map.get(p)) {
@@ -217,12 +217,10 @@ pub fn process_part2(input: &str, cheat: usize, save: usize) -> usize {
                 }
                 (_, _) => 0,
             };
-            if saved > *cost + save {
-                retval += 1;
-            }
+            p2p.insert((*p, *np, *cost as i32, saved as i32 - *cost as i32));
         }
     }
-    retval
+    p2p.iter().filter(|x| x.3 >= save as i32).count() as u64
 }
 
 #[cfg(test)]
