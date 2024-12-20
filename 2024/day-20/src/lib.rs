@@ -272,4 +272,28 @@ mod tests {
         let result = process_part2(INPUT, CHEAT2, SAVE4);
         assert_eq!(result, 7);
     }
+
+    #[test]
+    fn part2c_works() {
+        let result = process_part2(INPUT, CHEAT2, 72);
+        assert_eq!(result, 29);
+    }
+
+    #[test]
+    fn part2d_works() {
+        let result = process_part2(INPUT, CHEAT2, 70);
+        assert_eq!(result, 41);
+    }
+
+    #[test]
+    fn part2e_works() {
+        let result = process_part2(INPUT, CHEAT2, 68);
+        assert_eq!(result, 55);
+    }
+
+    #[test]
+    fn part2f_works() {
+        let result = process_part2(INPUT, CHEAT2, 66);
+        assert_eq!(result, 67);
+    }
 }
