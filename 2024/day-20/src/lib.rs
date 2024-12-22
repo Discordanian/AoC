@@ -155,8 +155,8 @@ pub fn adjacency(p: IPoint, cheat: usize) -> Vec<(IPoint, usize)> {
     assert!(cheat > 2);
     let mut retval = Vec::new();
 
-    for x in 0..cheat {
-        for y in 0..cheat {
+    for x in 0..=cheat {
+        for y in 0..=cheat {
             if x + y <= cheat {
                 if x != 0 {
                     retval.push((
