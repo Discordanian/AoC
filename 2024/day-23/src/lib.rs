@@ -16,8 +16,8 @@ pub fn process_part1(input: &str) -> usize {
     let mut graphmap: HashMap<&str, Vec<&str>> = HashMap::new();
 
     for (a, b) in links.iter() {
-        graphmap.entry(a).or_insert(Vec::new()).push(b);
-        graphmap.entry(b).or_insert(Vec::new()).push(a);
+        graphmap.entry(a).or_default().push(b);
+        graphmap.entry(b).or_default().push(a);
     }
 
     let mut set: HashSet<(&str, &str, &str)> = HashSet::new();
@@ -51,6 +51,111 @@ pub fn process_part1(input: &str) -> usize {
 }
 
 pub fn process_part2(input: &str) -> String {
+    let links = input_to_tuple(input);
+    let mut seen: HashSet<&str> = HashSet::new();
+
+    let mut graphmap: HashMap<&str, HashSet<&str>> = HashMap::new();
+    let mut intersections: HashSet<Vec<&str>> = HashSet::new();
+
+    for (a, b) in links.iter() {
+        graphmap.entry(a).or_default().insert(b);
+        graphmap.entry(a).or_default().insert(a); // map should contain itself
+        graphmap.entry(b).or_default().insert(a);
+        graphmap.entry(b).or_default().insert(b); // map should contain itself
+    }
+
+    for key in graphmap.keys() {
+        let base: HashSet<&str> = graphmap
+            .get(key)
+            .expect("Key available for graphmap")
+            .clone();
+        // println!("A {:?}", &base);
+        let mut intersection: HashSet<&str> = base.clone();
+        for key2 in base.iter() {
+            let mut inter2: HashSet<&str> = HashSet::new();
+            let setb: HashSet<&str> = graphmap.get(key2).expect("Key2 in graphmap").clone();
+            for x in setb.iter() {
+                if intersection.contains(x) {
+                    inter2.insert(x);
+                }
+            }
+            /*
+            println!(
+                "Given set {:?} and {:?} the intersection is {:?}",
+                intersection, setb, inter2
+            );
+            */
+            intersection = inter2.clone();
+            /*
+            println!("B {:?}", &base);
+            intersection = intersection
+                .intersection(&setb)
+                .map(|&x| x.clone())
+                .collect();
+            println!("{:?}", &intersection);
+            */
+            /*
+
+            intersection = intersection .intersection(
+                    &graphmap
+                        .get(key2)
+                        .expect("Key2 available for graphmap")
+                        .clone(),
+                )
+                .map(|x| x.clone())
+                .collect();
+            */
+        }
+        let mut sorted = intersection.into_iter().collect::<Vec<&str>>();
+        sorted.sort();
+
+        intersections.insert(sorted);
+    }
+
+    /*
+    for (a, b) in links.iter() {
+        if seen.contains(a) {
+            continue;
+        }
+        seen.insert(a);
+        let mut mastervec: Vec<&str> = vec![a, b];
+        let mut stack: Vec<&str> = graphmap
+            .get(a)
+            .expect("Create stack from first elem")
+            .to_vec();
+        while let Some(key) = stack.pop() {
+            if !seen.contains(key) {
+                seen.insert(key);
+                mastervec.push(key);
+                // add neighbors to stack
+                for node in graphmap.get(key).expect("").to_vec().iter() {
+                    stack.push(node);
+                }
+            }
+        }
+        mastervec.sort();
+        mastergraphmap.insert(a, mastervec);
+    }*/
+    // dbg!(graphmap);
+
+    /*
+    sets = set()
+
+    def search(node, req):
+        key = tuple(sorted(req))
+        if key in sets: return
+        sets.add(key)
+        for neighbor in conns[node]:
+            if neighbor in req: continue
+            if not all(neighbor in conns[query] for query in req): continue
+            search(neighbor, {*req, neighbor})
+
+    for x in conns:
+        search(x, {x})
+
+    print(",".join(sorted(max(sets, key=len))))
+     */
+    // dbg!(intersections);
     format!("{}", input.len())
 }
 
