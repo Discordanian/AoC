@@ -36,11 +36,30 @@ pub fn make_input_map(s: &str) -> HashMap<String, Register> {
     map
 }
 
-pub fn process_part1(input: &str) -> u32 {
-    let map = make_input_map(input);
-    dbg!(&map);
+pub fn value_wire(map: &HashMap<String, Register>, label: &String) -> u64 {
+    match map.get(label) {
+        None => panic!("Label not found in map!"),
+        Some(Register::Value(x)) => *x,
+        Some(Register::And(a, b)) => value_wire(&map, &a) & value_wire(&map, &b),
+        Some(Register::Or(a, b)) => value_wire(&map, &a) | value_wire(&map, &b),
+        Some(Register::Xor(a, b)) => value_wire(&map, &a) ^ value_wire(&map, &b),
+    }
+}
 
-    map.len() as u32
+pub fn make_wire(c: char, i: usize) -> String {
+    format!("{}{:02}", c, i)
+}
+
+pub fn process_part1(input: &str, bits: usize) -> u64 {
+    let map = make_input_map(input);
+    let mut retval = 0;
+
+    for i in 0..bits {
+        let label: String = make_wire('z', i);
+        retval += value_wire(&map, &label) << i;
+    }
+
+    retval
 }
 
 pub fn process_part2(input: &str) -> u32 {
@@ -112,13 +131,13 @@ tnw OR pbm -> gnj";
 
     #[test]
     fn part1a_works() {
-        let result = process_part1(SMALLINPUT);
+        let result = process_part1(SMALLINPUT, 3);
         assert_eq!(result, 4);
     }
 
     #[test]
     fn part1b_works() {
-        let result = process_part1(SMALLINPUT);
+        let result = process_part1(INPUT, 13);
         assert_eq!(result, 2024);
     }
 
