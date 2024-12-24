@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 #[derive(Clone, Debug)]
-enum Register {
+pub enum Register {
     Value(u64),
     And(String, String),
     Or(String, String),
@@ -40,9 +40,9 @@ pub fn value_wire(map: &HashMap<String, Register>, label: &String) -> u64 {
     match map.get(label) {
         None => panic!("Label not found in map!"),
         Some(Register::Value(x)) => *x,
-        Some(Register::And(a, b)) => value_wire(&map, &a) & value_wire(&map, &b),
-        Some(Register::Or(a, b)) => value_wire(&map, &a) | value_wire(&map, &b),
-        Some(Register::Xor(a, b)) => value_wire(&map, &a) ^ value_wire(&map, &b),
+        Some(Register::And(a, b)) => value_wire(map, a) & value_wire(map, b),
+        Some(Register::Or(a, b)) => value_wire(map, a) | value_wire(map, b),
+        Some(Register::Xor(a, b)) => value_wire(map, a) ^ value_wire(map, b),
     }
 }
 
@@ -62,8 +62,16 @@ pub fn process_part1(input: &str, bits: usize) -> u64 {
     retval
 }
 
-pub fn process_part2(input: &str) -> u32 {
-    0
+pub fn process_part2(input: &str, bits: usize, pairs: usize) -> String {
+    let map = make_input_map(input);
+    let mut retval = (bits + pairs) as u64;
+
+    for i in 0..bits {
+        let label: String = make_wire('z', i);
+        retval += value_wire(&map, &label) << i;
+    }
+
+    retval.to_string()
 }
 
 #[cfg(test)]
@@ -129,6 +137,8 @@ hwm AND bqk -> z03
 tgd XOR rvg -> z12
 tnw OR pbm -> gnj";
 
+    const PAIRS: usize = 2;
+
     #[test]
     fn part1a_works() {
         let result = process_part1(SMALLINPUT, 3);
@@ -143,7 +153,7 @@ tnw OR pbm -> gnj";
 
     #[test]
     fn part2_works() {
-        let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        let result = process_part2(INPUT, 13, PAIRS);
+        assert_eq!(result, "".to_string());
     }
 }
