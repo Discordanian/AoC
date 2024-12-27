@@ -49,6 +49,6 @@ mod tests {
     #[ignore]
     fn part2_example() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 1134);
     }
 }
