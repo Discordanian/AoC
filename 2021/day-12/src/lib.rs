@@ -46,7 +46,33 @@ pub fn process_part1(input: &str) -> usize {
 }
 
 pub fn process_part2(input: &str) -> usize {
-    input.len()
+    let map = make_adj_map(input);
+    let mut retval: Vec<Vec<String>> = Vec::new();
+
+    // (Current, Visited Vec)
+    let mut stack: Vec<(String, Vec<String>)> =
+        vec![(String::from("start"), vec![String::from("start")])];
+
+    while let Some((current, visited)) = stack.pop() {
+        if current == String::from("end") {
+            retval.push(visited);
+            continue;
+        }
+        let neighbors: Vec<String> = map[&current].clone();
+        for neighbor in neighbors.iter() {
+            if (visited.clone().iter().filter(|x| *x == neighbor).count() < 2
+                || cave_is_big(neighbor))
+                && *neighbor != String::from("start")
+            {
+                let mut newv: Vec<String> = visited.clone();
+                newv.push(neighbor.to_string());
+                stack.push((neighbor.to_string(), newv));
+            }
+        }
+    }
+
+    dbg!(&retval);
+    retval.len()
 }
 
 #[cfg(test)]
@@ -110,9 +136,15 @@ start-RW";
     }
 
     #[test]
+    fn part2b_example() {
+        let result = process_part2(INPUTB);
+        assert_eq!(result, 103);
+    }
+
+    #[test]
     #[ignore]
-    fn part2_example() {
+    fn part2c_example() {
         let result = process_part2(INPUTC);
-        assert_eq!(result, 0);
+        assert_eq!(result, 3509);
     }
 }
