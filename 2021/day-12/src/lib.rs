@@ -8,15 +8,19 @@ pub fn make_adj_map(input: &str) -> HashMap<String, Vec<String>> {
         let a: String = lit.next().expect("Str slice before dash").to_string();
         let b: String = lit.next().expect("Str slice before dash").to_string();
 
-        map.entry(a.clone()).or_default().push(b.clone());
-        map.entry(b.clone()).or_default().push(a);
+        if b != *"start" {
+            map.entry(a.clone()).or_default().push(b.clone());
+        }
+        if a != *"start" {
+            map.entry(b.clone()).or_default().push(a);
+        }
     }
 
     map
 }
 
-pub fn cave_is_big(a: &String) -> bool {
-    a.as_str().chars().all(|c| c.is_ascii_uppercase())
+pub fn cave_is_big(a: &str) -> bool {
+    a.chars().all(|c| c.is_ascii_uppercase())
 }
 
 pub fn process_part1(input: &str) -> usize {
@@ -28,7 +32,7 @@ pub fn process_part1(input: &str) -> usize {
         vec![(String::from("start"), vec![String::from("start")])];
 
     while let Some((current, visited)) = stack.pop() {
-        if current == String::from("end") {
+        if current == *"end" {
             retval.push(visited);
             continue;
         }
@@ -49,29 +53,37 @@ pub fn process_part2(input: &str) -> usize {
     let map = make_adj_map(input);
     let mut retval: Vec<Vec<String>> = Vec::new();
 
-    // (Current, Visited Vec)
-    let mut stack: Vec<(String, Vec<String>)> =
-        vec![(String::from("start"), vec![String::from("start")])];
+    let mut stack: Vec<(String, bool, Vec<String>)> =
+        vec![(String::from("start"), false, vec![String::from("start")])];
 
-    while let Some((current, visited)) = stack.pop() {
-        if current == String::from("end") {
+    while let Some((current, twice, visited)) = stack.pop() {
+        if current == *"end" {
             retval.push(visited);
             continue;
         }
         let neighbors: Vec<String> = map[&current].clone();
         for neighbor in neighbors.iter() {
-            if (visited.clone().iter().filter(|x| *x == neighbor).count() < 2
-                || cave_is_big(neighbor))
-                && *neighbor != String::from("start")
-            {
-                let mut newv: Vec<String> = visited.clone();
+            let neighbor_count = visited.clone().iter().filter(|x| *x == neighbor).count();
+            let mut newv: Vec<String> = visited.clone();
+            if cave_is_big(neighbor) {
                 newv.push(neighbor.to_string());
-                stack.push((neighbor.to_string(), newv));
+                stack.push((neighbor.to_string(), twice, newv));
+            } else {
+                match (twice, neighbor_count) {
+                    (_, 0) => {
+                        newv.push(neighbor.to_string());
+                        stack.push((neighbor.to_string(), twice, newv));
+                    }
+                    (false, 1) => {
+                        newv.push(neighbor.to_string());
+                        stack.push((neighbor.to_string(), true, newv));
+                    }
+                    (_, _) => {}
+                }
             }
         }
     }
 
-    dbg!(&retval);
     retval.len()
 }
 
@@ -142,7 +154,6 @@ start-RW";
     }
 
     #[test]
-    #[ignore]
     fn part2c_example() {
         let result = process_part2(INPUTC);
         assert_eq!(result, 3509);
