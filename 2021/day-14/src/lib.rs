@@ -63,8 +63,8 @@ pub fn minmax_sequence(sequence: &Vec<char>) -> (usize, usize) {
     (seq_min, seq_max)
 }
 
-pub fn process_part2(input: &str) -> u32 {
-    input.len() as u32
+pub fn process_part2(input: &str) -> u64 {
+    input.len() as u64
 }
 
 #[cfg(test)]
@@ -99,6 +99,6 @@ CN -> C";
     #[test]
     fn part2_example() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 2188189693529);
     }
 }
