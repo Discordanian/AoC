@@ -8,6 +8,10 @@ pub fn process_part1(input: &str) -> u32 {
         })
         .collect();
 
+    total_cost(risk_grid)
+}
+
+pub fn total_cost(risk_grid: Vec<Vec<u32>>) -> u32 {
     let ymax = risk_grid.len() - 1;
     let xmax = risk_grid.len() - 1;
 
@@ -22,8 +26,6 @@ pub fn process_part1(input: &str) -> u32 {
 
     assert_eq!(risk_grid.len(), cost_grid.len());
     assert_eq!(risk_grid[0].len(), cost_grid[0].len());
-
-    dbg!(&risk_grid);
 
     // y , x, cost
     let mut stack: Vec<(usize, usize, u32)> = vec![(0, 0, 0)];
@@ -53,8 +55,56 @@ pub fn process_part1(input: &str) -> u32 {
     cost_grid[ymax][xmax]
 }
 
-pub fn process_part2(input: &str) -> usize {
-    input.len()
+pub fn big_grid(grid: Vec<Vec<u32>>) -> Vec<Vec<u32>> {
+    let mut g: Vec<Vec<u32>> = Vec::new();
+
+    for line in &grid {
+        g.push(line.clone());
+    }
+
+    for i in 1..=4 {
+        for line in &grid {
+            g.push(
+                line.iter()
+                    .clone()
+                    .map(|x| x + i)
+                    .map(|x| match x > 9 {
+                        true => x - 9,
+                        _ => x,
+                    })
+                    .collect(),
+            );
+        }
+    }
+
+    for y in 0..g.len() {
+        for i in 1..=4 {
+            for x in 0..grid[0].len() {
+                let mut val = g[y][x] + i;
+                if val > 9 {
+                    val -= 9;
+                }
+                g[y].push(val);
+            }
+        }
+    }
+
+    g
+}
+
+pub fn process_part2(input: &str) -> u32 {
+    let risk_grid: Vec<Vec<u32>> = input
+        .lines()
+        .map(|line| {
+            line.chars()
+                .map(|c| c.to_digit(10).unwrap())
+                .collect::<Vec<u32>>()
+        })
+        .collect();
+
+    // The risk_grid needs to be 5x bigger
+
+    total_cost(big_grid(risk_grid))
 }
 
 #[cfg(test)]
@@ -81,6 +131,6 @@ mod tests {
     #[test]
     fn part2_example() {
         let result = process_part2(INPUT);
-        assert_eq!(result, 0);
+        assert_eq!(result, 315);
     }
 }
