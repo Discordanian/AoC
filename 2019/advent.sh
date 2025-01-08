@@ -16,9 +16,10 @@ git add $LIBNAME
 # All the template copying
 cp $SRCLIB/solve.sh $LIBNAME/solve.sh
 mkdir $LIBNAME/src/bin/
-sed "s/00/$1/g" $SRCLIB/src/bin/part-1.rs > $LIBNAME/src/bin/part-1.rs
-sed "s/00/$1/g" $SRCLIB/src/bin/part-2.rs $LIBNAME/src/bin/part-2.rs
+sed "s/00/$1/g" $SRCLIB/src/bin/solution.rs > $LIBNAME/src/bin/solution.rs
 cp -v $SRCLIB/src/lib.rs $LIBNAME/src/lib.rs
+cp -v $SRCLIB/get_input.sh $LIBNAME/
+cp -v $SRCLIB/session_id $LIBNAME/
 
 cd $LIBNAME
 cargo test
