@@ -1,5 +1,5 @@
-use day_5::process_part1;
-use day_5::process_part2;
+use day_05::process_part1;
+use day_05::process_part2;
 use std::fs;
 
 fn main() {
