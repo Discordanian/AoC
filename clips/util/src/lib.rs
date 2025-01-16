@@ -1,5 +1,31 @@
 use regex::Regex;
 
+// permute k elements of arr
+// Heap's algorithm
+// https://en.wikipedia.org/wiki/Heap%27s_algorithm
+pub fn permute(p: &mut Vec<Vec<u32>>, k: usize, arr: Vec<u32>) {
+    let mut a: Vec<u32> = arr.clone();
+    if k == 1 {
+        p.push(arr.to_vec());
+    } else {
+        permute(p, k - 1, a.clone());
+        let k_even = k % 2 == 0;
+
+        for idx in 0..(k - 1) {
+            if k_even {
+                let t = a[idx];
+                a[idx] = a[k - 1];
+                a[k - 1] = t;
+            } else {
+                let t = a[0];
+                a[0] = a[k - 1];
+                a[k - 1] = t;
+            }
+            permute(p, k - 1, a.clone());
+        }
+    }
+}
+
 // Ignores everything else in the str slice and returns all positive integers found
 pub fn parse_vec_u32(s: &str) -> Vec<u32> {
     let re = Regex::new(r"(\d+)").expect("parse_vec_u32 regex failure");
