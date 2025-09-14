@@ -20,3 +20,21 @@ Cargo.lock
 **/session_id
 
 **/*.py
+
+# Godot 4+ specific ignores
+2025/advent-of-code-2025/.godot/
+2025/advent-of-code-2025/.nomedia
+
+# Godot-specific ignores
+2025/advent-of-code-2025/.import/
+2025/advent-of-code-2025/export.cfg
+2025/advent-of-code-2025/export_credentials.cfg
+2025/advent-of-code-2025/*.tmp
+
+# Imported translations (automatically generated from CSV files)
+2025/advent-of-code-2025/*.translation
+
+# Mono-specific ignores
+2025/advent-of-code-2025/.mono/
+2025/advent-of-code-2025/data_*/
+2025/advent-of-code-2025/mono_crash.*.json
