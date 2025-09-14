@@ -22,3 +22,7 @@ Majority Rust with a tad of python.
 
 ## 2024
 Going to attempt all RUST
+
+## 2025
+Stretch goal this year as I've completed previous years now a few times.
+This year I'm going to do it using the [Godot](https://godotengine.org) game engine.   GDScript has arrays and dictionaries and precious little else for processing.
