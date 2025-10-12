@@ -11,8 +11,28 @@ config_version=5
 [application]
 
 config/name="Advent of Code 2025"
+config/description="Advent of Code work for Year 2025"
+run/main_scene="uid://q4hgd58ldx43"
 config/features=PackedStringArray("4.5", "Forward Plus")
+run/load_shell_environment=true
 config/icon="res://icon.svg"
+
+[autoload]
+
+GdSet="*res://singletons/gd_set.gd"
+
+[debug]
+
+gdscript/warnings/unassigned_variable=2
+gdscript/warnings/unassigned_variable_op_assign=2
+gdscript/warnings/unused_variable=2
+gdscript/warnings/incompatible_ternary=2
+gdscript/warnings/untyped_declaration=2
+gdscript/warnings/inferred_declaration=2
+
+[display]
+
+window/stretch/mode="viewport"
 
 [plugins]
 

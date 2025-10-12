@@ -1,5 +1,5 @@
 class_name GDSet
-extends Resource
+extends Node
 
 ## A strongly-typed set implementation backed by a Dictionary.
 ## Provides O(1) add, remove, and lookup operations.
@@ -24,17 +24,17 @@ func should_continue() -> bool:
     return current < size()
 
 
-func _iter_init(_arg) -> bool:
+func _iter_init(_arg: Variant) -> bool:
     current = start
     return should_continue()
 
 
-func _iter_next(_arg) -> bool:
+func _iter_next(_arg: Variant) -> bool:
     current += 1
     return should_continue()
 
 
-func _iter_get(_arg):
+func _iter_get(_arg: Variant) -> Variant:
     return map.keys()[current]
 
 
@@ -43,7 +43,7 @@ func add(element: Variant) -> void:
 
 
 func add_all(elements: Array) -> void:
-    for element in elements:
+    for element: Variant in elements:
         add(element)
 
 
@@ -52,13 +52,13 @@ func remove(element: Variant) -> void:
 
 
 func remove_all(elements: Array) -> void:
-    for element in elements:
+    for element: Variant in elements:
         remove(element)
 
 
 ## Removes all elements that return true when passed to the matcher
 func remove_matching(matcher: Callable) -> void:
-    for element in map.keys():
+    for element: Variant in map.keys():
         if matcher.call(element):
             remove(element)
 
@@ -90,11 +90,11 @@ func union(other: GDSet) -> GDSet:
     var result := GDSet.new()
     
     # Add all elements from this set
-    for element in map.keys():
+    for element: Variant in map.keys():
         result.add(element)
     
     # Add all elements from the other set
-    for element in other.map.keys():
+    for element: Variant in other.map.keys():
         result.add(element)
     
     return result
@@ -108,7 +108,7 @@ func intersection(other: GDSet) -> GDSet:
     var smaller_set: GDSet = self if size() <= other.size() else other
     var larger_set: GDSet = other if size() <= other.size() else self
     
-    for element in smaller_set.map.keys():
+    for element: Variant in smaller_set.map.keys():
         if larger_set.contains(element):
             result.add(element)
     
@@ -119,7 +119,7 @@ func intersection(other: GDSet) -> GDSet:
 func difference(other: GDSet) -> GDSet:
     var result := GDSet.new()
     
-    for element in map.keys():
+    for element: Variant in map.keys():
         if not other.contains(element):
             result.add(element)
     
@@ -131,12 +131,12 @@ func symmetric_difference(other: GDSet) -> GDSet:
     var result := GDSet.new()
     
     # Add elements from this set not in other
-    for element in map.keys():
+    for element: Variant in map.keys():
         if not other.contains(element):
             result.add(element)
     
     # Add elements from other set not in this
-    for element in other.map.keys():
+    for element: Variant in other.map.keys():
         if not contains(element):
             result.add(element)
     
@@ -148,7 +148,7 @@ func is_subset(other: GDSet) -> bool:
     if size() > other.size():
         return false
     
-    for element in map.keys():
+    for element: Variant in map.keys():
         if not other.contains(element):
             return false
     
@@ -165,7 +165,7 @@ func is_disjoint(other: GDSet) -> bool:
     var smaller_set: GDSet = self if size() <= other.size() else other
     var larger_set: GDSet = other if size() <= other.size() else self
     
-    for element in smaller_set.map.keys():
+    for element: Variant in smaller_set.map.keys():
         if larger_set.contains(element):
             return false
     
