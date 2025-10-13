@@ -4,9 +4,9 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-    for i in range(25):
+    for i: int in range(25):
         print("Button Loop ", i)
-        var b = DayButton.new()
+        var b: DayButton = DayButton.new()
         b.setup(i+1)
         grid.add_child(b)
         

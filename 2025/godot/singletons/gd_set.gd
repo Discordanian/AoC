@@ -87,7 +87,7 @@ func size() -> int:
 
 ## Returns a new set containing all elements from this set and the other set
 func union(other: GDSet) -> GDSet:
-    var result := GDSet.new()
+    var result: GDSet = GDSet.new()
     
     # Add all elements from this set
     for element: Variant in map.keys():
@@ -102,7 +102,7 @@ func union(other: GDSet) -> GDSet:
 
 ## Returns a new set containing only elements present in both sets
 func intersection(other: GDSet) -> GDSet:
-    var result := GDSet.new()
+    var result: GDSet = GDSet.new()
     
     # Iterate over the smaller set for better performance
     var smaller_set: GDSet = self if size() <= other.size() else other
@@ -117,7 +117,7 @@ func intersection(other: GDSet) -> GDSet:
 
 ## Returns a new set containing elements in this set but not in the other set
 func difference(other: GDSet) -> GDSet:
-    var result := GDSet.new()
+    var result: GDSet = GDSet.new()
     
     for element: Variant in map.keys():
         if not other.contains(element):
@@ -128,7 +128,7 @@ func difference(other: GDSet) -> GDSet:
 
 ## Returns a new set containing elements in either set but not in both (symmetric difference)
 func symmetric_difference(other: GDSet) -> GDSet:
-    var result := GDSet.new()
+    var result: GDSet = GDSet.new()
     
     # Add elements from this set not in other
     for element: Variant in map.keys():
