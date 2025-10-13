@@ -6,11 +6,16 @@ const SOUTH: Vector2i = Vector2i(0, -1)
 const EAST: Vector2i  = Vector2i(1, 0)
 const WEST: Vector2i  = Vector2i(-1, 0)
 
-# download input given year day
+const NORTHEAST: Vector2i = Vector2i(1,1)
+const SOUTHEAST: Vector2i = Vector2i(1,-1)
+const NORTHWEST: Vector2i = Vector2i(-1,1)
+const SOUTHWEST: Vector2i = Vector2i(-1,-1)
 
-# given a file reference return Array[String]
+const NEIGHBORS: Array[Vector2i] = [ NORTH, SOUTH, EAST, WEST ]
+const DIAGNEIGHBORS: Array[Vector2i] = [ NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST ]
+const ALLNEIGHBORS: Array[Vector2i] = [ NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST]
 
-# given a file reference return Array[Array[String]]
+
 
 # Example path given year and day
 static func example_path(y: int, d: int) -> String:
@@ -29,7 +34,9 @@ static func input_path(y: int, d: int) -> String:
     return "user://%4d-%02d.in" % [y,d]
 
 
-# Return rows and cols of a 2d array
+## Get the dimensions of an array of an array (Assumes col count is same for all rows)
+## @param data The 2d array
+## @returns Vector2i with x being the row count and y being the col count
 static func dimensions_of_2d_array(data: Array[Array]) -> Vector2i:
     var x: int = data.size()
     if x > 0:
@@ -37,7 +44,9 @@ static func dimensions_of_2d_array(data: Array[Array]) -> Vector2i:
     return Vector2i(0,0)
 
 
-
+## Takes an input string with newlines and returns a 2d character array
+## @param input a string to parse
+## @returns Array of Array of characters
 static func string_to_2d_char_array(input: String) -> Array[Array]:
     var result: Array[Array] = []
     var lines: PackedStringArray = input.split("\n")
@@ -53,6 +62,53 @@ static func string_to_2d_char_array(input: String) -> Array[Array]:
 
 static func string_to_lines(input: String) -> PackedStringArray:
     return  input.split("\n")
+
+
+## Given a string returns an array of an array of numbers
+## @param input The input string.
+## @returns An array of array of integers.  Both positive or negative. 
+static func string_to_2d_int_array(input: String) -> Array[Array]:
+    var result: Array[Array] = []
+    var lines: PackedStringArray = input.split("\n")
+    
+    for line: String in lines:
+        if line.is_empty():
+            continue
+        
+        var numbers: Array[int] = []
+        var current_number: String = ""
+        var is_negative: bool = false
+        
+        for i: int in range(line.length()):
+            var c: String = line[i]
+            
+            # Check if it's a digit
+            if c.is_valid_int():
+                current_number += c
+            # Check if it's a negative sign at the start of a number
+            elif c == "-" and current_number.is_empty():
+                is_negative = true
+            else:
+                # Non-numeric character - save current number if exists
+                if not current_number.is_empty():
+                    var num: int = int(current_number)
+                    if is_negative:
+                        num = -num
+                    numbers.append(num)
+                    current_number = ""
+                    is_negative = false
+        
+        # Don't forget the last number in the line
+        if not current_number.is_empty():
+            var num: int = int(current_number)
+            if is_negative:
+                num = -num
+            numbers.append(num)
+        
+        if numbers.size() > 0:
+            result.append(numbers)
+    
+    return result
     
 static func string_from_file(path: String) -> String:
     var retval: String = ""
@@ -67,6 +123,12 @@ static func string_from_file(path: String) -> String:
            push_error("Path not found : " + path)
     return retval
 
+## Downloads the input file from Advent of Code
+## @param parent_node This requires a parent node to attach to while the http_request occurs, normal `self`
+## @param year The Advent of Code year
+## @param day The Advent of Code day
+## @param file_path The file path to save the downloaded contents to
+## @returns void
 static func download_file(parent_node: Node, year: int, day: int, file_path: String) -> void:
     # Get session ID from environment variable
     var session_id: String = OS.get_environment("SESSIONID")
