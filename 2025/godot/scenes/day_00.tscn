@@ -47,6 +47,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Input"
 
+[node name="Main" type="Button" parent="MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Main"
+
 [node name="Assignment" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -125,4 +130,5 @@ size_flags_vertical = 3
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Header/Example" to="." method="_on_example_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Header/Input" to="." method="_on_input_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Header/Main" to="." method="_on_main_pressed"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/Assignment/Example/ExampleTextEdit" to="." method="_on_example_text_edit_text_changed"]

@@ -8,7 +8,9 @@ func _ready() -> void:
     pass # Replace with function body.
 
 
+
 func setup(d: int) -> void:
-    print("Setup called with ", d)
+    day = d
+    # print("Setup called with ", d)
     $".".text = "Day %02d" % d
-    print(text)
+    # print(text)
