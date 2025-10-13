@@ -12,17 +12,11 @@ extends Control
 
 var example_path: String
 
+func check_for_input() -> void:
+    inputData.button_pressed = FileAccess.file_exists(AOCUtil.input_path(2024,10))
+
 func setup_example() -> void:
-    var content: String = ""
-    if FileAccess.file_exists(example_path):
-        var file: FileAccess = FileAccess.open(example_path, FileAccess.READ)
-        if file:
-            content = file.get_as_text()
-            file.close()
-        else:
-            print("Error reading data from " + example_path)
-    else:
-        print("Example input file not already present") 
+    var content: String =  AOCUtil.string_from_file(example_path)
     exampleText.text = content
     exampleData.button_pressed = exampleText.text.length() != 0
 
@@ -31,12 +25,21 @@ func _ready() -> void:
     example_path = AOCUtil.example_path(year,day)
     print(example_path)
     var input_path: String = AOCUtil.input_path(2024,10)
-    AOCUtil.download_file(2024,10,input_path)
+    AOCUtil.download_file(self, 2024,10,input_path)
     setup_example()
+    check_for_input()
         
     
-func part1() -> void:
-    pass
+func part1(data: String, ans: LineEdit) -> void:
+    var answer: String
+    answer = str(AOCUtil.string_to_lines(data).size())
+    ans.text = answer
+    
+    
+func part2(data: String, ans: LineEdit) -> void:
+    var answer: String
+    answer = str(AOCUtil.dimensions_of_2d_array(AOCUtil.string_to_2d_char_array(data)))
+    ans.text = answer
 
 
 func _on_example_text_edit_text_changed() -> void:
@@ -48,3 +51,14 @@ func _on_example_text_edit_text_changed() -> void:
     else:
         print("Error writing to " + example_path)
     
+
+
+func _on_example_pressed() -> void:
+    var data: String = AOCUtil.string_from_file(AOCUtil.example_path(year, day))
+    part1(data, example1)
+    part2(data, example2)
+    
+func _on_input_pressed() -> void:
+    var data: String = AOCUtil.string_from_file(AOCUtil.input_path(2024, 10))
+    part1(data, answer1)
+    part2(data, answer2)
