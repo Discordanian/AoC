@@ -29,7 +29,7 @@ static func input_path(y: int, d: int) -> String:
     return "user://%4d-%02d.in" % [y,d]
 
 
-static func download_file(year: int, day: int, path: String) -> void:
+static func download_file(parent_node: Node, year: int, day: int, path: String) -> void:
     # Get session ID from environment variable
     var session_id: String = OS.get_environment("SESSIONID")
     
@@ -39,7 +39,7 @@ static func download_file(year: int, day: int, path: String) -> void:
     
     # Create HTTPRequest node
     var http_request: HTTPRequest = HTTPRequest.new()
-    # add_child(http_request)
+    parent_node.add_child(http_request)
     
     # Connect the request_completed signal
     http_request.request_completed.connect(_on_request_completed.bind(path))
