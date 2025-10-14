@@ -37,12 +37,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Day 00"
 
-[node name="Example" type="Button" parent="MarginContainer/VBoxContainer/Header"]
+[node name="ExampleRunButton" type="Button" parent="MarginContainer/VBoxContainer/Header"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Example"
 
-[node name="Input" type="Button" parent="MarginContainer/VBoxContainer/Header"]
+[node name="InputRunButton" type="Button" parent="MarginContainer/VBoxContainer/Header"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Input"
@@ -128,7 +130,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/Header/Example" to="." method="_on_example_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/Header/Input" to="." method="_on_input_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Header/ExampleRunButton" to="." method="_on_example_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Header/InputRunButton" to="." method="_on_input_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Header/Main" to="." method="_on_main_pressed"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/Assignment/Example/ExampleTextEdit" to="." method="_on_example_text_edit_text_changed"]

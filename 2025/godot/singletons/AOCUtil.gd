@@ -148,7 +148,7 @@ static func download_file(parent_node: Node, year: int, day: int, file_path: Str
     var headers: Array[String] = ["Cookie: session=%s" % session_id]
     
     # Connect with a lambda that captures http_request and file_path
-    http_request.request_completed.connect(func(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+    http_request.request_completed.connect(func(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
         if response_code == 200:
             var content: String = body.get_string_from_utf8().strip_edges()
             print("Downloaded successfully!")
@@ -161,7 +161,7 @@ static func download_file(parent_node: Node, year: int, day: int, file_path: Str
             else:
                 push_error("Failed to open file for writing: %s" % file_path)
         else:
-            push_error("HTTP request failed with response code: %d" % response_code)
+            push_error("HTTP request [%s] failed with response code: %d" % [url, response_code])
         
         # Remove and free the HTTPRequest node
         http_request.queue_free()

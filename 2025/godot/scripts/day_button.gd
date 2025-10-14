@@ -1,5 +1,4 @@
-extends Button
-class_name DayButton
+class_name DayButton extends Button
 
 var day: int
 

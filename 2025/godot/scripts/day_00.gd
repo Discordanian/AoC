@@ -10,8 +10,8 @@ extends Control
 @onready var exampleText: TextEdit = $MarginContainer/VBoxContainer/Assignment/Example/ExampleTextEdit
 @onready var exampleData: CheckBox = $MarginContainer/VBoxContainer/Assignment/VBoxContainer/ExampleDataReady
 @onready var inputData: CheckBox = $MarginContainer/VBoxContainer/Assignment/VBoxContainer/InputDataReady
-@onready var exampleButton: Button = $MarginContainer/VBoxContainer/Header/Example
-@onready var inputButton: Button = $MarginContainer/VBoxContainer/Header/Input
+@onready var exampleButton: Button = %ExampleRunButton
+@onready var inputButton: Button = %InputRunButton
 
 
 var example_path: String
