@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites id="2025-10-16" name="report_1" tests="2" failures="0" skipped="0" flaky="0" time="0.000">
-	<testsuite id="0" name="test_foo" package="test" timestamp="2025-10-16T17:22:32" hostname="localhost" tests="2" failures="0" errors="0" skipped="0" flaky="0" time="0.071">
-		<testcase name="test_foo" classname="test_foo" time="0.022">
+<testsuites id="2025-10-16" name="report_1" tests="11" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="test_foo" package="test" timestamp="2025-10-16T17:29:08" hostname="localhost" tests="2" failures="0" errors="0" skipped="0" flaky="0" time="0.102">
+		<testcase name="test_foo" classname="test_foo" time="0.029">
 		</testcase>
-		<testcase name="test_bar" classname="test_foo" time="0.022">
+		<testcase name="test_bar" classname="test_foo" time="0.030">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="test_set" package="test" timestamp="2025-10-16T17:29:08" hostname="localhost" tests="9" failures="0" errors="0" skipped="0" flaky="0" time="0.323">
+		<testcase name="test_Add_and_to_array" classname="test_set" time="0.031">
+		</testcase>
+		<testcase name="test_add_duplicate" classname="test_set" time="0.017">
+		</testcase>
+		<testcase name="test_remove_existing" classname="test_set" time="0.011">
+		</testcase>
+		<testcase name="test_remove_nonexistent" classname="test_set" time="0.017">
+		</testcase>
+		<testcase name="test_clear" classname="test_set" time="0.013">
+		</testcase>
+		<testcase name="test_add_all" classname="test_set" time="0.017">
+		</testcase>
+		<testcase name="test_union" classname="test_set" time="0.018">
+		</testcase>
+		<testcase name="test_intersection" classname="test_set" time="0.017">
+		</testcase>
+		<testcase name="test_difference" classname="test_set" time="0.026">
 		</testcase>
 	</testsuite>
 </testsuites>
