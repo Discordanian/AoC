@@ -152,7 +152,7 @@ func difference(other: Set) -> Set:
 ## Returns a new set containing all elements contained only in first OR other set but not both
 ## @param other Set
 ## @param returns Another Set with the symmetric difference of the first set and the other
-func symmetric_difference(other: GDSet) -> GDSet:
+func symmetric_difference(other: Set) -> Set:
 	var result: Set = Set.new()
 	
 	# Add elements from this set not in other
