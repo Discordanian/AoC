@@ -1,5 +1,4 @@
-class_name Counter
-extends RefCounted
+class_name Counter extends RefCounted
 
 var _counts: Dictionary = {}
 

@@ -26,9 +26,7 @@ func _ready() -> void:
 	for i: int in range(25):
 		var b: Button = Button.new()
 		b.text = "Day %02d" % i
-		# var b: DayButton = DayButton.new()
 		b.disabled = is_day_scene_missing(i)
-		# b.setup(i+1)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		grid.add_child(b)
