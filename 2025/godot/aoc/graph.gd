@@ -1,12 +1,11 @@
-# aoc/graph.gd
 class_name AoCGraph extends RefCounted
 
-# Perform Breadth-First Search (BFS) to find shortest path distance to a goal
-# Uses layer-by-layer exploration to guarantee shortest path in unweighted graphs
-# @param start: Starting node/state for the search
-# @param next: Callable that takes a node and returns Array[Variant] of neighboring nodes
-# @param goal: Callable that takes a node and returns bool indicating if it's the goal
-# @return: Number of steps to reach goal, or -1 if goal is unreachable
+## Perform Breadth-First Search (BFS) to find shortest path distance to a goal
+## Uses layer-by-layer exploration to guarantee shortest path in unweighted graphs
+## @param start: Starting node/state for the search
+## @param next: Callable that takes a node and returns Array[Variant] of neighboring nodes
+## @param goal: Callable that takes a node and returns bool indicating if it's the goal
+## @return: Number of steps to reach goal, or -1 if goal is unreachable
 static func bfs(start: Variant, next: Callable, goal: Callable) -> int:
     var q: Deque = Deque.new()
     var seen: Dictionary[Variant, bool] = {}
@@ -25,13 +24,13 @@ static func bfs(start: Variant, next: Callable, goal: Callable) -> int:
         steps += 1
     return -1
 
-# Perform Dijkstra's algorithm to find shortest paths from start to all reachable nodes
-# Uses priority queue to always process the node with minimum distance first
-# @param start: Starting node for shortest path calculation
-# @param next_costs: Callable that takes a node and returns Array[Dictionary] where each dict has:
-#                    {"v": neighbor_node, "w": edge_weight}
-# @return: Dictionary[Variant, int] mapping each reachable node to its shortest distance from start
-#          Unreachable nodes are not included in the result
+## Perform Dijkstra's algorithm to find shortest paths from start to all reachable nodes
+## Uses priority queue to always process the node with minimum distance first
+## @param start: Starting node for shortest path calculation
+## @param next_costs: Callable that takes a node and returns Array[Dictionary] where each dict has:
+##                    {"v": neighbor_node, "w": edge_weight}
+## @return: Dictionary[Variant, int] mapping each reachable node to its shortest distance from start
+##          Unreachable nodes are not included in the result
 static func dijkstra(
     start: Variant,
     next_costs: Callable  # Callable(u) -> Array[Dictionary] of {"v": v, "w": weight}

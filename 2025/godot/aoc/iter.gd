@@ -1,12 +1,11 @@
-# aoc/iter.gd
 class_name AoCIter extends RefCounted
 
-# Generate all combinations of k elements from the set {0, 1, 2, ..., n-1}
-# Uses lexicographic ordering to enumerate all possible combinations
-# @param n: Size of the set to choose from (elements 0 through n-1)
-# @param k: Number of elements to choose in each combination
-# @return: Array of PackedInt32Array, each containing k indices representing one combination
-#          Returns empty array if k < 0 or k > n
+## Generate all combinations of k elements from the set {0, 1, 2, ..., n-1}
+## Uses lexicographic ordering to enumerate all possible combinations
+## @param n: Size of the set to choose from (elements 0 through n-1)
+## @param k: Number of elements to choose in each combination
+## @return: Array of PackedInt32Array, each containing k indices representing one combination
+##          Returns empty array if k < 0 or k > n
 static func combinations(n: int, k: int) -> Array[PackedInt32Array]:
     var out: Array[PackedInt32Array] = []
     if k < 0 or k > n: return out
@@ -23,11 +22,11 @@ static func combinations(n: int, k: int) -> Array[PackedInt32Array]:
             idx[j] = idx[j - 1] + 1
     return out
 
-# Generate the next lexicographically greater permutation of an array in-place
-# Implements the standard next permutation algorithm used in competitive programming
-# @param a: Array of integers to permute (modified in-place)
-# @return: true if a next permutation exists and was generated, false if array is already the largest permutation
-#          When false is returned, the array remains in its largest permutation state
+## Generate the next lexicographically greater permutation of an array in-place
+## Implements the standard next permutation algorithm used in competitive programming
+## @param a: Array of integers to permute (modified in-place)
+## @return: true if a next permutation exists and was generated, false if array is already the largest permutation
+##          When false is returned, the array remains in its largest permutation state
 static func next_permutation(a: Array[int]) -> bool:
     var i: int = a.size() - 2
     while i >= 0 and a[i] >= a[i + 1]: i -= 1

@@ -1,10 +1,9 @@
-# aoc/math.gd
 class_name AoCMath extends RefCounted
 
-# Calculate the Greatest Common Divisor (GCD) of two integers using Euclidean algorithm
-# @param a: First integer (can be negative, will be made positive)
-# @param b: Second integer (can be negative, will be made positive)
-# @return: The greatest common divisor of a and b (always positive)
+## Calculate the Greatest Common Divisor (GCD) of two integers using Euclidean algorithm
+## @param a: First integer (can be negative, will be made positive)
+## @param b: Second integer (can be negative, will be made positive)
+## @return: The greatest common divisor of a and b (always positive)
 static func gcd(a: int, b: int) -> int:
     a = abs(a); b = abs(b)
     while b != 0:
@@ -13,18 +12,18 @@ static func gcd(a: int, b: int) -> int:
         a = t
     return a
 
-# Calculate the Least Common Multiple (LCM) of two integers
-# @param a: First integer
-# @param b: Second integer
-# @return: The least common multiple of a and b
+## Calculate the Least Common Multiple (LCM) of two integers
+## @param a: First integer
+## @param b: Second integer
+## @return: The least common multiple of a and b
 static func lcm(a: int, b: int) -> int:
     return a / gcd(a, b) * b
 
-# Extended Euclidean Algorithm - finds GCD and Bézout coefficients
-# Solves the equation: a*x + b*y = gcd(a,b)
-# @param a: First integer
-# @param b: Second integer
-# @return: Vector3i(gcd, x, y) where gcd = a*x + b*y
+## Extended Euclidean Algorithm - finds GCD and Bézout coefficients
+## Solves the equation: a*x + b*y = gcd(a,b)
+## @param a: First integer
+## @param b: Second integer
+## @return: Vector3i(gcd, x, y) where gcd = a*x + b*y
 static func egcd(a: int, b: int) -> Vector3i:
     # returns (g, x, y) with a*x + b*y = g
     var x0: int = 1; var y0: int = 0
@@ -41,12 +40,12 @@ static func egcd(a: int, b: int) -> Vector3i:
         y0 = y1; y1 = y2
     return Vector3i(aa, x0, y0)
 
-# Calculate the modular multiplicative inverse of a modulo m
-# Finds x such that (a * x) ≡ 1 (mod m)
-# @param a: Integer to find the inverse of
-# @param m: Modulus (must be coprime with a)
-# @return: The modular inverse of a modulo m
-# @precondition: gcd(a, m) must equal 1 (assertion will fail otherwise)
+## Calculate the modular multiplicative inverse of a modulo m
+## Finds x such that (a * x) ≡ 1 (mod m)
+## @param a: Integer to find the inverse of
+## @param m: Modulus (must be coprime with a)
+## @return: The modular inverse of a modulo m
+## @precondition: gcd(a, m) must equal 1 (assertion will fail otherwise)
 static func mod_inv(a: int, m: int) -> int:
     var r: Vector3i = egcd(a, m)
     assert(r.x == 1) # inverse exists
@@ -54,12 +53,12 @@ static func mod_inv(a: int, m: int) -> int:
     if x < 0: x += m
     return x
 
-# Calculate modular exponentiation: (base^exp) mod mod
-# Uses binary exponentiation for efficient computation
-# @param base: The base number
-# @param exp: The exponent (must be non-negative)
-# @param mod: The modulus
-# @return: (base^exp) mod mod
+## Calculate modular exponentiation: (base^exp) mod mod
+## Uses binary exponentiation for efficient computation
+## @param base: The base number
+## @param exp: The exponent (must be non-negative)
+## @param mod: The modulus
+## @return: (base^exp) mod mod
 static func mod_pow(base: int, exp: int, mod: int) -> int:
     var b: int = base % mod
     var e: int = exp
@@ -70,10 +69,10 @@ static func mod_pow(base: int, exp: int, mod: int) -> int:
         e >>= 1
     return r
 
-# Generate a sieve of Eratosthenes to find all prime numbers up to n
-# @param n: The upper limit (inclusive) to check for primes
-# @return: PackedInt32Array where index i is 1 if i is prime, 0 if composite
-#          Note: 0 and 1 are marked as 0 (not prime) by definition
+## Generate a sieve of Eratosthenes to find all prime numbers up to n
+## @param n: The upper limit (inclusive) to check for primes
+## @return: PackedInt32Array where index i is 1 if i is prime, 0 if composite
+##          Note: 0 and 1 are marked as 0 (not prime) by definition
 static func sieve(n: int) -> PackedInt32Array:
     var prime: PackedInt32Array = PackedInt32Array()
     prime.resize(n + 1)
