@@ -4,10 +4,6 @@ extends Control
 
 func is_day_scene_missing(day: int) -> bool:
 	var scene_path: String = "res://scenes/day_%02d.tscn" % day
-	if FileAccess.file_exists(scene_path):
-		print("I see file: ", scene_path)
-	else:
-		print("I do NOT see file: ", scene_path)	
 	return not ResourceLoader.exists(scene_path)
 
 
