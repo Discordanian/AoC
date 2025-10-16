@@ -1,15 +1,15 @@
 extends Node
 class_name AOCUtil
 
-const NORTH: Vector2i = Vector2i(0, 1)
-const SOUTH: Vector2i = Vector2i(0, -1)
-const EAST: Vector2i  = Vector2i(1, 0)
-const WEST: Vector2i  = Vector2i(-1, 0)
+const NORTH: Vector2i = Vector2i.UP
+const SOUTH: Vector2i = Vector2i.DOWN
+const EAST: Vector2i  = Vector2i.RIGHT
+const WEST: Vector2i  = Vector2i.LEFT
 
-const NORTHEAST: Vector2i = Vector2i(1,1)
-const SOUTHEAST: Vector2i = Vector2i(1,-1)
-const NORTHWEST: Vector2i = Vector2i(-1,1)
-const SOUTHWEST: Vector2i = Vector2i(-1,-1)
+const NORTHEAST: Vector2i = Vector2i.UP + Vector2i.RIGHT
+const SOUTHEAST: Vector2i = Vector2i.DOWN + Vector2i.RIGHT
+const NORTHWEST: Vector2i = Vector2i.UP + Vector2i.LEFT
+const SOUTHWEST: Vector2i = Vector2i.DOWN + Vector2i.LEFT
 
 const NEIGHBORS: Array[Vector2i] = [ NORTH, SOUTH, EAST, WEST ]
 const DIAGNEIGHBORS: Array[Vector2i] = [ NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST ]
