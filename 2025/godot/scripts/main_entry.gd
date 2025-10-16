@@ -29,6 +29,8 @@ func _ready() -> void:
 		# var b: DayButton = DayButton.new()
 		b.disabled = is_day_scene_missing(i)
 		# b.setup(i+1)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		grid.add_child(b)
 		b.pressed.connect(_on_day_button_pressed.bind(i))
 		
