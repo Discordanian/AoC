@@ -20,4 +20,11 @@ AI will not be used for anything other than as a short cut for writing unit test
 against the helper classes I've written myself.
 
 
+# Setup
+If you want to run some of this yourself, log onto Adevent of Code and get your SESSION ID
+from your login.  This will allow the auto-download of your input which will be stored locally.
 
+Set SESSIONID as an environmental variable prior to launching the Godot engine.
+
+
+The days are set up to store and retain the test input day over day as is.
