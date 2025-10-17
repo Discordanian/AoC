@@ -34,12 +34,12 @@
 		<div class="report-container">
 			<h1>Testsuite Report</h1>
 			<div>
-				<span class="label">res://test/test_set.gd</span>
+				<span class="label">res://test/test_deque.gd</span>
 			</div>
 			<div class="summary">
 				<div class="summary-item">
 					<span class="label">Tests</span>
-					<span class="value">9</span>
+					<span class="value">21</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Skipped</span>
@@ -59,7 +59,7 @@
 				</div>
 				<div class="summary-item">
 					<span class="label">Duration</span>
-					<span class="value">449ms</span>
+					<span class="value">1s 27ms</span>
 				</div>
 				<div class="success-rate">
 					<div class="check-icon status-passed">✓</div>
@@ -73,7 +73,7 @@
 		<div class="breadcrumb">
 			<a href="../index.html"><span>All</span></a>
 			<a href="../path/test.html"><span>test</span></a>
-			<a class="active" href="#"><span>test_set</span></a>
+			<a class="active" href="#"><span>test_deque</span></a>
 		</div>
 	</header>
 
@@ -94,11 +94,11 @@
 					<tbody>
 						
 								<tr class="testcase-group">
-									<td>test_Add_and_to_array</td>
+									<td>test_empty_deque</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
-									<td>31ms</td>
+									<td>10ms</td>
 									<td class="report-column">
 										<pre>
 
@@ -108,35 +108,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_add_duplicate</td>
-									<td><span class="status status-passed">PASSED</span></td>
-									<td>0</td>
-									<td>0</td>
-									<td>34ms</td>
-									<td class="report-column">
-										<pre>
-
-										</pre>
-									</td>
-								</tr>
-
-
-								<tr class="testcase-group">
-									<td>test_remove_existing</td>
-									<td><span class="status status-passed">PASSED</span></td>
-									<td>0</td>
-									<td>0</td>
-									<td>34ms</td>
-									<td class="report-column">
-										<pre>
-
-										</pre>
-									</td>
-								</tr>
-
-
-								<tr class="testcase-group">
-									<td>test_remove_nonexistent</td>
+									<td>test_custom_capacity</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -150,7 +122,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_clear</td>
+									<td>test_push_back</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -164,7 +136,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_add_all</td>
+									<td>test_push_front</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -178,7 +150,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_union</td>
+									<td>test_pop_back</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -192,7 +164,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_intersection</td>
+									<td>test_pop_front</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -206,11 +178,207 @@
 
 
 								<tr class="testcase-group">
-									<td>test_difference</td>
+									<td>test_mixed_push_operations</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
-									<td>35ms</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_queue_behavior</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_stack_behavior</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_reverse_stack_behavior</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_buffer_growth</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_buffer_growth_mixed_operations</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_mixed_data_types</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_large_deque</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>33ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_alternating_operations</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_circular_buffer_wrapping</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_front_operations_only</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_back_operations_only</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_random_operations</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_single_element_operations</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_minimal_capacity</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
 									<td class="report-column">
 										<pre>
 

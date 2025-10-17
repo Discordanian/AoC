@@ -34,12 +34,12 @@
 		<div class="report-container">
 			<h1>Testsuite Report</h1>
 			<div>
-				<span class="label">res://test/test_set.gd</span>
+				<span class="label">res://test/test_graph.gd</span>
 			</div>
 			<div class="summary">
 				<div class="summary-item">
 					<span class="label">Tests</span>
-					<span class="value">9</span>
+					<span class="value">16</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Skipped</span>
@@ -51,7 +51,7 @@
 				</div>
 				<div class="summary-item">
 					<span class="label">Failures</span>
-					<span class="value">0</span>
+					<span class="value">1</span>
 				</div>
 				<div class="summary-item">
 					<span class="label">Orphans</span>
@@ -59,13 +59,13 @@
 				</div>
 				<div class="summary-item">
 					<span class="label">Duration</span>
-					<span class="value">449ms</span>
+					<span class="value">786ms</span>
 				</div>
 				<div class="success-rate">
-					<div class="check-icon status-passed">✓</div>
+					<div class="check-icon status-failed">✓</div>
 					<div class="rate-text">
 						<span class="label">Success Rate</span>
-						<span class="value">100%</span>
+						<span class="value">93%</span>
 					</div>
 				</div>
 			</div>
@@ -73,7 +73,7 @@
 		<div class="breadcrumb">
 			<a href="../index.html"><span>All</span></a>
 			<a href="../path/test.html"><span>test</span></a>
-			<a class="active" href="#"><span>test_set</span></a>
+			<a class="active" href="#"><span>test_graph</span></a>
 		</div>
 	</header>
 
@@ -94,13 +94,17 @@
 					<tbody>
 						
 								<tr class="testcase-group">
-									<td>test_Add_and_to_array</td>
-									<td><span class="status status-passed">PASSED</span></td>
+									<td>test_bfs_simple_graph</td>
+									<td><span class="status status-failed">FAILED</span></td>
 									<td>0</td>
 									<td>0</td>
-									<td>31ms</td>
+									<td>18ms</td>
 									<td class="report-column">
 										<pre>
+line 61: Expecting:
+ '3'
+ but was
+ '2'
 
 										</pre>
 									</td>
@@ -108,21 +112,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_add_duplicate</td>
-									<td><span class="status status-passed">PASSED</span></td>
-									<td>0</td>
-									<td>0</td>
-									<td>34ms</td>
-									<td class="report-column">
-										<pre>
-
-										</pre>
-									</td>
-								</tr>
-
-
-								<tr class="testcase-group">
-									<td>test_remove_existing</td>
+									<td>test_bfs_unreachable_goal</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -136,7 +126,35 @@
 
 
 								<tr class="testcase-group">
-									<td>test_remove_nonexistent</td>
+									<td>test_bfs_start_is_goal</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_bfs_grid_pathfinding</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_bfs_single_node</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -150,7 +168,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_clear</td>
+									<td>test_bfs_with_cycles</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -164,21 +182,7 @@
 
 
 								<tr class="testcase-group">
-									<td>test_add_all</td>
-									<td><span class="status status-passed">PASSED</span></td>
-									<td>0</td>
-									<td>0</td>
-									<td>34ms</td>
-									<td class="report-column">
-										<pre>
-
-										</pre>
-									</td>
-								</tr>
-
-
-								<tr class="testcase-group">
-									<td>test_union</td>
+									<td>test_dijkstra_simple_weighted</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -192,7 +196,21 @@
 
 
 								<tr class="testcase-group">
-									<td>test_intersection</td>
+									<td>test_dijkstra_disconnected</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>33ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_dijkstra_single_node</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
@@ -206,11 +224,95 @@
 
 
 								<tr class="testcase-group">
-									<td>test_difference</td>
+									<td>test_dijkstra_zero_weights</td>
 									<td><span class="status status-passed">PASSED</span></td>
 									<td>0</td>
 									<td>0</td>
-									<td>35ms</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_dijkstra_large_weights</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_dijkstra_grid_uniform_weights</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_dijkstra_self_loops</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>33ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_dijkstra_performance</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_bfs_dijkstra_equivalence</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
+									<td class="report-column">
+										<pre>
+
+										</pre>
+									</td>
+								</tr>
+
+
+								<tr class="testcase-group">
+									<td>test_complex_state_space</td>
+									<td><span class="status status-passed">PASSED</span></td>
+									<td>0</td>
+									<td>0</td>
+									<td>34ms</td>
 									<td class="report-column">
 										<pre>
 
