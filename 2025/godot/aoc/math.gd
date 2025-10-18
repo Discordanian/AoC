@@ -6,7 +6,7 @@ class_name AoCMath extends RefCounted
 ## @return: The greatest common divisor of a and b (always positive)
 static func gcd(a: int, b: int) -> int:
     a = abs(a)
-	b = abs(b)
+    b = abs(b)
 
     while b != 0:
         var t: int = b
@@ -29,11 +29,11 @@ static func lcm(a: int, b: int) -> int:
 static func egcd(a: int, b: int) -> Vector3i:
     # returns (g, x, y) with a*x + b*y = g
     var x0: int = 1
-	var y0: int = 0
+    var y0: int = 0
     var x1: int = 0
-	var y1: int = 1
+    var y1: int = 1
     var aa: int = a
-	var bb: int = b
+    var bb: int = b
 
     while bb != 0:
         var q: int = aa / bb
@@ -42,10 +42,10 @@ static func egcd(a: int, b: int) -> Vector3i:
         aa = aa2
         var x2: int = x0 - q * x1
         x0 = x1
-		x1 = x2
+        x1 = x2
         var y2: int = y0 - q * y1
         y0 = y1
-		y1 = y2
+        y1 = y2
     return Vector3i(aa, x0, y0)
 
 ## Calculate the modular multiplicative inverse of a modulo m
@@ -62,7 +62,7 @@ static func mod_inv(a: int, m: int) -> int:
     var x: int = r.y % m
 
     if x < 0:
-		x += m
+        x += m
 
     return x
 
@@ -79,7 +79,7 @@ static func mod_pow(base: int, exp: int, mod: int) -> int:
 
     while e > 0:
         if (e & 1) == 1:
-			r = int((r as int) * (b as int) % mod)
+            r = int((r as int) * (b as int) % mod)
 
         b = int((b as int) * (b as int) % mod)
         e >>= 1

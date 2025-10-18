@@ -11,7 +11,7 @@ static func bfs(start: Variant, next: Callable, goal: Callable) -> int:
     var seen: Dictionary[Variant, bool] = {}
 
     q.push_back(start)
-	seen[start] = true
+    seen[start] = true
 
     var steps: int = 0
 
@@ -22,14 +22,14 @@ static func bfs(start: Variant, next: Callable, goal: Callable) -> int:
             var u: Variant = q.pop_front()
 
             if bool(goal.call(u)):
-				return steps
+                return steps
 
             var nbrs: Array[Variant] = next.call(u)
 
             for v: Variant in nbrs:
                 if not seen.has(v):
                     seen[v] = true
-					q.push_back(v)
+                    q.push_back(v)
             layer -= 1
         steps += 1
     return -1
@@ -44,7 +44,7 @@ static func dfs(start: Variant, next: Callable, goal: Callable) -> int:
     var seen: Dictionary[Variant, bool] = {}
 
     q.push_back(start)
-	seen[start] = true
+    seen[start] = true
 
     var steps: int = 0
 
@@ -55,14 +55,14 @@ static func dfs(start: Variant, next: Callable, goal: Callable) -> int:
             var u: Variant = q.pop_front()
 
             if bool(goal.call(u)):
-				return steps
+                return steps
 
             var nbrs: Array[Variant] = next.call(u)
 
             for v: Variant in nbrs:
                 if not seen.has(v):
                     seen[v] = true
-					q.push_front(v) # The diff between bfs and dfs
+                    q.push_front(v) # The diff between bfs and dfs
             layer -= 1
         steps += 1
     return -1

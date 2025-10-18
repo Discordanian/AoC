@@ -14,16 +14,16 @@ var _rank: Array[int]
 ## @param n: Number of elements to initialize (elements will be numbered 0 to n-1)
 func _init(n: int) -> void:
     _parent = []
-	_rank = []
+    _rank = []
 
     var ok1: int = _parent.resize(n)
-	var ok2: int = _rank.resize(n)
+    var ok2: int = _rank.resize(n)
 
     assert(ok1 == OK and ok2 == OK)
 
     for i: int in n:
         _parent[i] = i
-		_rank[i] = 0
+        _rank[i] = 0
 
 ## Find the representative (root) of the set containing element x
 ## Uses path compression optimization to flatten the tree structure for faster future queries
@@ -42,10 +42,10 @@ func find(x: int) -> int:
 ## @postcondition: After this operation, a and b will be in the same connected component
 func unite(a: int, b: int) -> void:
     var ra: int = find(a)
-	var rb: int = find(b)
+    var rb: int = find(b)
 
     if ra == rb:
-		return
+        return
 
     if _rank[ra] < _rank[rb]:
         _parent[ra] = rb

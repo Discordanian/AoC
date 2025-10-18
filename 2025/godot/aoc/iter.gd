@@ -10,13 +10,13 @@ static func combinations(n: int, k: int) -> Array[PackedInt32Array]:
     var out: Array[PackedInt32Array] = []
 
     if k < 0 or k > n:
-		return out # Return empty
+        return out # Return empty
 
     var idx: PackedInt32Array = PackedInt32Array()
     idx.resize(k)
 
     for i: int in k:
-		idx[i] = i
+        idx[i] = i
 
     while true:
         out.append(idx.duplicate())
@@ -24,10 +24,10 @@ static func combinations(n: int, k: int) -> Array[PackedInt32Array]:
         var i2: int = k - 1
 
         while i2 >= 0 and idx[i2] == n - k + i2:
-			i2 -= 1
+            i2 -= 1
 
         if i2 < 0:
-			break
+            break
 
         idx[i2] += 1
 
@@ -45,30 +45,30 @@ static func next_permutation(a: Array[int]) -> bool:
     var i: int = a.size() - 2
 
     while i >= 0 and a[i] >= a[i + 1]:
-		i -= 1
+        i -= 1
 
     if i < 0:
-		return false
+        return false
 
     var j: int = a.size() - 1
 
     while a[j] <= a[i]:
-		j -= 1
+        j -= 1
 
     var t: int = a[i]
 
-	a[i] = a[j]
-	a[j] = t
+    a[i] = a[j]
+    a[j] = t
 
     var l: int = i + 1
-	var r: int = a.size() - 1
+    var r: int = a.size() - 1
 
     while l < r:
         var t2: int = a[l]
-		a[l] = a[r]
-		a[r] = t2
+        a[l] = a[r]
+        a[r] = t2
 
         l += 1
-		r -= 1
+        r -= 1
 
     return true
