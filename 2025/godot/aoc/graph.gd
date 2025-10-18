@@ -27,7 +27,7 @@ static func bfs(start: Variant, next: Callable, goal: Callable) -> int:
 ## Perform Dijkstra's algorithm to find shortest paths from start to all reachable nodes
 ## Uses priority queue to always process the node with minimum distance first
 ## @param start: Starting node for shortest path calculation
-## @param next_costs: Callable that takes a node and returns Array[Dictionary] where each dict has:
+## @param next_costs: Callable that takes a node and returns Array where each dict has:
 ##                    {"v": neighbor_node, "w": edge_weight}
 ## @return: Dictionary[Variant, int] mapping each reachable node to its shortest distance from start
 ##          Unreachable nodes are not included in the result

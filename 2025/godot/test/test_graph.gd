@@ -182,8 +182,6 @@ func test_dijkstra_simple_weighted() -> void:
         return []
     
     var distances: Dictionary = AoCGraph.dijkstra("A", next_costs_func)
-    print(distances)
-    
     
     assert_int(distances["A"]).is_equal(0)
     assert_int(distances["B"]).is_equal(3)  # A -> C -> B (2 + 1 = 3)
