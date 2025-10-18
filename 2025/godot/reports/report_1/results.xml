@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites id="2025-10-17" name="report_1" tests="52" failures="1" skipped="0" flaky="0" time="0.000">
-	<testsuite id="0" name="test_deque" package="test" timestamp="2025-10-17T22:40:16" hostname="localhost" tests="21" failures="0" errors="0" skipped="0" flaky="0" time="1.027">
-		<testcase name="test_empty_deque" classname="test_deque" time="0.010">
+<testsuites id="2025-10-18" name="report_1" tests="52" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="test_deque" package="test" timestamp="2025-10-18T12:51:16" hostname="localhost" tests="21" failures="0" errors="0" skipped="0" flaky="0" time="1.027">
+		<testcase name="test_empty_deque" classname="test_deque" time="0.008">
 		</testcase>
 		<testcase name="test_custom_capacity" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_push_back" classname="test_deque" time="0.034">
+		<testcase name="test_push_back" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_push_front" classname="test_deque" time="0.034">
+		<testcase name="test_push_front" classname="test_deque" time="0.035">
 		</testcase>
 		<testcase name="test_pop_back" classname="test_deque" time="0.033">
 		</testcase>
@@ -15,107 +15,99 @@
 		</testcase>
 		<testcase name="test_mixed_push_operations" classname="test_deque" time="0.034">
 		</testcase>
-		<testcase name="test_queue_behavior" classname="test_deque" time="0.034">
+		<testcase name="test_queue_behavior" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_stack_behavior" classname="test_deque" time="0.034">
+		<testcase name="test_stack_behavior" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_reverse_stack_behavior" classname="test_deque" time="0.034">
+		<testcase name="test_reverse_stack_behavior" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_buffer_growth" classname="test_deque" time="0.034">
+		<testcase name="test_buffer_growth" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_buffer_growth_mixed_operations" classname="test_deque" time="0.034">
+		<testcase name="test_buffer_growth_mixed_operations" classname="test_deque" time="0.033">
 		</testcase>
 		<testcase name="test_mixed_data_types" classname="test_deque" time="0.034">
 		</testcase>
-		<testcase name="test_large_deque" classname="test_deque" time="0.033">
+		<testcase name="test_large_deque" classname="test_deque" time="0.031">
 		</testcase>
 		<testcase name="test_alternating_operations" classname="test_deque" time="0.034">
 		</testcase>
-		<testcase name="test_circular_buffer_wrapping" classname="test_deque" time="0.034">
+		<testcase name="test_circular_buffer_wrapping" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_front_operations_only" classname="test_deque" time="0.034">
+		<testcase name="test_front_operations_only" classname="test_deque" time="0.043">
 		</testcase>
-		<testcase name="test_back_operations_only" classname="test_deque" time="0.034">
+		<testcase name="test_back_operations_only" classname="test_deque" time="0.033">
 		</testcase>
 		<testcase name="test_random_operations" classname="test_deque" time="0.034">
 		</testcase>
-		<testcase name="test_single_element_operations" classname="test_deque" time="0.034">
+		<testcase name="test_single_element_operations" classname="test_deque" time="0.033">
 		</testcase>
-		<testcase name="test_minimal_capacity" classname="test_deque" time="0.034">
-		</testcase>
-	</testsuite>
-	<testsuite id="1" name="test_foo" package="test" timestamp="2025-10-17T22:40:17" hostname="localhost" tests="2" failures="0" errors="0" skipped="0" flaky="0" time="0.101">
-		<testcase name="test_foo" classname="test_foo" time="0.035">
-		</testcase>
-		<testcase name="test_bar" classname="test_foo" time="0.034">
+		<testcase name="test_minimal_capacity" classname="test_deque" time="0.035">
 		</testcase>
 	</testsuite>
-	<testsuite id="2" name="test_set" package="test" timestamp="2025-10-17T22:40:17" hostname="localhost" tests="9" failures="0" errors="0" skipped="0" flaky="0" time="0.449">
-		<testcase name="test_Add_and_to_array" classname="test_set" time="0.031">
+	<testsuite id="1" name="test_foo" package="test" timestamp="2025-10-18T12:51:17" hostname="localhost" tests="2" failures="0" errors="0" skipped="0" flaky="0" time="0.101">
+		<testcase name="test_foo" classname="test_foo" time="0.034">
+		</testcase>
+		<testcase name="test_bar" classname="test_foo" time="0.033">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="test_set" package="test" timestamp="2025-10-18T12:51:17" hostname="localhost" tests="9" failures="0" errors="0" skipped="0" flaky="0" time="0.442">
+		<testcase name="test_Add_and_to_array" classname="test_set" time="0.025">
 		</testcase>
 		<testcase name="test_add_duplicate" classname="test_set" time="0.034">
 		</testcase>
-		<testcase name="test_remove_existing" classname="test_set" time="0.034">
+		<testcase name="test_remove_existing" classname="test_set" time="0.035">
 		</testcase>
-		<testcase name="test_remove_nonexistent" classname="test_set" time="0.033">
+		<testcase name="test_remove_nonexistent" classname="test_set" time="0.034">
 		</testcase>
 		<testcase name="test_clear" classname="test_set" time="0.034">
 		</testcase>
-		<testcase name="test_add_all" classname="test_set" time="0.034">
+		<testcase name="test_add_all" classname="test_set" time="0.032">
 		</testcase>
 		<testcase name="test_union" classname="test_set" time="0.033">
 		</testcase>
 		<testcase name="test_intersection" classname="test_set" time="0.034">
 		</testcase>
-		<testcase name="test_difference" classname="test_set" time="0.035">
+		<testcase name="test_difference" classname="test_set" time="0.033">
 		</testcase>
 	</testsuite>
-	<testsuite id="3" name="test_graph" package="test" timestamp="2025-10-17T22:40:18" hostname="localhost" tests="16" failures="1" errors="0" skipped="0" flaky="0" time="0.786">
-		<testcase name="test_bfs_simple_graph" classname="test_graph" time="0.018">
-			<failure message="FAILED: res://test/test_graph.gd:61" type="FAILURE">
-<![CDATA[
-Expecting:
- '3'
- but was
- '2'
-]]>
-			</failure>
+	<testsuite id="3" name="test_graph" package="test" timestamp="2025-10-18T12:51:18" hostname="localhost" tests="16" failures="0" errors="0" skipped="0" flaky="0" time="0.775">
+		<testcase name="test_bfs_simple_graph" classname="test_graph" time="0.005">
 		</testcase>
 		<testcase name="test_bfs_unreachable_goal" classname="test_graph" time="0.034">
 		</testcase>
 		<testcase name="test_bfs_start_is_goal" classname="test_graph" time="0.034">
 		</testcase>
-		<testcase name="test_bfs_grid_pathfinding" classname="test_graph" time="0.034">
+		<testcase name="test_bfs_grid_pathfinding" classname="test_graph" time="0.035">
 		</testcase>
-		<testcase name="test_bfs_single_node" classname="test_graph" time="0.033">
+		<testcase name="test_bfs_single_node" classname="test_graph" time="0.034">
 		</testcase>
-		<testcase name="test_bfs_with_cycles" classname="test_graph" time="0.034">
+		<testcase name="test_bfs_with_cycles" classname="test_graph" time="0.035">
 		</testcase>
-		<testcase name="test_dijkstra_simple_weighted" classname="test_graph" time="0.033">
+		<testcase name="test_dijkstra_simple_weighted" classname="test_graph" time="0.034">
 		</testcase>
-		<testcase name="test_dijkstra_disconnected" classname="test_graph" time="0.033">
+		<testcase name="test_dijkstra_disconnected" classname="test_graph" time="0.034">
 		</testcase>
-		<testcase name="test_dijkstra_single_node" classname="test_graph" time="0.034">
+		<testcase name="test_dijkstra_single_node" classname="test_graph" time="0.033">
 		</testcase>
 		<testcase name="test_dijkstra_zero_weights" classname="test_graph" time="0.034">
 		</testcase>
-		<testcase name="test_dijkstra_large_weights" classname="test_graph" time="0.034">
+		<testcase name="test_dijkstra_large_weights" classname="test_graph" time="0.035">
 		</testcase>
-		<testcase name="test_dijkstra_grid_uniform_weights" classname="test_graph" time="0.034">
+		<testcase name="test_dijkstra_grid_uniform_weights" classname="test_graph" time="0.033">
 		</testcase>
 		<testcase name="test_dijkstra_self_loops" classname="test_graph" time="0.033">
 		</testcase>
 		<testcase name="test_dijkstra_performance" classname="test_graph" time="0.034">
 		</testcase>
-		<testcase name="test_bfs_dijkstra_equivalence" classname="test_graph" time="0.034">
+		<testcase name="test_bfs_dijkstra_equivalence" classname="test_graph" time="0.033">
 		</testcase>
-		<testcase name="test_complex_state_space" classname="test_graph" time="0.034">
+		<testcase name="test_complex_state_space" classname="test_graph" time="0.033">
 		</testcase>
 	</testsuite>
-	<testsuite id="4" name="test_minheap" package="test" timestamp="2025-10-17T22:40:19" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.201">
-		<testcase name="test_empty_heap" classname="test_minheap" time="0.033">
+	<testsuite id="4" name="test_minheap" package="test" timestamp="2025-10-18T12:51:19" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.198">
+		<testcase name="test_empty_heap" classname="test_minheap" time="0.030">
 		</testcase>
-		<testcase name="test_single_element" classname="test_minheap" time="0.032">
+		<testcase name="test_single_element" classname="test_minheap" time="0.033">
 		</testcase>
 		<testcase name="test_min_heap_property" classname="test_minheap" time="0.034">
 		</testcase>

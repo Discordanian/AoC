@@ -44,7 +44,7 @@ static func dijkstra(
         var d: int = int(top["p"])
         var u: Variant = top["v"]
         if d != dist.get(u, 1 << 30): continue
-        var outs: Array[Dictionary] = next_costs.call(u)
+        var outs: Array = next_costs.call(u)
         for e: Dictionary in outs:
             var v: Variant = e["v"]
             var w: int = int(e["w"])

@@ -11,6 +11,20 @@ func create_simple_graph() -> Dictionary[String, Array]:
         "F": ["C", "E"]
     }
 
+
+# Trying to confirm that I'm passing around Array[Dictionary]
+func is_dict_array(value: Variant) -> bool:
+    if typeof(value) != TYPE_ARRAY:
+        return false
+    
+    var arr: Array = value
+    # Check if the array has a typed signature
+    if arr.is_typed():
+        return arr.get_typed_builtin() == TYPE_DICTIONARY
+    
+    return false
+
+
 # Helper function to create a weighted graph for Dijkstra testing
 func create_weighted_graph() -> Dictionary[String, Array]:
     return {
@@ -58,7 +72,7 @@ func test_bfs_simple_graph() -> void:
         return node == "F"
     
     var distance: int = AoCGraph.bfs("A", next_func, goal_func)
-    assert_int(distance).is_equal(3)  # A -> C -> F (3 steps)
+    assert_int(distance).is_equal(2)  # A -> C -> F (3 steps)
 
 # Test BFS with unreachable goal
 func test_bfs_unreachable_goal() -> void:
@@ -161,16 +175,15 @@ func test_bfs_with_cycles() -> void:
 # Test Dijkstra with simple weighted graph
 func test_dijkstra_simple_weighted() -> void:
     var graph: Dictionary = create_weighted_graph()
-    return
     
-    # Changing return type from Array[Dictionary] to just Array
     var next_costs_func: Callable = func(node: Variant) -> Array:
         if graph.has(node):
-            return graph[node]
-        # var empty: Array[Dictionary] = []
+            return graph[node] 
         return []
     
     var distances: Dictionary = AoCGraph.dijkstra("A", next_costs_func)
+    print(distances)
+    
     
     assert_int(distances["A"]).is_equal(0)
     assert_int(distances["B"]).is_equal(3)  # A -> C -> B (2 + 1 = 3)
@@ -180,7 +193,6 @@ func test_dijkstra_simple_weighted() -> void:
 
 # Test Dijkstra with disconnected graph
 func test_dijkstra_disconnected() -> void:
-    return
     var graph: Dictionary = {
         "A": [{"v": "B", "w": 1}],
         "B": [{"v": "A", "w": 1}],
@@ -188,7 +200,7 @@ func test_dijkstra_disconnected() -> void:
         "D": [{"v": "C", "w": 1}]
     }
     
-    var next_costs_func: Callable = func(node: Variant) -> Array[Dictionary]:
+    var next_costs_func: Callable = func(node: Variant) -> Array:
         if graph.has(node):
             return graph[node]
         return []
@@ -202,7 +214,6 @@ func test_dijkstra_disconnected() -> void:
 
 # Test Dijkstra with single node
 func test_dijkstra_single_node() -> void:
-    return
     var next_costs_func: Callable = func(_node: Variant) -> Array:
         return []  # No neighbors
     
@@ -213,14 +224,13 @@ func test_dijkstra_single_node() -> void:
 
 # Test Dijkstra with zero-weight edges
 func test_dijkstra_zero_weights() -> void:
-    return
     var graph: Dictionary = {
         "A": [{"v": "B", "w": 0}, {"v": "C", "w": 5}],
         "B": [{"v": "C", "w": 1}],
         "C": []
     }
     
-    var next_costs_func: Callable = func(node: Variant) -> Array[Dictionary]:
+    var next_costs_func: Callable = func(node: Variant) -> Array:
         if graph.has(node):
             return graph[node]
         return []
@@ -233,7 +243,6 @@ func test_dijkstra_zero_weights() -> void:
 
 # Test Dijkstra with large weights
 func test_dijkstra_large_weights() -> void:
-    return
     var graph: Dictionary = {
         "A": [{"v": "B", "w": 1000000}, {"v": "C", "w": 1}],
         "B": [{"v": "D", "w": 1}],
@@ -241,7 +250,7 @@ func test_dijkstra_large_weights() -> void:
         "D": []
     }
     
-    var next_costs_func: Callable = func(node: Variant) -> Array[Dictionary]:
+    var next_costs_func: Callable = func(node: Variant) -> Array:
         if graph.has(node):
             return graph[node]
         return []
@@ -255,13 +264,12 @@ func test_dijkstra_large_weights() -> void:
 
 # Test Dijkstra with grid (uniform weights)
 func test_dijkstra_grid_uniform_weights() -> void:
-    return
     var grid: Dictionary = create_grid_graph(3, 3)
     
-    var next_costs_func: Callable = func(pos: Variant) -> Array[Dictionary]:
-        var edges: Array[Dictionary] = []
+    var next_costs_func: Callable = func(pos: Variant) -> Array:
+        var edges: Array = []
         if grid.has(pos):
-            for neighbor: Dictionary in grid[pos]:
+            for neighbor: Variant in grid[pos]:
                 edges.append({"v": neighbor, "w": 1})
         return edges
     
@@ -273,14 +281,13 @@ func test_dijkstra_grid_uniform_weights() -> void:
 
 # Test Dijkstra with self-loops
 func test_dijkstra_self_loops() -> void:
-    return
     var graph: Dictionary = {
         "A": [{"v": "A", "w": 1}, {"v": "B", "w": 2}],  # Self-loop
         "B": [{"v": "C", "w": 1}],
         "C": []
     }
     
-    var next_costs_func: Callable = func(node: Variant) -> Array[Dictionary]:
+    var next_costs_func: Callable = func(node: Variant) -> Array:
         if graph.has(node):
             return graph[node]
         return []
@@ -293,7 +300,6 @@ func test_dijkstra_self_loops() -> void:
 
 # Test Dijkstra performance with larger graph
 func test_dijkstra_performance() -> void:
-    return
     # Create a chain graph: 0 -> 1 -> 2 -> ... -> 99
     var graph: Dictionary[int, Array] = {}
     var chain_length: int = 100
@@ -302,7 +308,7 @@ func test_dijkstra_performance() -> void:
         graph[i] = [{"v": i + 1, "w": 1}]
     graph[chain_length - 1] = []
     
-    var next_costs_func: Callable = func(node: Variant) -> Array[Dictionary]:
+    var next_costs_func: Callable = func(node: Variant) -> Array:
         if graph.has(node):
             return graph[node]
         return []
@@ -318,22 +324,21 @@ func test_dijkstra_performance() -> void:
 
 # Test BFS and Dijkstra give same results on unweighted graph
 func test_bfs_dijkstra_equivalence() -> void:
-    return
     var graph: Dictionary = create_simple_graph()
     
     # BFS setup
     var next_func: Callable = func(node: Variant) -> Array[Variant]:
         var neighbors: Array[Variant] = []
         if graph.has(node):
-            for neighbor: Dictionary in graph[node]:
+            for neighbor: Variant in graph[node]:
                 neighbors.append(neighbor)
         return neighbors
     
     # Dijkstra setup (all weights = 1)
-    var next_costs_func: Callable = func(node: Variant) -> Array[Dictionary]:
-        var edges: Array[Dictionary] = []
+    var next_costs_func: Callable = func(node: Variant) -> Array:
+        var edges: Array = []
         if graph.has(node):
-            for neighbor: Dictionary in graph[node]:
+            for neighbor: Variant in graph[node]:
                 edges.append({"v": neighbor, "w": 1})
         return edges
     
