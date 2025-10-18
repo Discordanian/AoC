@@ -1,4 +1,3 @@
-# aoc/deque.gd
 class_name Deque extends RefCounted
 
 # Internal circular buffer to store elements
@@ -15,7 +14,9 @@ var _count: int
 func _init(capacity: int = 16) -> void:
 	_buf = []
 	var ok: int = _buf.resize(capacity)
+
 	assert(ok == OK)
+
 	_head = 0
 	_count = 0
 
@@ -24,7 +25,9 @@ func _init(capacity: int = 16) -> void:
 func _grow() -> void:
 	var new_buf: Array[Variant] = []
 	var ok: int = new_buf.resize(max(2 * _buf.size(), 1))
+
 	assert(ok == OK)
+
 	for i: int in _count:
 		new_buf[i] = _buf[(_head + i) % _buf.size()]
 	_buf = new_buf
@@ -32,11 +35,13 @@ func _grow() -> void:
 
 # Check if the deque is empty
 # @return: true if the deque contains no elements, false otherwise
-func empty() -> bool: return _count == 0
+func empty() -> bool:
+	return _count == 0
 
 # Get the current number of elements in the deque
 # @return: The number of elements currently stored
-func size() -> int: return _count
+func size() -> int:
+	return _count
 
 # Add an element to the back (end) of the deque
 # @param v: The value to add to the back of the deque
@@ -58,9 +63,12 @@ func push_front(v: Variant) -> void:
 # @precondition: The deque must not be empty (assertion will fail if empty)
 func pop_front() -> Variant:
 	assert(_count > 0)
+
 	var v: Variant = _buf[_head]
+
 	_head = (_head + 1) % _buf.size()
 	_count -= 1
+
 	return v
 
 # Remove and return the element from the back of the deque
@@ -68,7 +76,10 @@ func pop_front() -> Variant:
 # @precondition: The deque must not be empty (assertion will fail if empty)
 func pop_back() -> Variant:
 	assert(_count > 0)
+
 	var idx: int = (_head + _count - 1) % _buf.size()
 	var v: Variant = _buf[idx]
+
 	_count -= 1
+
 	return v

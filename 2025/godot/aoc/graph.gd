@@ -9,17 +9,60 @@ class_name AoCGraph extends RefCounted
 static func bfs(start: Variant, next: Callable, goal: Callable) -> int:
     var q: Deque = Deque.new()
     var seen: Dictionary[Variant, bool] = {}
-    q.push_back(start); seen[start] = true
+
+    q.push_back(start)
+	seen[start] = true
+
     var steps: int = 0
+
     while not q.empty():
         var layer: int = q.size()
+
         while layer > 0:
             var u: Variant = q.pop_front()
-            if bool(goal.call(u)): return steps
+
+            if bool(goal.call(u)):
+				return steps
+
             var nbrs: Array[Variant] = next.call(u)
+
             for v: Variant in nbrs:
                 if not seen.has(v):
-                    seen[v] = true; q.push_back(v)
+                    seen[v] = true
+					q.push_back(v)
+            layer -= 1
+        steps += 1
+    return -1
+
+## Perform Depth-First Search (DFS) to find path to goal
+## @param start: Starting node/state for the search
+## @param next: Callable that takes a node and returns Array[Variant] of neighboring nodes
+## @param goal: Callable that takes a node and returns bool indicating if it's the goal
+## @return: Number of steps to reach goal, or -1 if goal is unreachable
+static func dfs(start: Variant, next: Callable, goal: Callable) -> int:
+    var q: Deque = Deque.new()
+    var seen: Dictionary[Variant, bool] = {}
+
+    q.push_back(start)
+	seen[start] = true
+
+    var steps: int = 0
+
+    while not q.empty():
+        var layer: int = q.size()
+
+        while layer > 0:
+            var u: Variant = q.pop_front()
+
+            if bool(goal.call(u)):
+				return steps
+
+            var nbrs: Array[Variant] = next.call(u)
+
+            for v: Variant in nbrs:
+                if not seen.has(v):
+                    seen[v] = true
+					q.push_front(v) # The diff between bfs and dfs
             layer -= 1
         steps += 1
     return -1

@@ -1,4 +1,3 @@
-# test_union_find.gd
 extends GdUnitTestSuite
 
 # Test basic initialization
@@ -20,16 +19,19 @@ func test_init_creates_disjoint_sets() -> void:
 
 func test_init_single_element() -> void:
     var uf: UnionFind = UnionFind.new(1)
+
     assert_int(uf.find(0)).is_equal(0)
 
 func test_init_empty() -> void:
     var uf: UnionFind = UnionFind.new(0)
+
     assert_bool(uf == null).is_false()
     # Should not crash, arrays should be empty
 
 # Test find operation
 func test_find_returns_self_initially() -> void:
     var uf: UnionFind = UnionFind.new(3)
+
     assert_int(uf.find(0)).is_equal(0)
     assert_int(uf.find(1)).is_equal(1)
     assert_int(uf.find(2)).is_equal(2)
@@ -37,6 +39,7 @@ func test_find_returns_self_initially() -> void:
 # Test unite operation
 func test_unite_two_elements() -> void:
     var uf: UnionFind = UnionFind.new(5)
+
     uf.unite(0, 1)
     
     # 0 and 1 should now be in the same set
@@ -48,6 +51,7 @@ func test_unite_two_elements() -> void:
 
 func test_unite_creates_transitive_connections() -> void:
     var uf: UnionFind = UnionFind.new(5)
+
     uf.unite(0, 1)
     uf.unite(1, 2)
     
@@ -58,6 +62,7 @@ func test_unite_creates_transitive_connections() -> void:
 
 func test_unite_already_connected_elements() -> void:
     var uf: UnionFind = UnionFind.new(3)
+
     uf.unite(0, 1)
     uf.unite(0, 1)  # Unite again
     
@@ -109,6 +114,7 @@ func test_unite_merges_components() -> void:
 # Test same operation
 func test_same_reflexive() -> void:
     var uf: UnionFind = UnionFind.new(3)
+
     # Each element is in the same set as itself
     assert_bool(uf.same(0, 0)).is_true()
     assert_bool(uf.same(1, 1)).is_true()
@@ -116,6 +122,7 @@ func test_same_reflexive() -> void:
 
 func test_same_symmetric() -> void:
     var uf: UnionFind = UnionFind.new(3)
+
     uf.unite(0, 1)
     
     # same() should be symmetric
@@ -124,6 +131,7 @@ func test_same_symmetric() -> void:
 
 func test_same_transitive() -> void:
     var uf: UnionFind = UnionFind.new(4)
+
     uf.unite(0, 1)
     uf.unite(1, 2)
     uf.unite(2, 3)
@@ -170,6 +178,7 @@ func test_path_compression() -> void:
     
     # Find should work and compress the path
     var root: int = uf.find(0)
+
     assert_int(uf.find(4)).is_equal(root)
     
     # All elements should now point closer to root due to path compression

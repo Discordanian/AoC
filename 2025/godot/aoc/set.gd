@@ -3,11 +3,11 @@ class_name Set extends RefCounted
 ## A strongly-typed set implementation backed by a Dictionary.
 ## Provides O(1) add, remove, and lookup operations.
 
-# The dictionary (map) that backs our set.
+# The dictionary (_map) that backs our set.
 # Provides amortized O(1) adding, removing, and presence-checking.
-var map: Dictionary = {}
-var start: int = 0
-var current: int = 0
+var _map: Dictionary = {}
+var _start: int = 0
+var _current: int = 0
 
 # The dummy value we use to fill in the dictionary.
 const VALUE: int = 1
@@ -16,33 +16,33 @@ const VALUE: int = 1
 ## Initialization of Set
 ## @returns void
 func _init() -> void:
-    map = {}
-    start = 0
-    current = 0
+    _map = {}
+    _start = 0
+    _current = 0
 
 
 func _should_continue() -> bool:
-    return current < size()
+    return _current < size()
 
 
 func _iter_init(_arg: Variant) -> bool:
-    current = start
+    _current = _start
     return _should_continue()
 
 
 func _iter_next(_arg: Variant) -> bool:
-    current += 1
+    _current += 1
     return _should_continue()
 
 
 func _iter_get(_arg: Variant) -> Variant:
-    return map.keys()[current]
+    return _map.keys()[_current]
 
 
 ## Adds item to a Set
 ## @param element Item to add to Set
 func add(element: Variant) -> void:
-    map[element] = VALUE
+    _map[element] = VALUE
 
 
 ## Adds items to a Set from an Array
@@ -55,7 +55,7 @@ func add_all(elements: Array) -> void:
 ## Remove given item from set
 ## @param element Item to remove from Set
 func remove(element: Variant) -> void:
-    map.erase(element)
+    _map.erase(element)
 
 
 ## Remove items from set based on an array
@@ -68,7 +68,7 @@ func remove_all(elements: Array) -> void:
 ## Removes all elements that return true when passed to the matcher
 ## @param matcher Callable function to apply to each element.  Matching elements are removed.
 func remove_matching(matcher: Callable) -> void:
-    for element: Variant in map.keys():
+    for element: Variant in _map.keys():
         if matcher.call(element):
             remove(element)
 
@@ -76,30 +76,30 @@ func remove_matching(matcher: Callable) -> void:
 ## Checks existance of an element
 ## @param element Element to check existance of
 func contains(element: Variant) -> bool:
-    return map.has(element)
+    return _map.has(element)
 
 
 ## Returns all elements as an array
 ## @returns Array of Set elements
 func get_as_array() -> Array:
-    return map.keys()
+    return _map.keys()
 
 
 ## Removes all elements from the set
 func clear() -> void:
-    map.clear()
+    _map.clear()
 
 
 ## Checks if the Set is is_empty
 ## @returns bool True if Set has no elements
 func is_empty() -> bool:
-    return map.is_empty()
+    return _map.is_empty()
 
 
 ## Returns size of set
 ## @returns int Number of elements in Set
 func size() -> int:
-    return map.size()
+    return _map.size()
 
 
 ## Returns a new set containing all elements from this set and the other set
@@ -109,11 +109,11 @@ func union(other: Set) -> Set:
     var result: Set = Set.new()
     
     # Add all elements from this set
-    for element: Variant in map.keys():
+    for element: Variant in _map.keys():
         result.add(element)
     
     # Add all elements from the other set
-    for element: Variant in other.map.keys():
+    for element: Variant in other._map.keys():
         result.add(element)
     
     return result
@@ -129,7 +129,7 @@ func intersection(other: Set) -> Set:
     var smaller_set: Set = self if size() <= other.size() else other
     var larger_set: Set = other if size() <= other.size() else self
     
-    for element: Variant in smaller_set.map.keys():
+    for element: Variant in smaller_set._map.keys():
         if larger_set.contains(element):
             result.add(element)
     
@@ -142,7 +142,7 @@ func intersection(other: Set) -> Set:
 func difference(other: Set) -> Set:
     var result: Set = Set.new()
     
-    for element: Variant in map.keys():
+    for element: Variant in _map.keys():
         if not other.contains(element):
             result.add(element)
     
@@ -156,12 +156,12 @@ func symmetric_difference(other: Set) -> Set:
     var result: Set = Set.new()
     
     # Add elements from this set not in other
-    for element: Variant in map.keys():
+    for element: Variant in _map.keys():
         if not other.contains(element):
             result.add(element)
     
     # Add elements from other set not in this
-    for element: Variant in other.map.keys():
+    for element: Variant in other._map.keys():
         if not contains(element):
             result.add(element)
     
@@ -173,7 +173,7 @@ func is_subset(other: Set) -> bool:
     if size() > other.size():
         return false
     
-    for element: Variant in map.keys():
+    for element: Variant in _map.keys():
         if not other.contains(element):
             return false
     
@@ -190,7 +190,7 @@ func is_disjoint(other: Set) -> bool:
     var smaller_set: Set = self if size() <= other.size() else other
     var larger_set: Set = other if size() <= other.size() else self
     
-    for element: Variant in smaller_set.map.keys():
+    for element: Variant in smaller_set._map.keys():
         if larger_set.contains(element):
             return false
     

@@ -12,19 +12,6 @@ func create_simple_graph() -> Dictionary[String, Array]:
     }
 
 
-# Trying to confirm that I'm passing around Array[Dictionary]
-func is_dict_array(value: Variant) -> bool:
-    if typeof(value) != TYPE_ARRAY:
-        return false
-    
-    var arr: Array = value
-    # Check if the array has a typed signature
-    if arr.is_typed():
-        return arr.get_typed_builtin() == TYPE_DICTIONARY
-    
-    return false
-
-
 # Helper function to create a weighted graph for Dijkstra testing
 func create_weighted_graph() -> Dictionary[String, Array]:
     return {
@@ -34,6 +21,7 @@ func create_weighted_graph() -> Dictionary[String, Array]:
         "D": [{"v": "B", "w": 5}, {"v": "C", "w": 8}, {"v": "E", "w": 2}],
         "E": [{"v": "C", "w": 10}, {"v": "D", "w": 2}]
     }
+
 
 # Helper function to create a grid graph for pathfinding tests
 func create_grid_graph(width: int, height: int, blocked: Array[Vector2i] = []) -> Dictionary[Vector2i, Array]:
@@ -74,6 +62,7 @@ func test_bfs_simple_graph() -> void:
     var distance: int = AoCGraph.bfs("A", next_func, goal_func)
     assert_int(distance).is_equal(2)  # A -> C -> F (3 steps)
 
+
 # Test BFS with unreachable goal
 func test_bfs_unreachable_goal() -> void:
     var graph: Dictionary = {
@@ -96,6 +85,7 @@ func test_bfs_unreachable_goal() -> void:
     var distance: int = AoCGraph.bfs("A", next_func, goal_func)
     assert_int(distance).is_equal(-1)  # Unreachable
 
+
 # Test BFS with start node as goal
 func test_bfs_start_is_goal() -> void:
     var graph: Dictionary = create_simple_graph()
@@ -112,6 +102,7 @@ func test_bfs_start_is_goal() -> void:
     
     var distance: int = AoCGraph.bfs("A", next_func, goal_func)
     assert_int(distance).is_equal(0)  # Start is goal
+
 
 # Test BFS with grid pathfinding
 func test_bfs_grid_pathfinding() -> void:
@@ -130,6 +121,7 @@ func test_bfs_grid_pathfinding() -> void:
     var distance: int = AoCGraph.bfs(Vector2i(0, 0), next_func, goal_func)
     assert_int(distance).is_equal(8)  # Manhattan distance with obstacle
 
+
 # Test BFS with single node graph
 func test_bfs_single_node() -> void:
     var next_func: Callable = func(_node: Variant) -> Array:
@@ -147,6 +139,7 @@ func test_bfs_single_node() -> void:
     
     distance = AoCGraph.bfs("SINGLE", next_func, goal_func)
     assert_int(distance).is_equal(0)
+
 
 # Test BFS with cycle in graph
 func test_bfs_with_cycles() -> void:
@@ -189,6 +182,7 @@ func test_dijkstra_simple_weighted() -> void:
     assert_int(distances["D"]).is_equal(8)  # A -> C -> B -> D (2 + 1 + 5 = 8)
     assert_int(distances["E"]).is_equal(10) # A -> C -> B -> D -> E (2 + 1 + 5 + 2 = 10)
 
+
 # Test Dijkstra with disconnected graph
 func test_dijkstra_disconnected() -> void:
     var graph: Dictionary = {
@@ -210,6 +204,7 @@ func test_dijkstra_disconnected() -> void:
     assert_bool(distances.has("C")).is_false()  # Unreachable
     assert_bool(distances.has("D")).is_false()  # Unreachable
 
+
 # Test Dijkstra with single node
 func test_dijkstra_single_node() -> void:
     var next_costs_func: Callable = func(_node: Variant) -> Array:
@@ -219,6 +214,7 @@ func test_dijkstra_single_node() -> void:
     
     assert_int(distances.size()).is_equal(1)
     assert_int(distances["SINGLE"]).is_equal(0)
+
 
 # Test Dijkstra with zero-weight edges
 func test_dijkstra_zero_weights() -> void:
@@ -238,6 +234,7 @@ func test_dijkstra_zero_weights() -> void:
     assert_int(distances["A"]).is_equal(0)
     assert_int(distances["B"]).is_equal(0)  # A -> B (weight 0)
     assert_int(distances["C"]).is_equal(1)  # A -> B -> C (0 + 1 = 1)
+
 
 # Test Dijkstra with large weights
 func test_dijkstra_large_weights() -> void:
@@ -260,6 +257,7 @@ func test_dijkstra_large_weights() -> void:
     assert_int(distances["C"]).is_equal(1)
     assert_int(distances["D"]).is_equal(1000001)  # A -> B -> D
 
+
 # Test Dijkstra with grid (uniform weights)
 func test_dijkstra_grid_uniform_weights() -> void:
     var grid: Dictionary = create_grid_graph(3, 3)
@@ -276,6 +274,7 @@ func test_dijkstra_grid_uniform_weights() -> void:
     assert_int(distances[Vector2i(0, 0)]).is_equal(0)
     assert_int(distances[Vector2i(1, 0)]).is_equal(1)
     assert_int(distances[Vector2i(2, 2)]).is_equal(4)  # Manhattan distance
+
 
 # Test Dijkstra with self-loops
 func test_dijkstra_self_loops() -> void:
@@ -295,6 +294,7 @@ func test_dijkstra_self_loops() -> void:
     assert_int(distances["A"]).is_equal(0)  # Self-loop shouldn't affect shortest path
     assert_int(distances["B"]).is_equal(2)
     assert_int(distances["C"]).is_equal(3)
+
 
 # Test Dijkstra performance with larger graph
 func test_dijkstra_performance() -> void:

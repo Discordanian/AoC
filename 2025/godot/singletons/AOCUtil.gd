@@ -1,5 +1,5 @@
-extends Node
-class_name AOCUtil
+class_name AOCUtil extends Node
+# Has to be extended from type Node to be able to do the download
 
 const NORTH: Vector2i = Vector2i.UP
 const SOUTH: Vector2i = Vector2i.DOWN
