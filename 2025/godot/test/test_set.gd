@@ -5,6 +5,9 @@ var set: Set
 func before_test() -> void:
     set = Set.new()
     
+func after_test() -> void:
+    set = null
+    
 func test_Add_and_to_array() -> void:
     set.add("apple")
     set.add("banana")
