@@ -67,6 +67,29 @@ static func dfs(start: Variant, next: Callable, goal: Callable) -> int:
         steps += 1
     return -1
 
+## DFS Recursive - Used to see if the goal is reachable at all
+## @param start Starting node/state for the search
+## @next: Callable returns neighbors nodes of a given node
+## @goal: Callable takes node and return true/false if it's the goal
+## @return: true if goal is reachable, otherwise false
+static func dfs_recursive(start: Variant, next: Callable, goal: Callable) -> bool:
+    var seen: Dictionary[Variant, bool] = {} # works like a `set`
+    return _dfs_helper(start, next, goal, seen)
+
+# Helper function for recursive DFS
+static func _dfs_helper(node: Variant, next: Callable, goal: Callable, seen: Dictionary[Variant, bool]) -> bool:
+    if bool(goal.call(node)):
+        return true
+
+    seen[node] = true
+
+    var nbrs: Array[Variant] = next.call(node)
+    for neighbor: Variant in nbrs:
+        if not seen.has(neighbor):
+            if _dfs_helper(neighbor, next, goal, seen):
+                return true
+    return false
+
 ## Perform Dijkstra's algorithm to find shortest paths from start to all reachable nodes
 ## Uses priority queue to always process the node with minimum distance first
 ## @param start: Starting node for shortest path calculation
