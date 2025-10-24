@@ -5,7 +5,12 @@ do
 	cd $i
 	if [ -f ./clean.sh ]
 	then
-		./clean.sh
+    if command -v lolcat >/dev/null 2>&1
+      then
+      ./clean.sh |lolcat
+    else
+      ./clean.sh
+    fi
 	fi
 	cd ..
 done

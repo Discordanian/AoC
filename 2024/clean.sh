@@ -3,7 +3,13 @@
 for i in day-??
 do
 	cd $i
-	figlet $i
-	cargo clean
+  if command -v lolcat >/dev/null 2>&1
+  then
+    figlet $i |lolcat
+    cargo clean |lolcat
+  else
+    figlet $i 
+    cargo clean 
+  fi
 	cd ..
 done
