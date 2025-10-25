@@ -1,0 +1,252 @@
+use rand::Rng;
+use std::collections::{HashMap, HashSet};
+use std::fmt;
+
+#[derive(Clone)]
+enum Expr {
+    Var(String), // e.g., "x0", "y3"
+    And(Box<Expr>, Box<Expr>),
+    Or(Box<Expr>, Box<Expr>),
+    Xor(Box<Expr>, Box<Expr>),
+}
+
+impl fmt::Debug for Expr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Expr::Var(s) => write!(f, "{}", s),
+            Expr::And(a, b) => write!(f, "({:?} AND {:?})", a, b),
+            Expr::Or(a, b) => write!(f, "({:?} OR {:?})", a, b),
+            Expr::Xor(a, b) => write!(f, "({:?} XOR {:?})", a, b),
+        }
+    }
+}
+
+impl Expr {
+    /// Evaluate expression for given X, Y and return bit (0 or 1) for the bit index
+    fn eval_bit(&self, x_val: u64, y_val: u64, bit: usize) -> u8 {
+        match self {
+            Expr::Var(name) => {
+                let prefix = name.chars().next().unwrap_or('?');
+                // parse index after the first char
+                let idx: usize = name[1..].parse().unwrap_or_else(|_| {
+                    panic!("Invalid var name when parsing index: {}", name)
+                });
+                let bit_val = if prefix == 'x' {
+                    ((x_val >> idx) & 1) as u8
+                } else if prefix == 'y' {
+                    ((y_val >> idx) & 1) as u8
+                } else {
+                    panic!("Unknown var prefix: {}", name)
+                };
+                bit_val
+            }
+            Expr::And(a, b) => a.eval_bit(x_val, y_val, bit) & b.eval_bit(x_val, y_val, bit),
+            Expr::Or(a, b) => a.eval_bit(x_val, y_val, bit) | b.eval_bit(x_val, y_val, bit),
+            Expr::Xor(a, b) => a.eval_bit(x_val, y_val, bit) ^ b.eval_bit(x_val, y_val, bit),
+        }
+    }
+}
+
+/// Parse the input text (assumed to be `input` string) and return (values_section, gates_lines)
+fn parse_input(input: &str) -> (String, Vec<Vec<String>>) {
+    let parts: Vec<&str> = input.split("\n\n").collect();
+    if parts.len() < 2 {
+        panic!("Input should contain two sections separated by a blank line");
+    }
+    let values_part = parts[0].trim().to_string();
+    let gates_part = parts[1].trim();
+    let mut gates_tokens: Vec<Vec<String>> = Vec::new();
+    for line in gates_part.lines() {
+        if line.trim().is_empty() { continue; }
+        let toks: Vec<String> = line.split_whitespace().map(|s| s.to_string()).collect();
+        gates_tokens.push(toks);
+    }
+    (values_part, gates_tokens)
+}
+
+/// Build expression string representation (for debug) - not strictly necessary but kept.
+fn do_op_expr(left: &Expr, right: &Expr, op: &str) -> Expr {
+    match op {
+        "AND" => Expr::And(Box::new(left.clone()), Box::new(right.clone())),
+        "OR" => Expr::Or(Box::new(left.clone()), Box::new(right.clone())),
+        "XOR" => Expr::Xor(Box::new(left.clone()), Box::new(right.clone())),
+        other => panic!("Unknown op: {}", other),
+    }
+}
+
+/// run the algorithm like the Python `run` function
+/// returns set of wrong bit indices observed across multiple random trials
+fn run(gates: &[Vec<String>], values_section: &str) -> HashSet<usize> {
+    let mut wrong: HashSet<usize> = HashSet::new();
+    let trials = 10;
+    let mut rng = rand::thread_rng();
+
+    for _ in 0..trials {
+        // random X, Y in range [0, 2^45)
+        let x_val: u64 = rng.gen_range(0..(1u64 << 45));
+        let y_val: u64 = rng.gen_range(0..(1u64 << 45));
+
+        // V maps wire name -> Expr
+        let mut vmap: HashMap<String, Expr> = HashMap::new();
+
+        // Initialize from values section - the python used only names (xN/yN) as values
+        for line in values_section.lines() {
+            let line = line.trim();
+            if line.is_empty() { continue; }
+            // expected "name: value"
+            if let Some((name, _val)) = line.split_once(":") {
+                let name = name.trim().to_string();
+                if name.starts_with('x') || name.starts_with('y') {
+                    vmap.insert(name.clone(), Expr::Var(name));
+                } else {
+                    panic!("Unexpected name in values: {}", name);
+                }
+            } else {
+                panic!("Invalid values line: {}", line);
+            }
+        }
+
+        // repeatedly apply gates until no change
+        let mut changed = true;
+        let mut applied_indices: Vec<usize> = Vec::new();
+        while changed {
+            changed = false;
+            for (i, gate) in gates.iter().enumerate() {
+                if gate.len() < 5 {
+                    continue;
+                }
+                let n1 = &gate[0];
+                let op = &gate[1];
+                let n2 = &gate[2];
+                let n3 = &gate[4];
+                if vmap.contains_key(n1) && vmap.contains_key(n2) && !vmap.contains_key(n3) {
+                    let left = vmap.get(n1).unwrap().clone();
+                    let right = vmap.get(n2).unwrap().clone();
+                    let expr = do_op_expr(&left, &right, op);
+                    // debug print similar to python
+                    println!("{} {} {} -> {}  expr: {:?}", i, n1, n2, n3, expr);
+                    vmap.insert(n3.clone(), expr);
+                    applied_indices.push(i);
+                    changed = true;
+                }
+            }
+        }
+
+        // compute C = X + Y, then reconstruct Z by evaluating each z wire
+        let c_val: u64 = x_val.wrapping_add(y_val);
+        let mut z_val: u64 = 0;
+
+        // Collect z wires and evaluate their bit contributions
+        // In Python they iterated through sorted(V.items()) and for keys starting with 'z',
+        // they used the index after 'z' as bit position and planned to accumulate bit * 2**idx.
+        let mut z_keys: Vec<String> = vmap.keys()
+            .filter(|k| k.starts_with('z'))
+            .cloned()
+            .collect();
+        z_keys.sort();
+
+        for k in z_keys {
+            // parse index from "z{idx}"
+            let idx: usize = k[1..].parse().unwrap_or_else(|_| panic!("bad z name: {}", k));
+            let expr = vmap.get(&k).expect("z key must exist");
+            let bit = expr.eval_bit(x_val, y_val, idx) as u64;
+            if bit != 0 {
+                z_val |= 1u64 << idx;
+            }
+            println!("{} -> bit {} = {}", k, idx, bit);
+        }
+
+        // Compare bits up to 45 bits
+        for bit in 0..45usize {
+            let zbit = ((z_val >> bit) & 1) as u8;
+            let correct_bit = ((c_val >> bit) & 1) as u8;
+            if zbit != correct_bit {
+                wrong.insert(bit);
+            }
+        }
+    }
+
+    wrong
+}
+
+/// swap output names (the token at index 4) of two gates (mutates a gates vector)
+fn swap_gates(gates: &mut Vec<Vec<String>>, i1: usize, i2: usize) {
+    if gates[i1].len() <= 4 || gates[i2].len() <= 4 {
+        panic!("Gate does not have an output token at index 4");
+    }
+    std::mem::swap(&mut gates[i1][4], &mut gates[i2][4]);
+}
+
+fn main() {
+    // --- User-supplied `input` string should be available here. ---
+    // For demonstration we'll assume a variable `input` exists.
+    // Replace the following mock `input` with your real file contents string.
+    //
+    // Example usage:
+    // let input = std::fs::read_to_string("24.in").unwrap();
+    //
+    // But per your instructions, we assume `input` already exists.
+    //
+    // Uncomment and set input appropriately before running.
+    //
+    // let input = "...";
+    //
+    // For now, to avoid compile error, we create an empty placeholder that will panic.
+    // Replace that line.
+    let input = {
+        // panic!("Replace this placeholder with your `input` string content.");
+        // Temporary placeholder to allow easy local testing:
+        // NOTE: Replace with the real `input` when running.
+        String::from("x0: 0\nx1: 0\ny0: 0\n\tx0 AND y0 -> z0")
+    };
+
+    // parse
+    let (values_section, mut gates) = parse_input(&input);
+
+    // compute initial wrong set
+    let w0 = run(&gates, &values_section);
+    println!("Initial wrong bits: {:?}, gates count: {}", w0, gates.len());
+
+    // Search for swaps (same structure as Python)
+    let mut out_set: HashSet<String> = HashSet::new();
+    let mut swaps: Vec<(usize, usize)> = Vec::new();
+
+    while swaps.len() < 4 {
+        let mut best: Option<(HashSet<usize>, usize, usize)> = None;
+        for i0 in 0..gates.len() {
+            for i1 in 0..gates.len() {
+                // perform swap on a cloned gates copy so we can restore easily
+                let mut new_gates = gates.clone();
+                swap_gates(&mut new_gates, i0, i1);
+                let new_score = run(&new_gates, &values_section);
+                if best.is_none() || {
+                    // compare minimum wrong bit index (like python's min(new_score))
+                    let best_min = best.as_ref().unwrap().0.iter().min().cloned().unwrap_or(usize::MAX);
+                    let new_min = new_score.iter().min().cloned().unwrap_or(usize::MAX);
+                    new_min > best_min
+                } {
+                    println!("Candidate score {:?} swap {} {}", new_score, i0, i1);
+                    best = Some((new_score, i0, i1));
+                }
+            }
+        }
+
+        if let Some((best_score, bi0, bi1)) = best {
+            println!("Best found: {:?} at ({},{})", best_score, bi0, bi1);
+            swaps.push((bi0, bi1));
+            // add their outputs (token at index 4) to out_set
+            out_set.insert(gates[bi0][4].clone());
+            out_set.insert(gates[bi1][4].clone());
+            // perform swap in the real gates
+            swap_gates(&mut gates, bi0, bi1);
+        } else {
+            // no improvement found - break to avoid infinite loop
+            break;
+        }
+    }
+
+    // Print OUT as comma-separated sorted list
+    let mut out_list: Vec<String> = out_set.into_iter().collect();
+    out_list.sort();
+    println!("{}", out_list.join(","));
+}

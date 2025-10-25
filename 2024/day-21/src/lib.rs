@@ -1,131 +1,248 @@
-use std::collections::VecDeque;
-use std::collections::{BTreeMap, BTreeSet};
+use regex::Regex;
+use std::cmp::Reverse;
+use std::collections::{BinaryHeap, HashMap};
 
-const NUMPAD: [char; 11] = ['A', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-const DIRPAD: [char; 5] = ['<', 'v', '>', '^', 'A'];
+type Pos = (i32, i32);
 
-pub fn map_of_moves_numpad() -> BTreeMap<(char, char), Vec<Vec<char>>> {
-    let mut retval = BTreeMap::new();
-    for src in NUMPAD.iter() {
-        for dst in NUMPAD.iter() {
-            let mut paths: Vec<Vec<char>> = Vec::new();
-            retval.insert((*src, *dst), paths.clone());
-            if src == dst {
-                paths.push(vec![]);
-                retval.insert((*src, *dst), paths);
+fn pad1() -> Vec<&'static str> {
+    vec!["789", "456", "123", " 0A"]
+}
+fn pad2() -> Vec<&'static str> {
+    vec![" ^A", "<v>"]
+}
+
+fn get_pad1(p: Pos) -> Option<char> {
+    let r = p.0 as isize;
+    let c = p.1 as isize;
+    let grid = pad1();
+    if r < 0 || (r as usize) >= grid.len() {
+        return None;
+    }
+    let row = grid[r as usize];
+    if c < 0 || (c as usize) >= row.chars().count() {
+        return None;
+    }
+    let ch = row.chars().nth(c as usize).unwrap();
+    if ch == ' ' {
+        None
+    } else {
+        Some(ch)
+    }
+}
+
+fn get_pad2(p: Pos) -> Option<char> {
+    let r = p.0 as isize;
+    let c = p.1 as isize;
+    let grid = pad2();
+    if r < 0 || (r as usize) >= grid.len() {
+        return None;
+    }
+    let row = grid[r as usize];
+    if c < 0 || (c as usize) >= row.chars().count() {
+        return None;
+    }
+    let ch = row.chars().nth(c as usize).unwrap();
+    if ch == ' ' {
+        None
+    } else {
+        Some(ch)
+    }
+}
+
+// applyPad1/applyPad2: returns (new_pos, optional_output_char)
+fn apply_pad1(p: Pos, mv: char) -> (Pos, Option<char>) {
+    match mv {
+        'A' => (p, get_pad1(p)),
+        '<' => ((p.0, p.1 - 1), None),
+        '^' => ((p.0 - 1, p.1), None),
+        '>' => ((p.0, p.1 + 1), None),
+        'v' => ((p.0 + 1, p.1), None),
+        _ => (p, None),
+    }
+}
+fn apply_pad2(p: Pos, mv: char) -> (Pos, Option<char>) {
+    match mv {
+        'A' => (p, get_pad2(p)),
+        '<' => ((p.0, p.1 - 1), None),
+        '^' => ((p.0 - 1, p.1), None),
+        '>' => ((p.0, p.1 + 1), None),
+        'v' => ((p.0 + 1, p.1), None),
+        _ => (p, None),
+    }
+}
+
+// map prev_move to starting pos for a pad neighbor (same mapping as Python)
+fn start_pos_for(prev_move: char) -> Pos {
+    match prev_move {
+        '^' => (0, 1),
+        '<' => (1, 0),
+        'v' => (1, 1),
+        '>' => (1, 2),
+        'A' => (0, 2),
+        _ => (0, 2),
+    }
+}
+
+// DP cache for cost2
+struct CostCache {
+    dp: HashMap<(char, char, usize), i64>,
+}
+impl CostCache {
+    fn new() -> Self {
+        CostCache { dp: HashMap::new() }
+    }
+
+    // cost2: cost to produce character `ch` given previous move `prev_move`
+    // with `pads` stacked helper pads (pads >= 0). Mirrors Python cost2.
+    fn cost2(&mut self, ch: char, prev_move: char, pads: usize) -> i64 {
+        if let Some(&v) = self.dp.get(&(ch, prev_move, pads)) {
+            return v;
+        }
+        if pads == 0 {
+            // pressing directly is 1
+            self.dp.insert((ch, prev_move, pads), 1);
+            return 1;
+        }
+
+        // sanity checks (similar to asserts in Python)
+        assert!("^>v< A".contains(ch));
+        assert!("^>v< A".contains(prev_move));
+        // setup Dijkstra-like search over pad2 states
+        let start_pos = start_pos_for(prev_move);
+        // heap entries: (cost, pos, prev_move, out_string)
+        // We'll store out as String; we only accept when out == ch (single char)
+        let mut heap: BinaryHeap<Reverse<(i64, Pos, char, String)>> = BinaryHeap::new();
+        heap.push(Reverse((0, start_pos, 'A', String::new())));
+
+        let mut seen: HashMap<(Pos, char), i64> = HashMap::new();
+
+        while let Some(Reverse((d, p, prev, out))) = heap.pop() {
+            // If pad location invalid -> skip
+            if get_pad2(p).is_none() {
                 continue;
             }
-            let mut minimum = usize::MAX;
-            let mut queue: VecDeque<(char, Vec<char>)> = VecDeque::new();
-            queue.push_back((*src, Vec::new()));
-            while let Some((cur, v)) = queue.pop_front() {
-                let mut myv = v.clone();
-                myv.push(cur);
-                if cur == *dst && minimum >= myv.len() {
-                    minimum = myv.len();
-                    // Update vec and push path onto src/dst
-                    if let Some(x) = retval.get_mut(&(*src, *dst)) {
-                        x.push(myv.clone());
-                    }
-
+            if out == ch.to_string() {
+                self.dp.insert((ch, prev_move, pads), d);
+                return d;
+            } else if out.len() > 0 {
+                // Python continues only when out empty except when matches; we follow same
+                continue;
+            }
+            let key = (p, prev);
+            if let Some(&old) = seen.get(&key) {
+                if d >= old {
                     continue;
-                }
-                if minimum < myv.len() {
-                    continue;
-                } else {
-                    for next in adj_numpad(cur) {
-                        queue.push_back((next, myv.clone()));
-                    }
                 }
             }
+            seen.insert(key, d);
+
+            for &mv in &['^', '<', 'v', '>', 'A'] {
+                let (new_p, output_opt) = apply_pad2(p, mv);
+                // cost of performing `mv` (recursive)
+                let cost_move = self.cost2(mv, prev, pads - 1);
+                let new_d = d + cost_move;
+                let mut new_out = out.clone();
+                if let Some(ch_out) = output_opt {
+                    new_out.push(ch_out);
+                }
+                heap.push(Reverse((new_d, new_p, mv, new_out)));
+            }
+        }
+
+        panic!(
+            "cost2 failed to find solution for ch={} prev_move={} pads={}",
+            ch, prev_move, pads
+        );
+    }
+}
+
+// solve1: Dijkstra-like search across pad1 position and previous move (p2)
+// pads value is passed to cost2 to compute move costs
+fn solve1(code: &str, pads: usize, cache: &mut CostCache) -> i64 {
+    // start = [0, (3,2), 'A', '', '']
+    let start_pos: Pos = (3, 2);
+    // heap entries: (cost, p1_pos, prev_move, out_string)
+    let mut heap: BinaryHeap<Reverse<(i64, Pos, char, String)>> = BinaryHeap::new();
+    heap.push(Reverse((0i64, start_pos, 'A', String::new())));
+
+    let mut seen: HashMap<(Pos, char, String), i64> = HashMap::new();
+
+    while let Some(Reverse((d, p1, p2, out))) = heap.pop() {
+        assert!("<>v^A".contains(p2));
+        if out == code {
+            return d;
+        }
+        if !code.starts_with(&out) {
+            continue;
+        }
+        if get_pad1(p1).is_none() {
+            continue;
+        }
+        let key = (p1, p2, out.clone());
+        if let Some(&old) = seen.get(&key) {
+            if d >= old {
+                continue;
+            }
+        }
+        seen.insert(key, d);
+
+        for &mv in &['^', '<', 'v', '>', 'A'] {
+            let (new_p1, output_opt) = apply_pad1(p1, mv);
+            let mut new_out = out.clone();
+            if let Some(ch_out) = output_opt {
+                new_out.push(ch_out);
+            }
+            // cost to make move mv given prev move p2 and pads count
+            let cost_move = cache.cost2(mv, p2, pads);
+            let new_d = d + cost_move;
+            heap.push(Reverse((new_d, new_p1, mv, new_out)));
         }
     }
+
+    panic!("solve1 exhausted without finding code: {}", code);
+}
+
+// utility: extract first integer in a string (like Python's ints(line)[0])
+fn first_int(s: &str) -> Option<i64> {
+    let re = Regex::new(r"-?\d+").unwrap();
+    if let Some(mat) = re.find(s) {
+        return mat.as_str().parse::<i64>().ok();
+    }
+    None
+}
+
+pub fn process_part1(input: &str) -> i128 {
+    let mut retval: i128 = 0;
+    let mut cache = CostCache::new();
+
+    for line in input.lines() {
+        let line = line.trim();
+        if line.is_empty() {
+            continue;
+        }
+        let s1 = solve1(line, 2, &mut cache) as i128;
+        let line_int = first_int(line).unwrap_or(0) as i128;
+        retval += line_int * s1;
+    }
+
     retval
 }
 
-pub fn map_of_moves_dirpad() -> BTreeMap<(char, char), Vec<Vec<char>>> {
-    let mut retval = BTreeMap::new();
-    for src in DIRPAD.iter() {
-        for dst in DIRPAD.iter() {
-            let mut paths: Vec<Vec<char>> = Vec::new();
-            retval.insert((*src, *dst), paths.clone());
-            if src == dst {
-                paths.push(vec![]);
-                retval.insert((*src, *dst), paths);
-                continue;
-            }
-            let mut minimum = usize::MAX;
-            let mut queue: VecDeque<(char, Vec<char>)> = VecDeque::new();
-            queue.push_back((*src, Vec::new()));
-            while let Some((cur, v)) = queue.pop_front() {
-                let mut myv = v.clone();
-                myv.push(cur);
-                if cur == *dst && minimum >= myv.len() {
-                    minimum = myv.len();
-                    // Update vec and push path onto src/dst
-                    if let Some(x) = retval.get_mut(&(*src, *dst)) {
-                        x.push(myv.clone());
-                    }
+pub fn process_part2(input: &str) -> i128 {
+    let mut retval: i128 = 0;
+    let mut cache = CostCache::new();
 
-                    continue;
-                }
-                if minimum < myv.len() {
-                    continue;
-                } else {
-                    for next in adj_dirpad(cur) {
-                        queue.push_back((next, myv.clone()));
-                    }
-                }
-            }
+    for line in input.lines() {
+        let line = line.trim();
+        if line.is_empty() {
+            continue;
         }
+        let s2 = solve1(line, 25, &mut cache) as i128;
+        let line_int = first_int(line).unwrap_or(0) as i128;
+        retval += line_int * s2;
     }
+
     retval
-}
-
-pub fn input_num_vec(line: &str) -> (u64, Vec<char>) {
-    let num = line[0..3].parse().unwrap();
-    let v: Vec<char> = line.chars().collect();
-    (num, v)
-}
-
-pub fn adj_numpad(x: char) -> Vec<char> {
-    match x {
-        'A' => vec!['0', '3'],
-        '0' => vec!['2', 'A'],
-        '1' => vec!['4', '2'],
-        '2' => vec!['1', '5', '3', '0'],
-        '3' => vec!['2', '6', 'A'],
-        '4' => vec!['7', '5', '1'],
-        '5' => vec!['4', '8', '6', '2'],
-        '6' => vec!['5', '9', '3'],
-        '7' => vec!['8', '4'],
-        '8' => vec!['7', '9', '5'],
-        '9' => vec!['8', '6'],
-        _ => unreachable!("Number Adjancey got something other than 0-9A"),
-    }
-}
-
-pub fn adj_dirpad(x: char) -> Vec<char> {
-    match x {
-        '<' => vec!['v'],
-        'v' => vec!['<', '^', '>'],
-        '>' => vec!['v', 'A'],
-        '^' => vec!['v', 'A'],
-        'A' => vec!['^', '>'],
-        _ => unreachable!("Directional Adjancey got something other than <^>vA"),
-    }
-}
-
-pub fn process_part1(input: &str) -> u64 {
-    let in_vec: Vec<(u64, Vec<char>)> = input.lines().map(input_num_vec).collect();
-    let numpad_map = map_of_moves_numpad();
-    let dirpad_map = map_of_moves_dirpad();
-
-    in_vec.len() as u64
-}
-
-pub fn process_part2(input: &str) -> u64 {
-    input.len() as u64
 }
 
 #[cfg(test)]
