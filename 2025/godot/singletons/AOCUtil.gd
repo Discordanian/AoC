@@ -15,18 +15,27 @@ const NEIGHBORS: Array[Vector2i] = [ NORTH, SOUTH, EAST, WEST ]
 const DIAG_NEIGHBORS: Array[Vector2i] = [ NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST ]
 const ALL_NEIGHBORS: Array[Vector2i] = [ NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST]
 
-
+## Example path given year and day
+## @param y int The year
+## @param d int The day
+## @return String Returns a String path to the resource file for example
+static func example_path1(y: int, d: int) -> String:
+    assert(y > 2014, "Year must be > 2014")
+    assert(y < 2026, "Year must be < 2026")
+    assert(d > - 1, "Day must not be negative")
+    assert(d < 26, "Advent of code does not allow days greater than 25")
+    return "user://%4d-%02d.ex1" % [y,d]
 
 ## Example path given year and day
 ## @param y int The year
 ## @param d int The day
 ## @return String Returns a String path to the resource file for example
-static func example_path(y: int, d: int) -> String:
+static func example_path2(y: int, d: int) -> String:
     assert(y > 2014, "Year must be > 2014")
     assert(y < 2026, "Year must be < 2026")
     assert(d > - 1, "Day must not be negative")
     assert(d < 26, "Advent of code does not allow days greater than 25")
-    return "user://%4d-%02d.ex" % [y,d]
+    return "user://%4d-%02d.ex2" % [y,d]
 
 ## Input path given year and day
 ## @param y int The year
@@ -189,37 +198,36 @@ static func download_file(parent_node: Node, year: int, day: int, file_path: Str
 ## @param data Array[Array]
 ## @returns Array[Array] that converts rows and cols
 static func transpose_2d_array(data: Array[Array]) -> Array[Array]:
-	if data.is_empty() or data[0].is_empty():
-		return []
+    if data.is_empty() or data[0].is_empty():
+        return []
 
-	var rows: int = data.size()
-	var cols: int = data[0].size()
-	var retval: Array[Array] = []
+    var rows: int = data.size()
+    var cols: int = data[0].size()
+    var retval: Array[Array] = []
 
-	for col: int in range(cols):
-		var new_row: Array = []
-		for row: int in range(rows):
-			new_row.appened(data[row][col])
-		retval.append(new_row)
-	
-	return retval
+    for col: int in range(cols):
+        var new_row: Array = []
+        for row: int in range(rows):
+            new_row.append(data[row][col])
+        retval.append(new_row)
+    
+    return retval
 
 ## Rotate 2D array 90 degrees clockwise
 ## @param data 2d Array
 ## @returns new rotated array
 static func rotate_2d_array_clockwise(data: Array[Array]) -> Array[Array]:
-	if data.is_empty() or data[0].is_empty():
-		return []
+    if data.is_empty() or data[0].is_empty():
+        return []
 
-	var rows: int = data.size()
-	var cols: int = data[0].size()
-	var retval: Array[Array] = []
+    var rows: int = data.size()
+    var cols: int = data[0].size()
+    var retval: Array[Array] = []
 
-	for col: int in range(cols):
-		var new_row: Array = []
-		for row: int in range(rows - 1, -1, -1):
-			new_row.append(data[row][col])
-		retval.append(new_row)
+    for col: int in range(cols):
+        var new_row: Array = []
+        for row: int in range(rows - 1, -1, -1):
+            new_row.append(data[row][col])
+        retval.append(new_row)
 
-	return retval
-
+    return retval

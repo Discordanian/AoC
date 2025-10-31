@@ -1,6 +1,5 @@
-[gd_scene load_steps=3 format=3 uid="uid://c6ltf8njasfse"]
+[gd_scene load_steps=2 format=3 uid="uid://c6ltf8njasfse"]
 
-[ext_resource type="Theme" uid="uid://cmipx0ggmbqqw" path="res://scenes/themes/aoc.tres" id="1_7qy2k"]
 [ext_resource type="Script" uid="uid://dov7xqsjg4crb" path="res://scripts/day_00.gd" id="2_haadb"]
 
 [node name="Day00" type="Control"]
@@ -60,12 +59,6 @@ size_flags_vertical = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Assignment"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="ExampleDataReady" type="CheckBox" parent="MarginContainer/VBoxContainer/Assignment/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme = ExtResource("1_7qy2k")
-text = "Example Data Ready"
 
 [node name="ExPart1" type="Label" parent="MarginContainer/VBoxContainer/Assignment/VBoxContainer"]
 layout_mode = 2
@@ -129,7 +122,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="ExampleTextEdit2" type="TextEdit" parent="MarginContainer/VBoxContainer/Assignment/Example"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Header/ExampleRunButton" to="." method="_on_example_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Header/InputRunButton" to="." method="_on_input_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Header/Main" to="." method="_on_main_pressed"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/Assignment/Example/ExampleTextEdit" to="." method="_on_example_text_edit_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/Assignment/Example/ExampleTextEdit2" to="." method="_on_example_text_edit_text_changed2"]
