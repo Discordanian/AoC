@@ -4,7 +4,11 @@ Goals for this year are to give it a shot in gdscript in Godot game engine.
 
 ## gdscript
 Based on python but missing many of the basic containers and structures.
-There is no set.  The Array is essentially a list.  No deque.  No graph.
+Local implementations:
+- Set
+- Union Find
+- Deque
+- Graph functions (DFS, BFS)
 
 # Rules
 
@@ -19,12 +23,10 @@ based and UI-Control nodes.
 AI will not be used for anything other than as a short cut for writing unit tests
 against the helper classes I've written myself.
 
-
 # Setup
 If you want to run some of this yourself, log onto Adevent of Code and get your SESSION ID
 from your login.  This will allow the auto-download of your input which will be stored locally.
 
 Set SESSIONID as an environmental variable prior to launching the Godot engine.
-
 
 The days are set up to store and retain the test input day over day as is.
