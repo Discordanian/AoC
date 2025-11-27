@@ -3,6 +3,8 @@ extends Control
 @export var day: int = 0
 @export var year: int = 2025
 @export var downloadInput: bool = true
+
+#region Boilerplate
 @onready var answer1: LineEdit = $MarginContainer/VBoxContainer/Assignment/VBoxContainer/Answer1
 @onready var answer2: LineEdit = $MarginContainer/VBoxContainer/Assignment/VBoxContainer/Answer2
 @onready var example1: LineEdit = $MarginContainer/VBoxContainer/Assignment/VBoxContainer/ExAnswer1
@@ -33,7 +35,7 @@ func setup_example() -> void:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
     example_path1 = AOCUtil.example_path1(year,day)
-    example_path2 = AOCUtil.example_path1(year,day)
+    example_path2 = AOCUtil.example_path2(year,day)
     var input_path: String = AOCUtil.input_path(year,day)
     if downloadInput:
         AOCUtil.download_file(self, year,day,input_path)
@@ -42,19 +44,6 @@ func _ready() -> void:
     # I could/should use an async and a callback but instead I'm going to wait 3 seconds
     # and just see if I have the data file.  Mark me as lazy if you want.
     get_tree().create_timer(3.0).timeout.connect(check_for_input)
-        
-    
-func part1(data: String, ans: LineEdit) -> void:
-    var answer: String
-    answer = str(AOCUtil.string_to_lines(data).size())
-    ans.text = answer
-    
-    
-func part2(data: String, ans: LineEdit) -> void:
-    var answer: String
-    print("Part2",data)
-    answer = str(AOCUtil.dimensions_of_2d_array(AOCUtil.string_to_2d_char_array(data)))
-    ans.text = answer
 
 
 func _on_example_text_edit_text_changed() -> void:
@@ -93,3 +82,11 @@ func _on_input_pressed() -> void:
 
 func _on_main_pressed() -> void:
     get_tree().change_scene_to_file("res://scenes/main_entry.tscn") 
+#endregion    
+    
+    
+func part1(data: String, ans: LineEdit) -> void:
+    ans.text = D00.new().part1(data)
+      
+func part2(data: String, ans: LineEdit) -> void:
+    ans.text = D00.new().part2(data)   

@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-var test_set: test_set
+var test_set: Set
 
 func before_test() -> void:
     test_set = test_set.new()
@@ -49,11 +49,11 @@ func test_add_all() -> void:
 func test_union() -> void:
     test_set.add_all(["apple", "banana"])
 
-    var other: test_set = test_set.new()
+    var other: Set = test_set.new()
 
     other.add_all(["banana", "cherry"])
 
-    var result: test_set = test_set.union(other)
+    var result: Set = test_set.union(other)
 
     assert_array(result.get_as_array()).contains("apple")
     assert_array(result.get_as_array()).contains("banana")
@@ -63,11 +63,11 @@ func test_union() -> void:
 func test_intersection() -> void:
     test_set.add_all(["apple", "banana"])
 
-    var other: test_set = test_set.new()
+    var other: Set = test_set.new()
 
     other.add_all(["banana", "cherry"])
 
-    var result: test_set = test_set.intersection(other)
+    var result: Set = test_set.intersection(other)
 
     assert_array(result.get_as_array()).contains("banana")
     assert_int(result.size()).is_equal(1)
@@ -75,11 +75,11 @@ func test_intersection() -> void:
 func test_difference() -> void:
     test_set.add_all(["apple", "banana"])
 
-    var other: test_set = test_set.new()
+    var other: Set = test_set.new()
 
     other.add_all(["banana", "cherry"])
 
-    var result: test_set = test_set.difference(other)
+    var result: Set = test_set.difference(other)
 
     assert_array(result.get_as_array()).contains("apple")
     assert_int(result.size()).is_equal(1)

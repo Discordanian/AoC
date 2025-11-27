@@ -142,7 +142,7 @@ static func string_from_file(path: String) -> String:
            push_error("Error reading data from " + path)
     else:
            push_error("Path not found : " + path)
-    return retval
+    return retval.strip_edges()
 
 ## Downloads the input file from Advent of Code
 ## @param parent_node This requires a parent node to attach to while the http_request occurs, normal `self`
