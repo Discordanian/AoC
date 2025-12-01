@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://baqxa11lwwkek"]
 
-[ext_resource type="Script" uid="uid://cy1uce43spa6a" path="res://scripts/day_01.gd" id="1_wckcm"]
+[ext_resource type="Script" uid="uid://cy1uce43spa6a" path="res://scripts/day_05.gd" id="1_wckcm"]
 
-[node name="Day01" type="Control"]
+[node name="Day05" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,7 +33,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Day 01"
+text = "Day 05"
 
 [node name="ExampleRunButton" type="Button" parent="MarginContainer/VBoxContainer/Header"]
 unique_name_in_owner = true
