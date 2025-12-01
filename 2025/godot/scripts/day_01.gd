@@ -75,7 +75,7 @@ func _on_example_pressed() -> void:
 	part2(data2, example2)
 	
 func _on_input_pressed() -> void:
-	var data: String = AOCUtil.string_from_file(AOCUtil.input_path(2024, 10))
+	var data: String = AOCUtil.string_from_file(AOCUtil.input_path(year, day))
 	part1(data, answer1)
 	part2(data, answer2)
 
