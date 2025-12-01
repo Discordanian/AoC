@@ -22,7 +22,7 @@ func _on_day_button_pressed(day: int) -> void:
         push_error("Told to load non existant scene")				
 
 func create_day_buttons() -> void:
-    for i: int in range(12):
+    for i: int in range(1,13):
         var b: Button = Button.new()
         b.text = "Day %02d" % i
         b.disabled = is_day_scene_missing(i)
