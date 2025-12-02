@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://baqxa11lwwkek"]
 
-[ext_resource type="Script" uid="uid://cy1uce43spa6a" path="res://scripts/day_12.gd" id="1_wckcm"]
+[ext_resource type="Script" uid="uid://b8ec04yvnw4yk" path="res://scripts/day_12.gd" id="1_mg3o3"]
 
 [node name="Day12" type="Control"]
 layout_mode = 3
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_wckcm")
+script = ExtResource("1_mg3o3")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
