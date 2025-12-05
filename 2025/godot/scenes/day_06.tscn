@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://baqxa11lwwkek"]
+[gd_scene load_steps=3 format=3 uid="uid://baqxa11lwwkek"]
 
 [ext_resource type="Script" uid="uid://bmqxro5rbg3fa" path="res://scripts/day_06.gd" id="1_rw32n"]
+[ext_resource type="Theme" uid="uid://cmipx0ggmbqqw" path="res://themes/aoc.tres" id="1_tu4j6"]
 
 [node name="Day06" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_tu4j6")
 script = ExtResource("1_rw32n")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

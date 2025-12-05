@@ -1,10 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://baqxa11lwwkek"]
+[gd_scene load_steps=3 format=3 uid="uid://baqxa11lwwkek"]
 
 [ext_resource type="Script" uid="uid://bpfy583lo4cyl" path="res://scripts/day_04.gd" id="1_ninqq"]
-[ext_resource type="FontFile" uid="uid://b1n8cocwju4g1" path="res://assets/fonts/tt_interphases_pro_mono/TT Interphases Pro Mono Trial Regular.ttf" id="1_w0hsf"]
-
-[sub_resource type="Theme" id="Theme_2oj3p"]
-default_font = ExtResource("1_w0hsf")
+[ext_resource type="Theme" uid="uid://cmipx0ggmbqqw" path="res://themes/aoc.tres" id="1_w0hsf"]
 
 [node name="Day04" type="Control"]
 layout_mode = 3
@@ -13,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_2oj3p")
+theme = ExtResource("1_w0hsf")
 script = ExtResource("1_ninqq")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
