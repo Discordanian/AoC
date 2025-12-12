@@ -40,7 +40,7 @@ func _ready() -> void:
 	if downloadInput:
 		AOCUtil.download_file(self, year,day,input_path)
 	setup_example()
-	
+
 	# I could/should use an async and a callback but instead I'm going to wait 3 seconds
 	# and just see if I have the data file.  Mark me as lazy if you want.
 	get_tree().create_timer(3.0).timeout.connect(check_for_input)
@@ -55,7 +55,7 @@ func _on_example_text_edit_text_changed() -> void:
 		file.close()
 	else:
 		push_error("Error writing to " + example_path1)
-	
+
 func _on_example_text_edit_text_changed2() -> void:
 	# exampleData.button_pressed = exampleText.text.length() != 0
 	exampleButton.disabled = exampleText.text.length() == 0 || exampleText.text.length() == 0
@@ -73,7 +73,7 @@ func _on_example_pressed() -> void:
 	var data2: String = AOCUtil.string_from_file(example_path2)
 	part1(data1, example1)
 	part2(data2, example2)
-	
+
 func _on_input_pressed() -> void:
 	var data: String = AOCUtil.string_from_file(AOCUtil.input_path(year, day))
 	part1(data, answer1)
@@ -81,12 +81,12 @@ func _on_input_pressed() -> void:
 
 
 func _on_main_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/main_entry.tscn") 
-#endregion	
-	
-	
+	get_tree().change_scene_to_file("res://scenes/main_entry.tscn")
+#endregion
+
+
 func part1(data: String, ans: LineEdit) -> void:
 	ans.text = D12.new().part1(data)
-	  
+
 func part2(data: String, ans: LineEdit) -> void:
-	ans.text = D12.new().part2(data)   
+	ans.text = D12.new().part2(data)
