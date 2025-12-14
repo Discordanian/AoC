@@ -7,7 +7,6 @@ Based on python but missing many of the basic containers and structures.
 Local implementations:
 - Set
 - Union Find
-- Deque
 - Graph functions (DFS, BFS)
 
 # Rules
