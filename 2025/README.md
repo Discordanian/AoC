@@ -32,3 +32,5 @@ The days are set up to store and retain the test input day over day as is.
 
 # Thoughts on Conclusion of 2025
 I learned a lot about Godot.  Originally I was making each day a static class, but there really is no reason to do this.  And by not doing that, I can have class variables that are accessible to each function/method in the class.
+
+The reduced set of days for Adevent of Code was a bit of a plus.  The last 3 days were difficult questions but doable.  And I'm not spending 4 hours on Christmas day doing the last solve.
