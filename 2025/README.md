@@ -29,3 +29,6 @@ from your login.  This will allow the auto-download of your input which will be 
 Set SESSIONID as an environmental variable prior to launching the Godot engine.
 
 The days are set up to store and retain the test input day over day as is.
+
+# Thoughts on Conclusion of 2025
+I learned a lot about Godot.  Originally I was making each day a static class, but there really is no reason to do this.  And by not doing that, I can have class variables that are accessible to each function/method in the class.
