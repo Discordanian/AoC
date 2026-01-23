@@ -230,7 +230,6 @@ pub fn process_part2(input: &str) -> usize {
         let mut targets: Vec<(usize, usize)> = vec![(r, c)];
         let mut go = true;
 
-        // Iterate over `targets` while it grows (like the Python list-append loop).
         let mut idx = 0usize;
         while idx < targets.len() {
             let (cr, cc) = targets[idx];
