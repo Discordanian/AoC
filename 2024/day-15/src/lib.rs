@@ -209,15 +209,17 @@ pub fn vec_boxes(grid: &[Vec<char>]) -> Vec<(usize, usize)> {
 pub fn process_part2(input: &str) -> usize {
     let (g, i) = input.split_once("\n\n").unwrap();
 
-    let grid = make_fat_grid(g);
-    let wallset = wall_set(&grid);
-    let mut boxlist = vec_boxes(&grid);
-
+    // - For each move, build the closure of all cells that must shift (robot + both halves)
+    // - If any target would push into a wall, skip the move
+    // - Otherwise, shift everything simultaneously using a snapshot copy
+    let mut grid = make_fat_grid(g);
     let instructions = make_instructions(i);
-    let mut botpos = bot_position2(&grid);
+    let (rows, cols) = (grid.len(), grid[0].len());
+
+    let (mut r, mut c) = bot_position2(&grid);
 
     for dir in instructions.iter() {
-        let delta: (i32, i32) = match dir {
+        let (dr, dc): (i32, i32) = match dir {
             '^' => (-1, 0),
             'v' => (1, 0),
             '>' => (0, 1),
@@ -225,48 +227,79 @@ pub fn process_part2(input: &str) -> usize {
             _ => panic!("At the disco"),
         };
 
-        let mut canmove = true;
-        let mut stack: Vec<(usize, usize)> = vec![];
+        let mut targets: Vec<(usize, usize)> = vec![(r, c)];
+        let mut go = true;
 
-        let proposed = pair_addition(botpos, delta);
-        if wallset.contains(&proposed) {
+        // Iterate over `targets` while it grows (like the Python list-append loop).
+        let mut idx = 0usize;
+        while idx < targets.len() {
+            let (cr, cc) = targets[idx];
+            idx += 1;
+
+            let nr_i = cr as i32 + dr;
+            let nc_i = cc as i32 + dc;
+            if nr_i < 0 || nc_i < 0 || nr_i >= rows as i32 || nc_i >= cols as i32 {
+                go = false;
+                break;
+            }
+            let (nr, nc) = (nr_i as usize, nc_i as usize);
+
+            if targets.contains(&(nr, nc)) {
+                continue;
+            }
+
+            match grid[nr][nc] {
+                '#' => {
+                    go = false;
+                    break;
+                }
+                '[' => {
+                    targets.push((nr, nc));
+                    targets.push((nr, nc + 1));
+                }
+                ']' => {
+                    targets.push((nr, nc));
+                    targets.push((nr, nc - 1));
+                }
+                _ => {}
+            }
+        }
+
+        if !go {
             continue;
         }
 
-        if boxlist.contains(&proposed) {
-            stack.push(proposed);
+        let copy = grid.clone();
+
+        // Move robot.
+        grid[r][c] = '.';
+        grid[(r as i32 + dr) as usize][(c as i32 + dc) as usize] = '@';
+
+        // Clear all box cells involved (exclude robot at index 0).
+        for &(br, bc) in targets.iter().skip(1) {
+            grid[br][bc] = '.';
         }
-        if boxlist.contains(&pair_addition(proposed, (0, -1))) {
-            stack.push(pair_addition(proposed, (0, -1)));
+        // Shift them from the snapshot.
+        for &(br, bc) in targets.iter().skip(1) {
+            let tr = (br as i32 + dr) as usize;
+            let tc = (bc as i32 + dc) as usize;
+            grid[tr][tc] = copy[br][bc];
         }
 
-        let mut seen: BTreeSet<(usize, usize)> = BTreeSet::new();
+        r = (r as i32 + dr) as usize;
+        c = (c as i32 + dc) as usize;
+    }
 
-        while let Some(next) = stack.pop() {
-            let proposed = pair_addition(next, delta);
-            let proposed_wide = (proposed.0, proposed.1 + 1); // box is 2 wide
-
-            if wallset.contains(&proposed) || wallset.contains(&proposed_wide) {
-                canmove = false;
-                break;
-            }
-
-            if seen.contains(&proposed) {
-                continue;
-            }
-            seen.insert(proposed);
-        } // stack processing
-        if canmove {
-            botpos = pair_addition(botpos, delta);
-            for item in &mut boxlist {
-                if seen.contains(item) {
-                    *item = pair_addition(*item, delta);
-                }
+    // Score: sum of GPS for left-half '[' positions.
+    let mut sum = 0usize;
+    for rr in 0..rows {
+        for cc in 0..cols {
+            if grid[rr][cc] == '[' {
+                sum += rr * 100 + cc;
             }
         }
     }
-    print_debug(&wallset, &boxlist);
-    score_part2(boxlist).min(9021)
+    sum
 }
 
 #[cfg(test)]
