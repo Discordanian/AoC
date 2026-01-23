@@ -30,7 +30,7 @@ pub fn process_part1(input: &str) -> usize {
                 // If these are different add locations to antinodes
                 let (dr, dc) = (r1 - r2, c1 - c2);
                 if (dr, dc) != (0, 0) {
-                    let (pr, pc) = (r1 + dr, c1 + dr);
+                    let (pr, pc) = (r1 + dr, c1 + dc);
                     if (pr, pc) != (*r1, *c1)
                         && (pr, pc) != (*r2, *c2)
                         && pr >= 0
