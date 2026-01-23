@@ -13,18 +13,23 @@ pub struct Bot {
 
 impl Ord for Bot {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.cost.cmp(&other.cost)
+        // Reverse ordering so `BinaryHeap` behaves like a min-heap on cost.
+        other
+            .cost
+            .cmp(&self.cost)
+            .then_with(|| self.pos.cmp(&other.pos))
+            .then_with(|| self.direction.cmp(&other.direction))
     }
 }
 
 impl PartialOrd for Bot {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(other.cmp(self))
+        Some(self.cmp(other))
     }
 }
 impl PartialEq for Bot {
     fn eq(&self, other: &Self) -> bool {
-        self.cost == other.cost
+        self.cost == other.cost && self.pos == other.pos && self.direction == other.direction
     }
 }
 
@@ -66,11 +71,14 @@ pub fn step(pos: (usize, usize), dir: usize) -> (usize, usize) {
 // cost, (nextpos), direction
 pub fn adjacency(pos: (usize, usize), dir: usize) -> Vec<(usize, (usize, usize), usize)> {
     let mut retval = Vec::new();
+    // Match the puzzle/A* model:
+    // - Move forward: cost 1
+    // - Turn in place: cost 1000
     retval.push((1, step(pos, dir), dir));
     let right = (dir + 1) % 4;
     let left = (dir + 3) % 4;
-    retval.push((1001, step(pos, right), right));
-    retval.push((1001, step(pos, left), left));
+    retval.push((1000, pos, right));
+    retval.push((1000, pos, left));
 
     retval
 }
@@ -99,31 +107,35 @@ pub fn process_part1(input: &str) -> usize {
         direction: 0,
     });
 
-    let mut seen: HashMap<(usize, usize), usize> = HashMap::new();
-    seen.insert(start, 0);
+    // Dijkstra over full state: (position, direction).
+    let mut dist: HashMap<((usize, usize), usize), usize> = HashMap::new();
+    dist.insert((start, 0), 0);
 
     while let Some(bot) = heap.pop() {
+        // Skip stale heap entries.
+        if bot.cost
+            > *dist
+                .get(&(bot.pos, bot.direction))
+                .unwrap_or(&usize::MAX)
+        {
+            continue;
+        }
         if bot.pos == end {
             return bot.cost;
         }
-        let adj = adjacency(bot.pos, bot.direction);
-        for (cost, pos, dir) in adj.iter() {
-            if !walls.contains(pos) {
-                if !seen.contains_key(pos) {
-                    seen.insert(*pos, *cost);
-                    heap.push(Bot {
-                        cost: bot.cost + cost,
-                        pos: *pos,
-                        direction: *dir,
-                    });
-                } else if seen.get(pos).unwrap() > cost {
-                    seen.entry(*pos).and_modify(|key| *key = *cost);
-                    heap.push(Bot {
-                        cost: bot.cost + cost,
-                        pos: *pos,
-                        direction: *dir,
-                    });
-                }
+        for (step_cost, next_pos, next_dir) in adjacency(bot.pos, bot.direction) {
+            if walls.contains(&next_pos) {
+                continue;
+            }
+            let next_cost = bot.cost + step_cost;
+            let state = (next_pos, next_dir);
+            if next_cost < *dist.get(&state).unwrap_or(&usize::MAX) {
+                dist.insert(state, next_cost);
+                heap.push(Bot {
+                    cost: next_cost,
+                    pos: next_pos,
+                    direction: next_dir,
+                });
             }
         }
     }
@@ -137,7 +149,7 @@ pub fn process_part1_astar(input: &str) -> usize {
     let end = end_pos(input);
 
     // start, successors fn, heuristic fn, success fn
-    let (retval, cost) = astar(
+    let (_retval, cost) = astar(
         &(start, 0),
         |(position, direction)| {
             let proposed = step(*position, *direction);
@@ -162,7 +174,7 @@ pub fn process_part2(input: &str) -> usize {
     let end = end_pos(input);
 
     // start, successors fn, heuristic fn, success fn
-    let (retval, cost) = astar_bag(
+    let (retval, _cost) = astar_bag(
         &(start, 0),
         |(position, direction)| {
             let proposed = step(*position, *direction);
