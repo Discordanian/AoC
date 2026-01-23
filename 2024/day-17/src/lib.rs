@@ -76,55 +76,75 @@ pub fn process_part1(input: &str) -> String {
         .join(",")
 }
 
-pub fn process_part2(input: &str) -> u64 {
-    let mut line_iter = input.lines();
-    // let mut retval = 0;
+fn find(program: &[u64], target: &[u64], ans: u64) -> Option<u64> {
+    if target.is_empty() {
+        return Some(ans);
+    }
 
-    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
-    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
-    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
-    line_iter.next().unwrap();
-    let instructions = parse_vec_u64(line_iter.next().unwrap());
+    for t in 0..8 {
+        let a = ans << 3 | t;
+        let mut b = 0u64;
+        let mut c = 0u64;
+        let mut output: Option<u64> = None;
+        let mut adv3 = false;
 
-    let mut stack: Vec<(usize, u64)> = Vec::new();
-    stack.push((instructions.len(), 0));
+        // Process instructions up to (but not including) the final JNZ
+        for pointer in (0..program.len() - 2).step_by(2) {
+            let ins = program[pointer];
+            let operand = program[pointer + 1];
 
-    let mut output = 23; // can never be 23
-    while let Some((inst_length, retval)) = stack.pop() {
-        if inst_length == 0 {
-            return retval;
-        }
-        let targetnum = instructions[inst_length - 1];
-        for d in 0..8 {
-            let mut a = retval << 3 | d;
-            let mut b = 0;
-            let mut c = 0;
-            let mut pc = 0;
-            while pc < (instructions.len() - 2) {
-                assert!(pc < instructions.len() - 2);
-                let ins = instructions[pc];
-                let operand = instructions[pc + 1];
-                match ins {
-                    0 => a = a >> combo(operand, a, b, c),
-                    1 => b ^= operand,
-                    2 => b = combo(operand, a, b, c) % 8,
-                    3 => panic!(),
-                    4 => b ^= c,
-                    5 => output = combo(operand, a, b, c) % 8,
-                    6 => b = a >> combo(operand, a, b, c),
-                    7 => c = a >> combo(operand, a, b, c),
-                    _ => unreachable!(),
+            match ins {
+                0 => {
+                    assert!(!adv3, "program has multiple ADVs");
+                    assert_eq!(operand, 3, "program has ADV with operand other than 3");
+                    adv3 = true;
                 }
-                pc += 2;
-            } // going through instructions
-            if output == targetnum {
-                stack.push((inst_length - 1, a));
-                dbg!(&stack);
+                1 => b ^= operand,
+                2 => b = combo(operand, a, b, c) % 8,
+                3 => panic!("program has JNZ inside expected loop body"),
+                4 => b ^= c,
+                5 => {
+                    assert!(output.is_none(), "program has multiple OUT");
+                    output = Some(combo(operand, a, b, c) % 8);
+                }
+                6 => b = a >> combo(operand, a, b, c),
+                7 => c = a >> combo(operand, a, b, c),
+                _ => unreachable!(),
+            }
+            
+            // Check if output matches target (this check happens after each instruction)
+            if let Some(out) = output {
+                if out == target[target.len() - 1] {
+                    if let Some(sub) = find(program, &target[..target.len() - 1], a) {
+                        return Some(sub);
+                    }
+                }
             }
         }
     }
-    dbg!("Outside of stack");
-    123
+
+    None
+}
+
+pub fn process_part2(input: &str) -> u64 {
+    let mut line_iter = input.lines();
+    
+    // Skip register values (first 3 lines)
+    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    let _: u64 = parse_vec_u64(line_iter.next().unwrap())[0];
+    line_iter.next().unwrap(); // Skip empty line
+    let instructions = parse_vec_u64(line_iter.next().unwrap());
+
+    // Assert program ends with JNZ 0
+    assert_eq!(
+        instructions[instructions.len() - 2..],
+        [3, 0],
+        "program does not end with JNZ 0"
+    );
+
+    // The target is the program itself (we're working backwards)
+    find(&instructions, &instructions, 0).unwrap()
 }
 
 #[cfg(test)]
@@ -135,7 +155,13 @@ mod tests {
 Register B: 0
 Register C: 0
 
-instructions: 0,1,5,4,3,0";
+Program: 0,1,5,4,3,0";
+
+    const INPUT2: &str = "Register A: 2024
+Register B: 0
+Register C: 0
+
+Program: 0,3,5,4,3,0";
 
     #[test]
     fn part1_works() {
@@ -144,9 +170,8 @@ instructions: 0,1,5,4,3,0";
     }
 
     #[test]
-    #[ignore]
     fn part2_works() {
-        let result = process_part2(INPUT);
-        assert_eq!(result, 117440);
+        let result = process_part2(INPUT2);
+        assert_eq!(result, 14680);
     }
 }
