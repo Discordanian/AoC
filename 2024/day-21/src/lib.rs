@@ -256,16 +256,8 @@ mod tests {
 379A";
 
     #[test]
-    #[ignore]
     fn part1_works() {
         let result = process_part1(INPUT);
         assert_eq!(result, 126384);
-    }
-
-    #[test]
-    #[ignore]
-    fn part2_works() {
-        let result = process_part2(INPUT);
-        assert_eq!(result, 0);
     }
 }
