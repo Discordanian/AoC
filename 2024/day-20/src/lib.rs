@@ -152,47 +152,20 @@ pub fn process_part1(input: &str, _cheat: usize, save: usize) -> usize {
 }
 
 pub fn adjacency(p: IPoint, cheat: usize) -> Vec<(IPoint, usize)> {
-    assert!(cheat > 2);
+    assert!(cheat > 0);
     let mut retval = Vec::new();
 
-    for x in 0..=cheat {
-        for y in 0..=cheat {
-            if x + y <= cheat {
-                if x != 0 {
-                    retval.push((
-                        p + IPoint {
-                            x: x as i32,
-                            y: y as i32,
-                        },
-                        x + y,
-                    ));
-                    retval.push((
-                        p + IPoint {
-                            x: -(x as i32),
-                            y: y as i32,
-                        },
-                        x + y,
-                    ));
-                }
-                if y != 0 {
-                    retval.push((
-                        p + IPoint {
-                            x: x as i32,
-                            y: y as i32,
-                        },
-                        x + y,
-                    ));
-                    retval.push((
-                        p + IPoint {
-                            x: x as i32,
-                            y: -(y as i32),
-                        },
-                        x + y,
-                    ));
-                }
+    let cheat_i = cheat as i32;
+    for dx in -cheat_i..=cheat_i {
+        for dy in -cheat_i..=cheat_i {
+            let cost = dx.unsigned_abs() as usize + dy.unsigned_abs() as usize;
+            if cost == 0 || cost > cheat {
+                continue;
             }
+            retval.push((p + IPoint { x: dx, y: dy }, cost));
         }
     }
+
     retval
 }
 
