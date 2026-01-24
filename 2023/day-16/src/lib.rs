@@ -38,6 +38,10 @@ fn energized_count(start: Ray, grid: &[Vec<Tile>]) -> usize {
     q.push_back(start);
 
     while let Some(mut ray) = q.pop_front() {
+        // If a ray ever ends up outside the grid, it contributes nothing further.
+        if ray.pos.y >= rows || ray.pos.x >= cols {
+            continue;
+        }
         if seen.contains(&ray) {
             continue;
         }
@@ -103,9 +107,9 @@ impl Ray {
     fn forward(mut self, rows: usize, cols: usize) -> Option<Self> {
         match self.dir {
             Direction::North if self.pos.y > 0 => self.pos.y -= 1,
-            Direction::East if self.pos.x > 0 => self.pos.x -= 1,
+            Direction::East if self.pos.x < cols - 1 => self.pos.x += 1,
             Direction::South if self.pos.y < rows - 1 => self.pos.y += 1,
-            Direction::West if self.pos.x < cols - 1 => self.pos.x += 1,
+            Direction::West if self.pos.x > 0 => self.pos.x -= 1,
             _ => return None,
         }
         Some(self)
@@ -165,7 +169,7 @@ mod tests {
 ........|.
 ..........
 .........\
-..../.\..
+..../.\\..
 .-.-/..|..
 .|....-|.\
 ..//.|....";
@@ -173,8 +177,7 @@ mod tests {
     #[test]
     fn part1_works() {
         let result = process_part1(INPUT);
-        // assert_eq!(result, 46);
-        assert_eq!(result, 1);
+        assert_eq!(result, 46);
     }
 
     #[test]
