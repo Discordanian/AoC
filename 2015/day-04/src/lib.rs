@@ -14,13 +14,18 @@ pub fn process_part1(input: &str) -> String {
 }
 
 pub fn process_part2(input: &str) -> String {
+    use std::fmt::Write;
+
     let secret_key = input.trim();
+    let mut candidate = String::with_capacity(secret_key.len() + 20);
 
     for n in 1u64.. {
-        let candidate = format!("{secret_key}{n}");
-        let digest = md5::compute(candidate);
+        candidate.clear();
+        candidate.push_str(secret_key);
+        write!(&mut candidate, "{n}").expect("writing into a String cannot fail");
+        let digest = md5::compute(candidate.as_bytes());
 
-        if format!("{digest:x}").starts_with("000000") {
+        if digest.0[0] == 0 && digest.0[1] == 0 && digest.0[2] == 0 {
             return n.to_string();
         }
     }
