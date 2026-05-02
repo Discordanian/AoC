@@ -51,6 +51,16 @@ fn parse_line(line: &str) -> Option<(String, Expr)> {
     Some((target, expr))
 }
 
+fn parse_circuit(input: &str) -> HashMap<String, Expr> {
+    let mut circuit = HashMap::new();
+    for line in input.lines() {
+        if let Some((target, expr)) = parse_line(line) {
+            circuit.insert(target, expr);
+        }
+    }
+    circuit
+}
+
 fn eval_operand(
     op: &Operand,
     circuit: &HashMap<String, Expr>,
@@ -82,19 +92,23 @@ fn eval_wire(name: &str, circuit: &HashMap<String, Expr>, cache: &mut HashMap<St
 }
 
 pub fn process_part1(input: &str) -> String {
-    let mut circuit: HashMap<String, Expr> = HashMap::new();
-    for line in input.lines() {
-        if let Some((target, expr)) = parse_line(line) {
-            circuit.insert(target, expr);
-        }
-    }
+    let circuit = parse_circuit(input);
     let mut cache = HashMap::new();
     let a = eval_wire("a", &circuit, &mut cache);
     a.to_string()
 }
 
 pub fn process_part2(input: &str) -> String {
-    input.len().to_string()
+    let mut circuit = parse_circuit(input);
+    let mut cache = HashMap::new();
+    let signal_on_a = eval_wire("a", &circuit, &mut cache);
+    circuit.insert(
+        "b".to_string(),
+        Expr::Signal(Operand::Lit(signal_on_a)),
+    );
+    let mut cache = HashMap::new();
+    let new_a = eval_wire("a", &circuit, &mut cache);
+    new_a.to_string()
 }
 
 #[cfg(test)]
@@ -140,7 +154,18 @@ NOT y -> i";
     }
 
     #[test]
-    fn part2_placeholder() {
-        assert_eq!(process_part2("xy"), "2".to_string());
+    fn part2_override_b_changes_a() {
+        let input = "2 -> b
+b LSHIFT 1 -> a";
+        assert_eq!(process_part1(input), "4");
+        assert_eq!(process_part2(input), "8");
+    }
+
+    #[test]
+    fn part2_works() {
+        let input = include_str!("../input.txt");
+        let result = process_part2(input);
+        assert!(!result.is_empty());
+        assert!(result.parse::<u32>().is_ok());
     }
 }
