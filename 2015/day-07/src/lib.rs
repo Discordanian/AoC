@@ -17,24 +17,24 @@ enum Expr {
 }
 
 fn parse_operand(s: &str) -> Operand {
-    let s = s.trim();
-    if s.chars().all(|c| c.is_ascii_digit()) {
-        Operand::Lit(s.parse().unwrap())
+    let trimmed: &str = s.trim();
+    if trimmed.chars().all(|c| c.is_ascii_digit()) {
+        Operand::Lit(trimmed.parse().unwrap())
     } else {
-        Operand::Wire(s.to_string())
+        Operand::Wire(trimmed.to_string())
     }
 }
 
 fn parse_line(line: &str) -> Option<(String, Expr)> {
-    let line = line.trim();
-    if line.is_empty() {
+    let trimmed: &str = line.trim();
+    if trimmed.is_empty() {
         return None;
     }
-    let (lhs, rhs) = line.split_once(" -> ")?;
-    let target = rhs.trim().to_string();
-    let lhs = lhs.trim();
+    let (lhs, rhs): (&str, &str) = trimmed.split_once(" -> ")?;
+    let target: String = rhs.trim().to_string();
+    let lhs: &str = lhs.trim();
 
-    let expr = if let Some(rest) = lhs.strip_prefix("NOT ") {
+    let expr: Expr = if let Some(rest) = lhs.strip_prefix("NOT ") {
         Expr::Not(parse_operand(rest))
     } else if let Some((a, b)) = lhs.split_once(" AND ") {
         Expr::And(parse_operand(a), parse_operand(b))
@@ -52,9 +52,11 @@ fn parse_line(line: &str) -> Option<(String, Expr)> {
 }
 
 fn parse_circuit(input: &str) -> HashMap<String, Expr> {
-    let mut circuit = HashMap::new();
+    let mut circuit: HashMap<String, Expr> = HashMap::new();
     for line in input.lines() {
-        if let Some((target, expr)) = parse_line(line) {
+        let line: &str = line;
+        if let Some(parsed) = parse_line(line) {
+            let (target, expr): (String, Expr) = parsed;
             circuit.insert(target, expr);
         }
     }
@@ -76,10 +78,10 @@ fn eval_wire(name: &str, circuit: &HashMap<String, Expr>, cache: &mut HashMap<St
     if let Some(&v) = cache.get(name) {
         return v;
     }
-    let expr = circuit
+    let expr: &Expr = circuit
         .get(name)
         .unwrap_or_else(|| panic!("unknown wire: {name}"));
-    let v = match expr {
+    let v: u16 = match expr {
         Expr::Signal(o) => eval_operand(o, circuit, cache),
         Expr::And(a, b) => eval_operand(a, circuit, cache) & eval_operand(b, circuit, cache),
         Expr::Or(a, b) => eval_operand(a, circuit, cache) | eval_operand(b, circuit, cache),
@@ -92,22 +94,22 @@ fn eval_wire(name: &str, circuit: &HashMap<String, Expr>, cache: &mut HashMap<St
 }
 
 pub fn process_part1(input: &str) -> String {
-    let circuit = parse_circuit(input);
-    let mut cache = HashMap::new();
-    let a = eval_wire("a", &circuit, &mut cache);
+    let circuit: HashMap<String, Expr> = parse_circuit(input);
+    let mut cache: HashMap<String, u16> = HashMap::new();
+    let a: u16 = eval_wire("a", &circuit, &mut cache);
     a.to_string()
 }
 
 pub fn process_part2(input: &str) -> String {
-    let mut circuit = parse_circuit(input);
-    let mut cache = HashMap::new();
-    let signal_on_a = eval_wire("a", &circuit, &mut cache);
+    let mut circuit: HashMap<String, Expr> = parse_circuit(input);
+    let mut cache: HashMap<String, u16> = HashMap::new();
+    let signal_on_a: u16 = eval_wire("a", &circuit, &mut cache);
     circuit.insert(
         "b".to_string(),
         Expr::Signal(Operand::Lit(signal_on_a)),
     );
-    let mut cache = HashMap::new();
-    let new_a = eval_wire("a", &circuit, &mut cache);
+    let mut cache: HashMap<String, u16> = HashMap::new();
+    let new_a: u16 = eval_wire("a", &circuit, &mut cache);
     new_a.to_string()
 }
 
@@ -128,11 +130,13 @@ NOT y -> i";
     fn part1_example() {
         let mut circuit: HashMap<String, Expr> = HashMap::new();
         for line in EXAMPLE.lines() {
-            if let Some((target, expr)) = parse_line(line) {
+            let line: &str = line;
+            if let Some(parsed) = parse_line(line) {
+                let (target, expr): (String, Expr) = parsed;
                 circuit.insert(target, expr);
             }
         }
-        let mut cache = HashMap::new();
+        let mut cache: HashMap<String, u16> = HashMap::new();
         assert_eq!(eval_wire("d", &circuit, &mut cache), 72);
         cache.clear();
         assert_eq!(eval_wire("e", &circuit, &mut cache), 507);
@@ -148,14 +152,14 @@ NOT y -> i";
 
     #[test]
     fn part1_works() {
-        let result = process_part1(include_str!("../input.txt"));
+        let result: String = process_part1(include_str!("../input.txt"));
         assert!(!result.is_empty());
         assert!(result.parse::<u32>().is_ok());
     }
 
     #[test]
     fn part2_override_b_changes_a() {
-        let input = "2 -> b
+        let input: &str = "2 -> b
 b LSHIFT 1 -> a";
         assert_eq!(process_part1(input), "4");
         assert_eq!(process_part2(input), "8");
@@ -163,8 +167,8 @@ b LSHIFT 1 -> a";
 
     #[test]
     fn part2_works() {
-        let input = include_str!("../input.txt");
-        let result = process_part2(input);
+        let input: &str = include_str!("../input.txt");
+        let result: String = process_part2(input);
         assert!(!result.is_empty());
         assert!(result.parse::<u32>().is_ok());
     }
