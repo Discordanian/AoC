@@ -1,6 +1,9 @@
 # Advent of Code 2015
 
-Not complete.
+Incomplete as of yet.
 
-No test datasets for this season.
+# Solution Stack
+
+I'll be using `Rust` to solve this year.
+
 
