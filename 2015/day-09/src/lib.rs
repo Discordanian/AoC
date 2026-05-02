@@ -84,7 +84,7 @@ fn longest_hamiltonian_path(
     dist: u32,
     best: &mut u32,
 ) {
-    let n = mat.len();
+    let n: usize = mat.len();
     if visited == n {
         *best = (*best).max(dist);
         return;
@@ -104,9 +104,9 @@ fn longest_hamiltonian_path(
 }
 
 pub fn process_part2(input: &str) -> String {
-    let mat = distance_matrix(input);
-    let mut best = 0u32;
-    let mut used = vec![false; mat.len()];
+    let mat: Vec<Vec<u32>> = distance_matrix(input);
+    let mut best: u32 = 0u32;
+    let mut used: Vec<bool> = vec![false; mat.len()];
     longest_hamiltonian_path(&mat, &mut used, None, 0, 0, &mut best);
     best.to_string()
 }
@@ -121,13 +121,13 @@ Dublin to Belfast = 141";
 
     #[test]
     fn part1_works() {
-        let result = process_part1(EXAMPLE);
+        let result: String = process_part1(EXAMPLE);
         assert_eq!(result, "605".to_string());
     }
 
     #[test]
     fn part2_works() {
-        let result = process_part2(EXAMPLE);
+        let result: String = process_part2(EXAMPLE);
         assert_eq!(result, "982".to_string());
     }
 }
