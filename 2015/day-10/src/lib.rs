@@ -15,7 +15,7 @@ fn length_after_look_and_say_rounds(input: &str, rounds: usize) -> String {
 }
 
 fn look_and_say(s: &str) -> String {
-    let bytes = s.as_bytes();
+    let bytes: &[u8] = s.as_bytes();
     let mut out = String::with_capacity(s.len() * 2);
     let mut i = 0;
     while i < bytes.len() {
