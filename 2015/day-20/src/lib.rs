@@ -24,8 +24,33 @@ fn sum_of_divisors_sieve(limit: usize) -> Vec<u64> {
     sigma
 }
 
+/// Elf `e` delivers `11 * e` to houses `e, 2e, …, 50e` only.
+/// House `h` gets `11 * e` from each divisor `e` of `h` with `h / e <= 50`.
 pub fn process_part2(input: &str) -> String {
-    input.len().to_string()
+    let target: u64 = input.trim().parse().expect("puzzle input should be a positive integer");
+    let mut upper: usize = 50_000;
+    loop {
+        let presents = presents_part2_sieve(upper);
+        if let Some(n) = (1..=upper).find(|&n| presents[n] >= target) {
+            return n.to_string();
+        }
+        upper *= 2;
+    }
+}
+
+fn presents_part2_sieve(limit: usize) -> Vec<u64> {
+    let mut p = vec![0u64; limit + 1];
+    for e in 1..=limit {
+        let add = (e as u64) * 11;
+        for k in 1..=50 {
+            let h = e * k;
+            if h > limit {
+                break;
+            }
+            p[h] += add;
+        }
+    }
+    p
 }
 
 #[cfg(test)]
@@ -42,5 +67,17 @@ mod tests {
     #[test]
     fn puzzle_input() {
         assert_eq!(process_part1("33100000"), "776160");
+    }
+
+    #[test]
+    fn part2_house_4() {
+        let p = presents_part2_sieve(10);
+        // Elves 1, 2, 4 each within 50 stops; 11 * (1 + 2 + 4) = 77
+        assert_eq!(p[4], 77);
+    }
+
+    #[test]
+    fn puzzle_input_part2() {
+        assert_eq!(process_part2("33100000"), "786240");
     }
 }
