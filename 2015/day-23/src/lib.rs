@@ -103,7 +103,9 @@ pub fn process_part1(input: &str) -> String {
 }
 
 pub fn process_part2(input: &str) -> String {
-    input.len().to_string()
+    let program: Vec<Instr> = input.lines().filter_map(parse_line).collect();
+    let (_a, b) = run(&program, 1, 0);
+    b.to_string()
 }
 
 #[cfg(test)]
