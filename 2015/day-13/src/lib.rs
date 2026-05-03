@@ -14,8 +14,8 @@ pub fn process_part2(input: &str) -> String {
 }
 
 fn parse_happiness(input: &str) -> (Vec<String>, HashMap<(usize, usize), i32>) {
-    let mut name_set = BTreeSet::new();
-    let mut triples = Vec::new();
+    let mut name_set: BTreeSet<String> = BTreeSet::new();
+    let mut triples: Vec<(String, String, i32)> = Vec::new();
 
     for line in input.lines() {
         let line = line.trim();
