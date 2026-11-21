@@ -12,9 +12,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_ceaup")
 script = ExtResource("1_mg3o3")
-day = null
-year = null
-downloadInput = null
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1858444908]
 layout_mode = 1

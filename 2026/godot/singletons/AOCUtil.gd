@@ -21,7 +21,7 @@ const ALL_NEIGHBORS: Array[Vector2i] = [ NORTH, NORTHEAST, EAST, SOUTHEAST, SOUT
 ## @return String Returns a String path to the resource file for example
 static func example_path1(y: int, d: int) -> String:
     assert(y > 2014, "Year must be > 2014")
-    assert(y < 2026, "Year must be < 2026")
+    assert(y < 2027, "Year must be < 2027")
     assert(d > - 1, "Day must not be negative")
     assert(d < 26, "Advent of code does not allow days greater than 25")
     return "user://%4d-%02d.ex1" % [y,d]
@@ -32,7 +32,7 @@ static func example_path1(y: int, d: int) -> String:
 ## @return String Returns a String path to the resource file for example
 static func example_path2(y: int, d: int) -> String:
     assert(y > 2014, "Year must be > 2014")
-    assert(y < 2026, "Year must be < 2026")
+    assert(y < 2027, "Year must be < 2027")
     assert(d > - 1, "Day must not be negative")
     assert(d < 26, "Advent of code does not allow days greater than 25")
     return "user://%4d-%02d.ex2" % [y,d]
@@ -43,7 +43,7 @@ static func example_path2(y: int, d: int) -> String:
 ## @return String Returns a String path to the resource file for the input
 static func input_path(y: int, d: int) -> String:
     assert(y > 2014, "Year must be > 2014")
-    assert(y < 2026, "Year must be < 2026")
+    assert(y < 2027, "Year must be < 2027")
     assert(d > - 1, "Day must not be negative")
     assert(d < 26, "Advent of code does not allow days greater than 25")
     return "user://%4d-%02d.in" % [y,d]
