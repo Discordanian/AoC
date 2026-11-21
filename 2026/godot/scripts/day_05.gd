@@ -1,7 +1,7 @@
 extends Control
 
 @export var day: int = 5
-@export var year: int = 2025
+@export var year: int = 2026
 @export var downloadInput: bool = true
 
 #region Boilerplate
