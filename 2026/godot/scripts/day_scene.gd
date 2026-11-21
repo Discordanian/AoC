@@ -12,8 +12,6 @@ extends Control
 @onready var exampleText: TextEdit = $MarginContainer/VBoxContainer/Assignment/Example/ExampleTextEdit
 @onready var exampleText2: TextEdit = $MarginContainer/VBoxContainer/Assignment/Example/ExampleTextEdit2
 @onready var inputData: CheckBox = $MarginContainer/VBoxContainer/Assignment/VBoxContainer/InputDataReady
-@onready var exampleButton: Button = %ExampleRunButton
-@onready var inputButton: Button = %InputRunButton
 
 var example_path1: String
 var example_path2: String
@@ -34,7 +32,6 @@ func _ready() -> void:
 
 func check_for_input() -> void:
 	inputData.button_pressed = FileAccess.file_exists(AOCUtil.input_path(year, day))
-	inputButton.disabled = not inputData.button_pressed
 
 
 func setup_example() -> void:
@@ -42,21 +39,14 @@ func setup_example() -> void:
 	var content2: String = AOCUtil.string_from_file(example_path2)
 	exampleText.text = content1
 	exampleText2.text = content2
-	_update_example_button()
 
 
 func _on_example_text_edit_text_changed() -> void:
 	_save_example(example_path1, exampleText.text)
-	_update_example_button()
 
 
 func _on_example_text_edit_text_changed2() -> void:
 	_save_example(example_path2, exampleText2.text)
-	_update_example_button()
-
-
-func _update_example_button() -> void:
-	exampleButton.disabled = exampleText.text.is_empty() or exampleText2.text.is_empty()
 
 
 func _save_example(path: String, content: String) -> void:
@@ -76,7 +66,12 @@ func _on_example_pressed() -> void:
 
 
 func _on_input_pressed() -> void:
-	var data: String = AOCUtil.string_from_file(AOCUtil.input_path(year, day))
+	var input_path: String = AOCUtil.input_path(year, day)
+	if not FileAccess.file_exists(input_path):
+		answer1.text = "File not Found"
+		answer2.text = "File not Found"
+		return
+	var data: String = AOCUtil.string_from_file(input_path)
 	part1(data, answer1)
 	part2(data, answer2)
 
